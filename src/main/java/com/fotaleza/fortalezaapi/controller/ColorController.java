@@ -2,7 +2,6 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.model.Color;
 import com.fotaleza.fortalezaapi.service.impl.ColorService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
