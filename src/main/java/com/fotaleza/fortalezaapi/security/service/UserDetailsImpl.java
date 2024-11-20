@@ -2,6 +2,7 @@ package com.fotaleza.fortalezaapi.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fotaleza.fortalezaapi.model.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,17 +16,25 @@ public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
+    @Getter
     private Long id;
     private String username;
+    @Getter
+    private String firstName;
+    @Getter
+    private String lastName;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(long id, String username, String firstName, String lastName,
+                           String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.authorities = authorities;
     }
@@ -39,6 +48,8 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getPassword(),
                 authorities);
     }
@@ -47,8 +58,6 @@ public class UserDetailsImpl implements UserDetails {
     public Collection<? extends  GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
-    public Long getId() { return id; }
 
     @Override
     public String getPassword() { return password; }

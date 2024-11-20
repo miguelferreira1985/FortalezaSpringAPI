@@ -69,6 +69,8 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getUsername(),
+                        userDetails.getFirstName(),
+                        userDetails.getLastName(),
                         roles));
     }
 
@@ -117,6 +119,8 @@ public class AuthController {
 
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
+        user.setFirstName(signUpRequest.getFirstName());
+        user.setLastName(signUpRequest.getLastName());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRoles(roles);
 
