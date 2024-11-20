@@ -11,18 +11,21 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-@Table(name = TableNames.TABLE_COLORS,
+@Table(name = TableNames.TABLE_PRESENTATIONS,
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_NAME)
     })
-public class Color {
+public class Presentation {
 
     @Id
-    @Column(name = ColumnNames.COLUMN_COLOR_ID)
+    @Column(name = ColumnNames.COLUMN_PRESENTATION_ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
     private String name;
+
+    @Column(name = ColumnNames.COLUMN_DESCRIPTION)
+    private String description;
 
 }
