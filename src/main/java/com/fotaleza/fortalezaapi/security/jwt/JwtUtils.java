@@ -10,11 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -45,14 +43,12 @@ public class JwtUtils {
 
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
 
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").build();
-        return cookie;
+        return ResponseCookie.from(jwtCookie, jwt).path("/api").build();
 
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
-        return cookie;
+        return ResponseCookie.from(jwtCookie, null).path("/api").build();
     }
 
     public String getUserNamefromJwtToken(String token) {
