@@ -9,7 +9,9 @@ public interface IColorService {
     Color saveColor(Color color);
     List<Color> getAllColors();
     Color getColorById(Integer colorId);
-    Color updateColor(Integer colorId, Color color);
+    Color getColorByName(String colorName);
+    Boolean existsByColorName(String colorName);
+    Color updateColor(Color color);
     void deleteColor(Integer colorId);
 
 }

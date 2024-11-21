@@ -22,8 +22,9 @@ public class Presentation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
-    private String name;
+    private EPresentation name;
 
     @Column(name = ColumnNames.COLUMN_DESCRIPTION)
     private String description;
