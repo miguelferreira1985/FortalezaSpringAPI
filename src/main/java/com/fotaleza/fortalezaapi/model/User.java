@@ -1,5 +1,7 @@
 package com.fotaleza.fortalezaapi.model;
 
+import com.fotaleza.fortalezaapi.constans.ColumnNames;
+import com.fotaleza.fortalezaapi.constans.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,32 +14,33 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-@Table(name = "users",
+@Table(name = TableNames.TABLE_USERS,
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username")
+        @UniqueConstraint(columnNames = ColumnNames.COLUMN_USERNAME)
     })
 public class User {
 
     @Id
+    @Column(name = ColumnNames.COLUMN_USER_ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", length = 50, nullable = false)
+    @Column(name = ColumnNames.COLUMN_USERNAME, length = 50, nullable = false)
     private String username;
 
-    @Column(name = "firstName", length = 50, nullable = false)
+    @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
     private String firstName;
 
-    @Column(name = "lastName", length = 50, nullable = false)
+    @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
     private String lastName;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = ColumnNames.COLUMN_PASSWORD, nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-                joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = TableNames.TABLE_USER_ROLES,
+                joinColumns = @JoinColumn(name = ColumnNames.COLUMN_USER_ID),
+                inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
 
 }
