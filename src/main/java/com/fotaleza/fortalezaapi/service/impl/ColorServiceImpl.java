@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ColorServiceImpl implements IColorService {
@@ -31,12 +30,12 @@ public class ColorServiceImpl implements IColorService {
     }
 
     @Override
-    public Optional<Color> getColorByName(String colorName) {
+    public Color getColorByName(String colorName) {
 
         Color color = colorRepository.findByName(colorName)
                 .orElseThrow(() -> new RuntimeException("Color no encontrado con el nombre: " + colorName));
 
-        return Optional.ofNullable(color);
+        return color;
     }
 
     @Override
