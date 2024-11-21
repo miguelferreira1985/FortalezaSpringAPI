@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.model.Color;
-import com.fotaleza.fortalezaapi.service.impl.ColorService;
+import com.fotaleza.fortalezaapi.service.impl.ColorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +14,22 @@ import java.util.List;
 public class ColorController {
 
     @Autowired
-    private ColorService colorService;
+    private ColorServiceImpl colorServiceImpl;
 
     @GetMapping("/getAllColors")
     public List<Color> getAllColors() {
-        return colorService.getAllColors();
+        return colorServiceImpl.getAllColors();
     }
 
     @GetMapping()
     public ResponseEntity<Color> getColorById(@RequestParam("colorId") Integer colorId) {
 
-        Color color = colorService.getColorById(colorId);
+        Color color = colorServiceImpl.getColorById(colorId);
 
         if (color != null) {
-            return new ResponseEntity<Color>(colorService.getColorById(colorId), HttpStatus.OK);
+            return new ResponseEntity<Color>(colorServiceImpl.getColorById(colorId), HttpStatus.OK);
         } else {
-            return new ResponseEntity<Color>(colorService.getColorById(colorId), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Color>(colorServiceImpl.getColorById(colorId), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -38,7 +38,7 @@ public class ColorController {
     public ResponseEntity<Color> createColor(@RequestBody Color color) {
 
         if(color.getName() != null) {
-            return new ResponseEntity<Color>(colorService.saveColor(color), HttpStatus.CREATED);
+            return new ResponseEntity<Color>(colorServiceImpl.saveColor(color), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -46,9 +46,9 @@ public class ColorController {
     }
 
     @PutMapping()
-    public ResponseEntity<Color> updateColor(@RequestParam("colorId") Integer colorId, @RequestBody Color color) {
+    public ResponseEntity<?> updateColor(@RequestBody Color color) {
 
-        Color colorUpdated = colorService.updateColor(colorId, color);
+        Color colorUpdated = colorServiceImpl.updateColor(color);
 
         if (colorUpdated != null) {
             return new ResponseEntity<Color>(colorUpdated, HttpStatus.OK);

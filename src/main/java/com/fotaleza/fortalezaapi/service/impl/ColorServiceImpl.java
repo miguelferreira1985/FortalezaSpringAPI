@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ColorService implements IColorService {
+public class ColorServiceImpl implements IColorService {
 
     @Autowired
     private ColorRepository colorRepository;
@@ -30,16 +31,19 @@ public class ColorService implements IColorService {
     }
 
     @Override
-    public Color updateColor(Integer colorId, Color color) {
+    public Optional<Color> getColorByName(String colorName) {
 
-        Color existingColor = colorRepository.findById(colorId).orElse(null);
+        Color color = colorRepository.findByName(colorName)
+                .orElseThrow(() -> new RuntimeException("Color no encontrado con el nombre: " + colorName));
 
-        if(existingColor != null) {
-            existingColor.setName(color.getName());
-        }
-
-        return existingColor;
+        return Optional.ofNullable(color);
     }
+
+    @Override
+    public Boolean existsByColorName(String colorName) { return colorRepository.existsByName(colorName); }
+
+    @Override
+    public Color updateColor(Color color) { return colorRepository.save(color); }
 
     @Override
     public void deleteColor(Integer colorId) {
