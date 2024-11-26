@@ -11,6 +11,8 @@ import com.fotaleza.fortalezaapi.repository.RoleRepository;
 import com.fotaleza.fortalezaapi.repository.UserRepository;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
+import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
+import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,8 +32,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 // for Angular Client (withCredentials)
-//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials = "true")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials = "true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -40,10 +42,10 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    UserServiceImpl userService;
 
     @Autowired
-    RoleRepository roleRepository;
+    RoleServiceImpl roleService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -78,38 +80,37 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: El Nombre de Usuario ya esta registrado"));
+        if (userService.existsByUserName(signUpRequest.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: El Nombre de Usuario ya esta registrado", userService));
         }
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role cashierRole = roleRepository.findByName(ERole.ROLE_CASHIER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            Role cashierRole = roleService.getRoleByName(ERole.ROLE_CASHIER);
             roles.add(cashierRole);
         } else {
 
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+
+                        Role adminRole = roleService.getRoleByName(ERole.ROLE_ADMIN);
                         roles.add(adminRole);
 
                         break;
 
                     case "manager":
-                        Role managerRole = roleRepository.findByName(ERole.ROLE_MANAGER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+
+                        Role managerRole = roleService.getRoleByName(ERole.ROLE_MANAGER);
                         roles.add(managerRole);
 
                         break;
 
                     default:
-                        Role cashierRole = roleRepository.findByName(ERole.ROLE_CASHIER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+
+                        Role cashierRole = roleService.getRoleByName(ERole.ROLE_CASHIER);
                         roles.add(cashierRole);
 
                         break;
@@ -125,15 +126,15 @@ public class AuthController {
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRoles(roles);
 
-        userRepository.save(user);
+        userService.saveUser(user);
 
-        return ResponseEntity.ok(new MessageResponse("Usuario " + user.getUsername() + " registrado con exito!"));
+        return ResponseEntity.ok(new MessageResponse("Usuario " + user.getUsername() + " registrado con exito!", userService));
     }
 
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok(new MessageResponse("Su sesion ha sido cerrada!"));
+        return ResponseEntity.ok(new MessageResponse("Su sesion ha sido cerrada!", cookie));
     }
 
 }
