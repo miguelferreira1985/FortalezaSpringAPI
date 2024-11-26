@@ -7,8 +7,6 @@ import com.fotaleza.fortalezaapi.payload.request.LoginRequest;
 import com.fotaleza.fortalezaapi.payload.request.SignupRequest;
 import com.fotaleza.fortalezaapi.payload.response.MessageResponse;
 import com.fotaleza.fortalezaapi.payload.response.UserInfoResponse;
-import com.fotaleza.fortalezaapi.repository.RoleRepository;
-import com.fotaleza.fortalezaapi.repository.UserRepository;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
@@ -81,7 +79,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         if (userService.existsByUserName(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: El Nombre de Usuario ya esta registrado", userService));
+            return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", signUpRequest.getUsername()));
         }
 
         Set<String> strRoles = signUpRequest.getRole();

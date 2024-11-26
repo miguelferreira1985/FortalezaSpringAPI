@@ -31,11 +31,8 @@ public class ColorServiceImpl implements IColorService {
 
     @Override
     public Color getColorByName(String colorName) {
-
-        Color color = colorRepository.findByName(colorName)
+        return colorRepository.findByName(colorName)
                 .orElseThrow(() -> new RuntimeException("Color no encontrado con el nombre: " + colorName));
-
-        return color;
     }
 
     @Override

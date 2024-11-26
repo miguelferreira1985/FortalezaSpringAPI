@@ -4,7 +4,6 @@ import com.fotaleza.fortalezaapi.model.Color;
 import com.fotaleza.fortalezaapi.payload.response.MessageResponse;
 import com.fotaleza.fortalezaapi.service.impl.ColorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +31,8 @@ public class ColorController {
 
         if (color != null) {
             return ResponseEntity.ok().body(color);
-            //return new ResponseEntity<Color>(colorServiceImpl.getColorById(colorId), HttpStatus.OK);
         } else {
-            return (ResponseEntity<?>) ResponseEntity.notFound().build().getBody();
-            //return new ResponseEntity<Color>(colorServiceImpl.getColorById(colorId), HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
     }
@@ -46,16 +43,14 @@ public class ColorController {
         if (color.getName() != null) {
             if (colorServiceImpl.existsByColorName(color.getName())) {
                 return ResponseEntity.badRequest()
-                        .body(new MessageResponse("Error: Este Color ya esta registrado", color));
+                        .body(new MessageResponse("Este Color ya esta registrado", color));
             }
             colorServiceImpl.saveColor(color);
             return ResponseEntity.ok(new MessageResponse("Color " + color.getName() + " agregado correctamente", color));
-            //return new ResponseEntity<Color>(colorServiceImpl.saveColor(color), HttpStatus.CREATED);
         } else {
-            return ResponseEntity.badRequest().build();
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("No se pudo guardar el color " + color.getName() + ".", color));
         }
-
     }
 
     @PutMapping()
@@ -64,13 +59,15 @@ public class ColorController {
         Color colorToUpdated = colorServiceImpl.getColorById(color.getId());
 
         if (colorToUpdated != null) {
+            if (colorServiceImpl.existsByColorName(color.getName())) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("No se pudo actualizar el color " + color.getName() + " el color ya existe.", color));
+            }
             colorServiceImpl.updateColor(color);
-            return ResponseEntity.ok(color);
-            //return new ResponseEntity<Color>(colorUpdated, HttpStatus.OK);
+            return ResponseEntity.ok(new MessageResponse("Color " + color.getName() + " actualicado correctamente", color));
         } else {
-            return ResponseEntity.badRequest().build();
-            //return new ResponseEntity<Color>(colorUpdated, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("No existe el color " + color.getName() + ".", color));
         }
-
     }
 }

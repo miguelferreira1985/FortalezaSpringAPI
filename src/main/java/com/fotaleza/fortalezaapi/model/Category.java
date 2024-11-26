@@ -22,8 +22,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
-    private String name;
+    private ECategory name;
 
     @Column(name = ColumnNames.COLUMN_DESCRIPTION)
     private String description;
