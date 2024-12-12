@@ -20,22 +20,15 @@ public class ColorServiceImpl implements IColorService {
     }
 
     @Override
-    public List<Color> getAllColors() {
-        return colorRepository.findAll();
-    }
+    public List<Color> getAllColors() { return colorRepository.findAll().stream().toList(); }
 
     @Override
-    public Color getColorById(Integer colorId) {
-        return colorRepository.findById(colorId).orElse(null);
-    }
+    public Color getColorById(Integer colorId) { return colorRepository.findById(colorId).orElse(null); }
 
     @Override
     public Color getColorByName(String colorName) {
-
-        Color color = colorRepository.findByName(colorName)
+        return colorRepository.findByName(colorName)
                 .orElseThrow(() -> new RuntimeException("Color no encontrado con el nombre: " + colorName));
-
-        return color;
     }
 
     @Override

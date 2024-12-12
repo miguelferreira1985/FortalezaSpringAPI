@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.payload.request;
+package com.fotaleza.fortalezaapi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class SignupRequestDto {
 
     @NotBlank
     @Size(min = 3, max = 20)

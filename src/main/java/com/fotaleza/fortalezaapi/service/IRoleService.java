@@ -5,6 +5,6 @@ import com.fotaleza.fortalezaapi.model.Role;
 
 public interface IRoleService {
 
-    Role getRoleByName(ERole role);
+    Role getRoleByName(ERole roleName);
 
 }
