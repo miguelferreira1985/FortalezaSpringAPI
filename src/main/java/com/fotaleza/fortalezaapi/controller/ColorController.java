@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.model.Color;
-import com.fotaleza.fortalezaapi.payload.response.MessageResponse;
+import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.service.impl.ColorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// for Angular Client (withCredentials)
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
-//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/color")
+@RequestMapping("/api/v1/color")
 public class ColorController {
 
     @Autowired

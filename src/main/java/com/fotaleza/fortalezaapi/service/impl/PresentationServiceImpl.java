@@ -1,6 +1,5 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.model.Category;
 import com.fotaleza.fortalezaapi.model.EPresentation;
 import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.repository.PresentationRepository;

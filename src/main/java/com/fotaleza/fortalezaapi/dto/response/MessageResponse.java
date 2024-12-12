@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.payload.response;
+package com.fotaleza.fortalezaapi.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
