@@ -7,7 +7,6 @@ import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
 import com.fotaleza.fortalezaapi.dto.request.SignupRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
-import com.fotaleza.fortalezaapi.dto.response.UserInfoResponse;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsServiceImpl;
@@ -15,16 +14,12 @@ import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
