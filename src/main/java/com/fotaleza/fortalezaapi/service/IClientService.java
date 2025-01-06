@@ -9,8 +9,9 @@ public interface IClientService {
     Client saveClient(Client client);
     List<Client> getAllClients();
     Client getClientById(Integer clientId);
-    Client getClientByName(String clientName);
-    Boolean existsByClientName(String clientName);
+    //Client getClientByName(String clientName);
+    //Boolean existsByClientName(String clientName);
+    Boolean existsByRfc(String rfc);
     Client updateClient(Client client);
     void deleteClient(Integer clientId);
 }

@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface PresentationRepository extends JpaRepository<Presentation, Integer> {
 
-    Optional<Presentation> findByName(EPresentation presentationName);
-
 }

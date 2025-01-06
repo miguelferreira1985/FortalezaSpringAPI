@@ -26,7 +26,4 @@ public class Presentation {
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
     private EPresentation name;
 
-    @Column(name = ColumnNames.COLUMN_DESCRIPTION)
-    private String description;
-
 }

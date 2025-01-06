@@ -7,15 +7,18 @@ import com.fotaleza.fortalezaapi.service.IPresentationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PresentationServiceImpl implements IPresentationService {
 
     @Autowired
     private PresentationRepository presentationRepository;
 
+
     @Override
-    public Presentation getPresentationByName(EPresentation presentationName) {
-        return presentationRepository.findByName(presentationName)
-                .orElseThrow(() -> new RuntimeException("Presentacion no encontrada con el nombre: " + presentationName));
+    public List<Presentation> getAllPresentations() {
+        return presentationRepository.findAll().stream().toList();
     }
+
 }

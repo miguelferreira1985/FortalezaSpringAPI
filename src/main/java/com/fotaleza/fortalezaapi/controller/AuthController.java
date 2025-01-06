@@ -2,6 +2,7 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.response.AuthResponseDto;
 import com.fotaleza.fortalezaapi.model.ERole;
+import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
@@ -151,12 +152,18 @@ public class AuthController {
 
         }
 
+        Employee employee = new Employee();
+        employee.setFirstName(signupRequestDto.getFirstName());
+        employee.setLastName(signupRequestDto.getLastName());
+        employee.setSsn("4667883");
+
         User user = new User();
         user.setUsername(signupRequestDto.getUsername());
-        user.setFirstName(signupRequestDto.getFirstName());
-        user.setLastName(signupRequestDto.getLastName());
+        //user.setEmployee(employee);
         user.setPassword(encoder.encode(signupRequestDto.getPassword()));
         user.setRoles(roles);
+
+        employee.setUser(user);
 
         userService.saveUser(user);
 
