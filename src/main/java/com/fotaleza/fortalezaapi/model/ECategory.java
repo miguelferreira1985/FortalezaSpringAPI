@@ -4,6 +4,6 @@ public enum ECategory {
 
     REFACCIONES,
     HILOS,
-    MAQUINAS,
+    MAQUINAS
 
 }

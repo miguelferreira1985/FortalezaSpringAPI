@@ -28,14 +28,13 @@ public class User {
     @Column(name = ColumnNames.COLUMN_USERNAME, length = 50, nullable = false)
     private String username;
 
-    @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
-    private String firstName;
-
-    @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
-    private String lastName;
-
     @Column(name = ColumnNames.COLUMN_PASSWORD, nullable = false)
     private String password;
+
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY,
+            mappedBy = "user", cascade = CascadeType.PERSIST)
+    private Employee employee;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableNames.TABLE_USER_ROLES,
