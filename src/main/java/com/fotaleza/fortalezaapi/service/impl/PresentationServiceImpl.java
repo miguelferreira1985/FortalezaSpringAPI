@@ -1,6 +1,5 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.model.EPresentation;
 import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.repository.PresentationRepository;
 import com.fotaleza.fortalezaapi.service.IPresentationService;
@@ -14,7 +13,6 @@ public class PresentationServiceImpl implements IPresentationService {
 
     @Autowired
     private PresentationRepository presentationRepository;
-
 
     @Override
     public List<Presentation> getAllPresentations() {

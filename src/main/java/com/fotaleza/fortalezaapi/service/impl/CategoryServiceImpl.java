@@ -1,7 +1,6 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 import com.fotaleza.fortalezaapi.model.Category;
-import com.fotaleza.fortalezaapi.model.ECategory;
 import com.fotaleza.fortalezaapi.repository.CategoryRepository;
 import com.fotaleza.fortalezaapi.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
