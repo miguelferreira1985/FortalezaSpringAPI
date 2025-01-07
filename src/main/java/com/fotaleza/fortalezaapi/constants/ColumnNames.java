@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.constans;
+package com.fotaleza.fortalezaapi.constants;
 
 public class ColumnNames {
 
@@ -23,5 +23,7 @@ public class ColumnNames {
     public static final String COLUMN_ADDRESS = "address";
     public static final String COLUMN_CONTACT = "contact";
     public static final String COLUMN_SSN = "ssn";
+    public static final String COLUMN_CREATED_DATE_TIME = "createdDateTime";
+    public static final String COLUMN_UPDATED_DATE_TIME = "updatedDateTime";
 
 }

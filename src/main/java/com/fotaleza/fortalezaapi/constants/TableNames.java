@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.constans;
+package com.fotaleza.fortalezaapi.constants;
 
 public class TableNames {
 

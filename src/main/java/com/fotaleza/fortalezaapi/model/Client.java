@@ -1,10 +1,12 @@
 package com.fotaleza.fortalezaapi.model;
 
-import com.fotaleza.fortalezaapi.constans.ColumnNames;
-import com.fotaleza.fortalezaapi.constans.TableNames;
+import com.fotaleza.fortalezaapi.constants.ColumnNames;
+import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+
+import java.util.Date;
 
 @Entity
 @Data
@@ -44,5 +46,11 @@ public class Client {
 
     @Column(name = ColumnNames.COLUMN_RFC, length = 20, nullable = false)
     private String rfc;
+
+    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
+    private Date createdDateTime;
+
+    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
+    private Date updatedDateTime;
 
 }

@@ -1,10 +1,11 @@
 package com.fotaleza.fortalezaapi.model;
 
-import com.fotaleza.fortalezaapi.constans.ColumnNames;
-import com.fotaleza.fortalezaapi.constans.TableNames;
+import com.fotaleza.fortalezaapi.constants.ColumnNames;
+import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,5 +42,11 @@ public class User {
                 joinColumns = @JoinColumn(name = ColumnNames.COLUMN_USER_ID),
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
+
+    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
+    private Date createdDateTime;
+
+    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
+    private Date updatedDateTime;
 
 }

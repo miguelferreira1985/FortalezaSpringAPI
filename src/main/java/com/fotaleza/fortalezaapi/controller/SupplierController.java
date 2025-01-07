@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,6 +40,8 @@ public class SupplierController {
             supplierResponseDto.setEmail(supplier.getEmail());
             supplierResponseDto.setAddress(supplier.getAddress());
             supplierResponseDto.setPhone(supplier.getPhone());
+            supplierResponseDto.setCreatedDateTime(supplier.getCreatedDateTime());
+            supplierResponseDto.setUpdatedDateTime(supplier.getUpdatedDateTime());
 
             return ResponseEntity.ok(supplierResponseDto);
         } else {
@@ -60,6 +63,8 @@ public class SupplierController {
         newSupplier.setAddress(supplierRequestDto.getAddress());
         newSupplier.setEmail(supplierRequestDto.getEmail());
         newSupplier.setPhone(supplierRequestDto.getPhone());
+        newSupplier.setCreatedDateTime(new Date());
+        newSupplier.setUpdatedDateTime(new Date());
 
         supplierService.saveSupplier(newSupplier);
 
@@ -82,6 +87,7 @@ public class SupplierController {
             supplierToUpdate.setAddress(supplierRequestDto.getAddress());
             supplierToUpdate.setEmail(supplierRequestDto.getEmail());
             supplierToUpdate.setPhone(supplierRequestDto.getPhone());
+            supplierToUpdate.setUpdatedDateTime(new Date());
 
             supplierService.updateSupplier(supplierToUpdate);
 

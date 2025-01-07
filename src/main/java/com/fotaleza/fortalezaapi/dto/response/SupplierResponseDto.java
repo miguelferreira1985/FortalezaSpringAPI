@@ -2,6 +2,8 @@ package com.fotaleza.fortalezaapi.dto.response;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class SupplierResponseDto {
 
@@ -11,5 +13,7 @@ public class SupplierResponseDto {
     private String address;
     private String email;
     private String phone;
+    private Date createdDateTime;
+    private Date updatedDateTime;
 
 }

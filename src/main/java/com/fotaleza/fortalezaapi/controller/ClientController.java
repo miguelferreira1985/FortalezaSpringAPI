@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +43,8 @@ public class ClientController {
             clientResponseDto.setEmail(client.getEmail());
             clientResponseDto.setPhone(client.getPhone());
             clientResponseDto.setRfc(client.getRfc());
+            clientResponseDto.setCreatedDateTime(client.getCreatedDateTime());
+            clientResponseDto.setUpdatedDateTime(client.getUpdatedDateTime());
 
             return ResponseEntity.ok(clientResponseDto);
         } else {
@@ -65,6 +68,8 @@ public class ClientController {
         newClient.setEmail(clientRequestDto.getEmail());
         newClient.setPhone(clientRequestDto.getPhone());
         newClient.setRfc(clientRequestDto.getRfc());
+        newClient.setCreatedDateTime(new Date());
+        newClient.setUpdatedDateTime(new Date());
 
         clientService.saveClient(newClient);
 
@@ -92,6 +97,7 @@ public class ClientController {
             clientToUpdate.setEmail(clientRequestDto.getEmail());
             clientToUpdate.setPhone(clientRequestDto.getPhone());
             clientToUpdate.setRfc(clientRequestDto.getRfc());
+            clientToUpdate.setUpdatedDateTime(new Date());
 
             clientService.updateClient(clientToUpdate);
 

@@ -1,9 +1,11 @@
 package com.fotaleza.fortalezaapi.model;
 
-import com.fotaleza.fortalezaapi.constans.ColumnNames;
-import com.fotaleza.fortalezaapi.constans.TableNames;
+import com.fotaleza.fortalezaapi.constants.ColumnNames;
+import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
 
 @Entity
 @Data

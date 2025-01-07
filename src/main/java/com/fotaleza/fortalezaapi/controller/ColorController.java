@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,8 @@ public class ColorController {
             ColorResponseDto colorResponseDto = new ColorResponseDto();
             colorResponseDto.setId(color.getId());
             colorResponseDto.setName(color.getName());
+            colorResponseDto.setCreatedDateTime(color.getCreatedDateTime());
+            colorResponseDto.setUpdatedDateTime(color.getUpdatedDateTime());
 
             return ResponseEntity.ok().body(colorResponseDto);
         } else {
@@ -56,6 +59,8 @@ public class ColorController {
 
         Color newColor = new Color();
         newColor.setName(colorRequestDto.getName());
+        newColor.setCreatedDateTime(new Date());
+        newColor.setUpdatedDateTime(new Date());
 
         colorService.saveColor(newColor);
 
@@ -76,6 +81,7 @@ public class ColorController {
 
             colorToUpdated.setId(colorToUpdated.getId());
             colorToUpdated.setName(colorRequestDto.getName());
+            colorToUpdated.setUpdatedDateTime(new Date());
 
             colorService.updateColor(colorToUpdated);
 
