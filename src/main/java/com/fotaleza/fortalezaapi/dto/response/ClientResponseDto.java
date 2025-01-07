@@ -1,7 +1,5 @@
 package com.fotaleza.fortalezaapi.dto.response;
 
-import com.fotaleza.fortalezaapi.constants.ColumnNames;
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.Date;
