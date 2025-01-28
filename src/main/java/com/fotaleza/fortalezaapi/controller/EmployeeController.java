@@ -1,6 +1,6 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.request.SignupRequestDto;
+import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.model.ERole;
 import com.fotaleza.fortalezaapi.model.Employee;
@@ -39,17 +39,17 @@ public class EmployeeController {
     PasswordEncoder encoder;
 
     @PostMapping()
-    public ResponseEntity<?> createEmployee(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<?> createEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
 
         User user = new User();
         Set<Role> roles = new HashSet<>();
 
-        if (signupRequestDto.getUsername() != null) {
-            if (userService.existsByUserName(signupRequestDto.getUsername())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", signupRequestDto.getUsername()));
+        if (employeeRequestDto.getUsername() != null) {
+            if (userService.existsByUserName(employeeRequestDto.getUsername())) {
+                return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", employeeRequestDto.getUsername()));
             }
 
-            Set<String> strRoles = signupRequestDto.getRole();
+            Set<String> strRoles = employeeRequestDto.getRole();
 
             if (strRoles == null) {
                 Role cashierRole = roleService.getRoleByName(ERole.ROLE_CASHIER);
@@ -74,18 +74,22 @@ public class EmployeeController {
                 });
             }
 
-            user.setUsername(signupRequestDto.getUsername());
-            user.setPassword(encoder.encode(signupRequestDto.getPassword()));
+            user.setUsername(employeeRequestDto.getUsername());
+            user.setPassword(encoder.encode(employeeRequestDto.getPassword()));
             user.setRoles(roles);
         }
 
         Employee employee = new Employee();
-        employee.setFirstName(signupRequestDto.getFirstName());
-        employee.setLastName(signupRequestDto.getLastName());
-        employee.setSsn("4667883");
+        employee.setFirstName(employeeRequestDto.getFirstName());
+        employee.setLastName(employeeRequestDto.getLastName());
+        employee.setEmail(employeeRequestDto.getEmail());
+        employee.setPhone(employeeRequestDto.getPhone());
+        employee.setAddress(employeeRequestDto.getAddress());
+        employee.setSsn(employeeRequestDto.getSsn());
         employee.setUser(user);
         employee.setCreatedDateTime(new Date());
         employee.setUpdatedDateTime(new Date());
+        employee.setIsActivate(true);
 
         employeeService.saveEmployee(employee);
 

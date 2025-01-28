@@ -15,5 +15,6 @@ public class SupplierResponseDto {
     private String phone;
     private Date createdDateTime;
     private Date updatedDateTime;
+    private Boolean isActivate;
 
 }

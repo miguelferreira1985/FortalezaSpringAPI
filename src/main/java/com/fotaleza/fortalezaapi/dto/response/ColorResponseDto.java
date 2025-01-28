@@ -11,5 +11,6 @@ public class ColorResponseDto {
     private String name;
     private Date createdDateTime;
     private Date updatedDateTime;
+    private Boolean isActivate;
 
 }

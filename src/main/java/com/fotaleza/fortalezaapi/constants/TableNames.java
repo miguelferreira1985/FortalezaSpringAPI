@@ -11,5 +11,6 @@ public class TableNames {
     public static final String TABLE_CLIENTS = "clients";
     public static final String TABLE_SUPPLIERS = "suppliers";
     public static final String TABLE_EMPLOYEES = "employees";
+    public static final String TABLE_PRODUCTS = "products";
 
 }

@@ -5,6 +5,7 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
         uniqueConstraints = {
             @UniqueConstraint(columnNames = ColumnNames.COLUMN_SSN)
         })
+@SQLDelete(sql = "UPDATE employees SET isActivate = false WHERE employeeId = ?")
 public class Employee {
 
     @Id
@@ -53,5 +55,8 @@ public class Employee {
 
     @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
     private Date updatedDateTime;
+
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
 
 }

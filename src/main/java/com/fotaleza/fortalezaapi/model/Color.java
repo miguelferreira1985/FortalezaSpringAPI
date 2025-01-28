@@ -33,4 +33,7 @@ public class Color {
     @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
     private Date updatedDateTime;
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
 }

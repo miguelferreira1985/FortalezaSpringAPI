@@ -6,7 +6,7 @@ import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
-import com.fotaleza.fortalezaapi.dto.request.SignupRequestDto;
+import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
@@ -111,13 +111,13 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
 
-        if (userService.existsByUserName(signupRequestDto.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", signupRequestDto.getUsername()));
+        if (userService.existsByUserName(employeeRequestDto.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", employeeRequestDto.getUsername()));
         }
 
-        Set<String> strRoles = signupRequestDto.getRole();
+        Set<String> strRoles = employeeRequestDto.getRole();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
@@ -153,14 +153,14 @@ public class AuthController {
         }
 
         Employee employee = new Employee();
-        employee.setFirstName(signupRequestDto.getFirstName());
-        employee.setLastName(signupRequestDto.getLastName());
+        employee.setFirstName(employeeRequestDto.getFirstName());
+        employee.setLastName(employeeRequestDto.getLastName());
         employee.setSsn("4667883");
 
         User user = new User();
-        user.setUsername(signupRequestDto.getUsername());
+        user.setUsername(employeeRequestDto.getUsername());
         //user.setEmployee(employee);
-        user.setPassword(encoder.encode(signupRequestDto.getPassword()));
+        user.setPassword(encoder.encode(employeeRequestDto.getPassword()));
         user.setRoles(roles);
 
         employee.setUser(user);

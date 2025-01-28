@@ -17,5 +17,6 @@ public class ClientResponseDto {
     private String rfc;
     private Date createdDateTime;
     private Date updatedDateTime;
+    private Boolean isActivate;
 
 }

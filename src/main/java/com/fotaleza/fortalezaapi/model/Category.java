@@ -26,7 +26,4 @@ public class Category {
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
     private ECategory name;
 
-    @Column(name = ColumnNames.COLUMN_DESCRIPTION)
-    private String description;
-
 }

@@ -6,7 +6,9 @@ import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.model.Client;
 import com.fotaleza.fortalezaapi.service.impl.ClientServiceImpl;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,13 @@ public class ClientController {
     private ClientServiceImpl clientService;
 
     @GetMapping
-    @RequestMapping("/getAllClients")
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
+    @RequestMapping("/getAllActiveClients")
+    public List<Client> getAllActiveClients() { return clientService.getAllActiveClients(); }
+
+    @GetMapping
+    @RequestMapping("/getAllInactiveClients")
+    public List<Client> getAllInactiveClients() {
+        return clientService.getAllInactiveClients();
     }
 
     @GetMapping
@@ -45,6 +51,7 @@ public class ClientController {
             clientResponseDto.setRfc(client.getRfc());
             clientResponseDto.setCreatedDateTime(client.getCreatedDateTime());
             clientResponseDto.setUpdatedDateTime(client.getUpdatedDateTime());
+            clientResponseDto.setIsActivate(client.getIsActivate());
 
             return ResponseEntity.ok(clientResponseDto);
         } else {
@@ -70,6 +77,8 @@ public class ClientController {
         newClient.setRfc(clientRequestDto.getRfc());
         newClient.setCreatedDateTime(new Date());
         newClient.setUpdatedDateTime(new Date());
+        newClient.setIsActivate(true);
+
 
         clientService.saveClient(newClient);
 
@@ -108,4 +117,28 @@ public class ClientController {
         }
 
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteClient(@Param("clientId") Integer clientId) {
+
+        Client clientToDelete = clientService.getClientById(clientId);
+
+        if ( Objects.nonNull(clientToDelete) ) {
+            if (clientToDelete.getIsActivate()) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(
+                                "El cliente ya estaba eliminado!",
+                                clientToDelete));
+            }
+
+            clientService.deleteClient(clientId);
+
+            return ResponseEntity.ok(new MessageResponse("Client eliminado exitosamente!", clientToDelete));
+        } else {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("No se encontro el cliente que desea eliminar", null));
+        }
+        
+    }
+
 }
