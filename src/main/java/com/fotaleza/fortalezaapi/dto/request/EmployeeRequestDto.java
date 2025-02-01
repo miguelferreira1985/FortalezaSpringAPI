@@ -11,7 +11,8 @@ import java.util.Set;
 @Setter
 public class EmployeeRequestDto {
 
-    @NotBlank
+    private Integer employeeId;
+
     @Size(min = 3, max = 20)
     private String username;
 
@@ -36,7 +37,6 @@ public class EmployeeRequestDto {
     @Size(min = 3, max = 20)
     private String ssn;
 
-    @NotBlank
     @Size(min = 6, max = 40)
     private String password;
 

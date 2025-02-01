@@ -1,13 +1,15 @@
 package com.fotaleza.fortalezaapi.dto.response;
 
+import com.fotaleza.fortalezaapi.model.Role;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class EmployeeResponseDto {
 
-    private Long employeeId;
+    private Integer employeeId;
     private String firstName;
     private String lastName;
     private String email;
@@ -15,7 +17,9 @@ public class EmployeeResponseDto {
     private String address;
     private String ssn;
     private String username;
-    private List<String> roles;
+    private List<Role> roles;
+    private Date createdDateTime;
+    private Date updatedDateTime;
     private Boolean isActivate;
 
 }

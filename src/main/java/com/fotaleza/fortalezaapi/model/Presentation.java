@@ -4,6 +4,7 @@ import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Data

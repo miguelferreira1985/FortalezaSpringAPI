@@ -4,6 +4,7 @@ import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_NAME)
     })
+@SQLDelete(sql = "UPDATE colors SET isActivate = false WHERE colorId = ?")
 public class Color {
 
     @Id
@@ -35,5 +37,4 @@ public class Color {
 
     @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
     private Boolean isActivate;
-
 }

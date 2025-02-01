@@ -25,5 +25,4 @@ public class Category {
     @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
     private ECategory name;
-
 }

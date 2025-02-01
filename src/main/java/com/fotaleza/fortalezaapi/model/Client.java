@@ -19,7 +19,7 @@ import java.util.Date;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_RFC)
     })
-@SQLDelete(sql = "UPDATE clients SET isActivate = fals WHERE clientId=?")
+@SQLDelete(sql = "UPDATE clients SET isActivate = false WHERE clientId=?")
 public class Client {
 
     @Id

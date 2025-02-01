@@ -6,7 +6,6 @@ import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.model.Client;
 import com.fotaleza.fortalezaapi.service.impl.ClientServiceImpl;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -113,7 +112,7 @@ public class ClientController {
             return ResponseEntity.ok(new MessageResponse("Cliente " + clientToUpdate.getCompanyName() + " actualizado con exito.", clientToUpdate));
         } else {
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("No ecxiste el cliente " + clientRequestDto.getCompanyName() + ".", clientRequestDto));
+                    .body(new MessageResponse("No existe el cliente " + clientRequestDto.getCompanyName() + ".", clientRequestDto));
         }
 
     }
@@ -124,7 +123,7 @@ public class ClientController {
         Client clientToDelete = clientService.getClientById(clientId);
 
         if ( Objects.nonNull(clientToDelete) ) {
-            if (clientToDelete.getIsActivate()) {
+            if (!clientToDelete.getIsActivate()) {
                 return ResponseEntity.badRequest()
                         .body(new MessageResponse(
                                 "El cliente ya estaba eliminado!",

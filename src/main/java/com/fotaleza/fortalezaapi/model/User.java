@@ -4,6 +4,7 @@ import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import java.util.Set;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_USERNAME)
     })
+@SQLDelete(sql = "UPDATE users SET isActivate = false WHERE userId = ?")
 public class User {
 
     @Id
