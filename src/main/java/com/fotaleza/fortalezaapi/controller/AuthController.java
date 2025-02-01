@@ -1,13 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.response.AuthResponseDto;
-import com.fotaleza.fortalezaapi.model.ERole;
-import com.fotaleza.fortalezaapi.model.Employee;
-import com.fotaleza.fortalezaapi.model.Role;
-import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
-import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDto;
-import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsServiceImpl;
