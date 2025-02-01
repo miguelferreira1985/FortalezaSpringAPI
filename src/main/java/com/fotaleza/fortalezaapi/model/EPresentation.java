@@ -6,6 +6,7 @@ public enum EPresentation {
     LITRO,
     PIEZA,
     BOLSA,
-    UNIDAD
+    UNIDAD,
+    SIN_PRESENTACION
 
 }

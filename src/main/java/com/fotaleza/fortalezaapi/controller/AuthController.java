@@ -63,7 +63,7 @@ public class AuthController {
             authResponseDto.setToken(jwt);
             authResponseDto.setRefreshToken(refreshToken);
 
-            return new ResponseEntity<AuthResponseDto>(authResponseDto, HttpStatus.OK);
+            return new ResponseEntity<>(authResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication error" + e.getMessage());
         }
@@ -92,7 +92,7 @@ public class AuthController {
                 authResponseDto.setToken(newJwt);
                 authResponseDto.setRefreshToken(newRefreshToken);
 
-                return new ResponseEntity<AuthResponseDto>(authResponseDto, HttpStatus.OK);
+                return new ResponseEntity<>(authResponseDto, HttpStatus.OK);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
             }
