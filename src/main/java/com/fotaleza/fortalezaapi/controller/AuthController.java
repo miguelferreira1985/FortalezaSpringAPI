@@ -4,8 +4,6 @@ import com.fotaleza.fortalezaapi.dto.response.AuthResponseDto;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
-import com.fotaleza.fortalezaapi.security.service.UserDetailsServiceImpl;
-import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,23 +22,16 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserServiceImpl userService;
+    private final JwtUtils jwtUtils;
 
     @Autowired
-    UserServiceImpl userService;
-
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    RoleServiceImpl roleService;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
+    public AuthController(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
@@ -63,9 +53,14 @@ public class AuthController {
             authResponseDto.setToken(jwt);
             authResponseDto.setRefreshToken(refreshToken);
 
-            return new ResponseEntity<>(authResponseDto, HttpStatus.OK);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(authResponseDto);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication error" + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(String.format("Error de autenticación: %s", e.getMessage()));
         }
 
     }
@@ -92,12 +87,18 @@ public class AuthController {
                 authResponseDto.setToken(newJwt);
                 authResponseDto.setRefreshToken(newRefreshToken);
 
-                return new ResponseEntity<>(authResponseDto, HttpStatus.OK);
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(authResponseDto);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("Token para refrescar invalido.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error refresh token" + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(String.format("Error en token para refrescar: %s", e.getMessage()));
         }
 
     }

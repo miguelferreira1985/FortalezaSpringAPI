@@ -9,6 +9,7 @@ import com.fotaleza.fortalezaapi.service.impl.ClientServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +22,18 @@ import java.util.Objects;
 @RequestMapping("/api/v1/client")
 public class ClientController {
 
+    private final ClientServiceImpl clientService;
+
     @Autowired
-    private ClientServiceImpl clientService;
+    public ClientController(ClientServiceImpl clientService) {
+        this.clientService = clientService;
+    }
 
     @GetMapping
     @RequestMapping("/getAllClients")
     public ResponseEntity<?> getAllClients(@RequestParam("isActivate") boolean isActivate) {
 
-        List<ClientResponseDto> clientResponseDtoList = new ArrayList<>();
+        List<ClientResponseDto> clientResponseDtoList;
 
         if (isActivate) {
             clientResponseDtoList = ClientMapperDto.toModelList(clientService.getAllActiveClients());
@@ -36,9 +41,10 @@ public class ClientController {
             clientResponseDtoList = ClientMapperDto.toModelList(clientService.getAllInactiveClients());
         }
 
-        return ResponseEntity.ok(clientResponseDtoList);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(clientResponseDtoList);
     }
-
 
     @GetMapping
     public ResponseEntity<?> getClientById(@RequestParam("clientId") Integer clientId) {
@@ -49,9 +55,13 @@ public class ClientController {
 
             ClientResponseDto clientResponseDto = ClientMapperDto.toModel(client);
 
-            return ResponseEntity.ok(clientResponseDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(clientResponseDto);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("El cliente no fue encontrado.", null));
         }
     }
 
@@ -59,8 +69,10 @@ public class ClientController {
     public ResponseEntity<?> createClient(@Valid @RequestBody ClientRequestDto clientRequestDto) {
 
         if (clientService.existsByRfc(clientRequestDto.getRfc())) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Este RFC ya esta registrado para un cliente!", clientRequestDto.getRfc()));
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(
+                            String.format("El RFC %s ya esta registrado para un cliente!", clientRequestDto.getRfc()), clientRequestDto));
         }
 
         Client newClient = ClientMapperDto.toEntity(clientRequestDto);
@@ -70,7 +82,9 @@ public class ClientController {
 
         clientService.saveClient(newClient);
 
-        return ResponseEntity.ok(new MessageResponse("Cliente registrado con exito!", newClient));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new MessageResponse("Cliente registrado con exito!", newClient));
 
     }
 
@@ -81,9 +95,10 @@ public class ClientController {
 
         if (Objects.nonNull(clientToUpdate)) {
             if (clientService.existsByRfc(clientRequestDto.getRfc())) {
-                return ResponseEntity.badRequest()
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(
-                                "No se puede actualizar el cliente " + clientRequestDto.getCompanyName() + " , el cliente ya se encuentra registrado.",
+                                String.format("No se puede actualizar el cliente %s, el cliente ya se encuentra registrado.", clientRequestDto.getCompanyName()),
                                 clientRequestDto));
             }
 
@@ -92,10 +107,15 @@ public class ClientController {
 
             clientService.updateClient(clientToUpdate);
 
-            return ResponseEntity.ok(new MessageResponse("Cliente " + clientToUpdate.getCompanyName() + " actualizado con exito.", clientToUpdate));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse(
+                            String.format("Cliente %s actualizado con exito.", clientToUpdate.getCompanyName()), clientToUpdate));
         } else {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("No existe el cliente " + clientRequestDto.getCompanyName() + ".", clientRequestDto));
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse(
+                            String.format("No existe el cliente %s.", clientRequestDto.getCompanyName()), null));
         }
 
     }
@@ -105,12 +125,16 @@ public class ClientController {
 
         Client clientToDelete = clientService.getClientById(clientId);
 
-        if ( Objects.nonNull(clientToDelete) ) {
-            clientService.deleteClient(clientId);
-            return ResponseEntity.ok(new MessageResponse("Client eliminado exitosamente!", clientToDelete));
-        } else {
-            return ResponseEntity.badRequest()
+        if (!Objects.nonNull(clientToDelete) ) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new MessageResponse("No se encontro el cliente que desea eliminar", null));
         }
+
+        clientService.deleteClient(clientId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MessageResponse("Client eliminado exitosamente!", clientToDelete));
     }
 }

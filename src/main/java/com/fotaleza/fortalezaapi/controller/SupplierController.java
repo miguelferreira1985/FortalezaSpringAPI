@@ -56,7 +56,7 @@ public class SupplierController {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new MessageResponse("Proveedor no encontrado.", supplierId));
+                    .body(new MessageResponse("Proveedor no encontrado.", null));
         }
     }
 
@@ -103,8 +103,8 @@ public class SupplierController {
                     .body(new MessageResponse(" Proveerdor " + supplierToUpdate.getName() + " actualizado correctament.", supplierToUpdate));
         } else {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse("No existe el proveedor " + supplierRequestDto.getName() + ".", supplierRequestDto));
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("No existe el proveedor " + supplierRequestDto.getName() + ".", null));
         }
     }
 

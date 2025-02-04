@@ -7,6 +7,7 @@ import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.service.impl.ColorServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,12 @@ import java.util.Objects;
 @RequestMapping("/api/v1/color")
 public class ColorController {
 
+    private final ColorServiceImpl colorService;
+
     @Autowired
-    private ColorServiceImpl colorService;
+    public ColorController(ColorServiceImpl colorService) {
+        this.colorService = colorService;
+    }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
     @GetMapping("/getAllColors")
@@ -34,13 +39,9 @@ public class ColorController {
             colors = colorService.getAllInactivateColors();
         }
 
-        return ResponseEntity.ok(colors);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
-    @GetMapping("/getAllInactivateColors")
-    public List<Color> getAllInactivateColors() {
-        return colorService.getAllInactivateColors();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(colors);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
@@ -57,9 +58,13 @@ public class ColorController {
             colorResponseDto.setCreatedDateTime(color.getCreatedDateTime());
             colorResponseDto.setUpdatedDateTime(color.getUpdatedDateTime());
 
-            return ResponseEntity.ok().body(colorResponseDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(colorResponseDto);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Color no encontrado.", null));
         }
     }
 
@@ -68,8 +73,10 @@ public class ColorController {
     public ResponseEntity<?> createColor(@Valid @RequestBody ColorRequestDto colorRequestDto) {
 
         if (colorService.existsByColorName(colorRequestDto.getName())) {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Este Color ya esta registrado", colorRequestDto));
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(
+                            String.format("El color %s ya esta registrado", colorRequestDto.getName()), colorRequestDto));
         }
 
         Color newColor = new Color();
@@ -79,7 +86,10 @@ public class ColorController {
 
         colorService.saveColor(newColor);
 
-        return ResponseEntity.ok(new MessageResponse("Color " + newColor.getName() + " agregado correctamente.", newColor));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new MessageResponse(
+                        String.format("Color %s agregado correctamente.", newColor.getName()), newColor));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
@@ -90,8 +100,10 @@ public class ColorController {
 
         if (Objects.nonNull(colorToUpdated)) {
             if (colorService.existsByColorName(colorRequestDto.getName())) {
-                return ResponseEntity.badRequest()
-                        .body(new MessageResponse("No se pudo actualizar el color " + colorRequestDto.getName() + " el color ya existe.", colorRequestDto));
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new MessageResponse(
+                                String.format("No se pudo actualizar el color %s, el color ya existe.", colorRequestDto.getName()), colorRequestDto));
             }
 
             colorToUpdated.setId(colorToUpdated.getId());
@@ -100,10 +112,15 @@ public class ColorController {
 
             colorService.updateColor(colorToUpdated);
 
-            return ResponseEntity.ok(new MessageResponse("Color " + colorToUpdated.getName() + " actualicado correctamente", colorToUpdated));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse(
+                            String.format("Color %s actualicado correctamente.", colorToUpdated.getName()), colorToUpdated));
         } else {
-            return ResponseEntity.badRequest()
-                    .body(new MessageResponse("No existe el color " + colorRequestDto.getName() + ".", colorRequestDto));
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse(
+                            String.format("No existe el color %s.", colorRequestDto.getName()), null));
         }
     }
 }

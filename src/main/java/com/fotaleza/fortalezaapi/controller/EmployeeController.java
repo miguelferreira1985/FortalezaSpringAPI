@@ -13,6 +13,7 @@ import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +24,18 @@ import java.util.*;
 @RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeServiceImpl employeeService;
+    private final EmployeeServiceImpl employeeService;
+    private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    private UserServiceImpl userService;
-
-    @Autowired
-    private RoleServiceImpl roleService;
-
-    @Autowired
-    PasswordEncoder encoder;
+    public EmployeeController(EmployeeServiceImpl employeeService, UserServiceImpl userService, RoleServiceImpl roleService, PasswordEncoder encoder) {
+        this.employeeService = employeeService;
+        this.userService = userService;
+        this.roleService = roleService;
+        this.encoder = encoder;
+    }
 
     @GetMapping
     @RequestMapping("/getAllEmployees")
@@ -47,7 +49,9 @@ public class EmployeeController {
             employees = employeeService.getAllInactivateEmployees();
         }
 
-        return ResponseEntity.ok(employees);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(employees);
     }
 
     @GetMapping
@@ -71,11 +75,15 @@ public class EmployeeController {
             employeeResponseDto.setUpdatedDateTime(employee.getUpdatedDateTime());
             employeeResponseDto.setIsActivate(employee.getIsActivate());
 
-            return ResponseEntity.ok(employeeResponseDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(employeeResponseDto);
 
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new MessageResponse("Empleado no encontrado.", null));
 
     }
 
@@ -87,10 +95,13 @@ public class EmployeeController {
 
         if (employeeRequestDto.getUsername() != null) {
             if (userService.existsByUserName(employeeRequestDto.getUsername())) {
-                return ResponseEntity.badRequest().body(new MessageResponse("El Nombre de Usuario ya esta registrado", employeeRequestDto.getUsername()));
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new MessageResponse(
+                                String.format("El Nombre de Usuario %s ya esta registrado.", employeeRequestDto.getUsername()), employeeRequestDto));
             }
 
-            Set<String> strRoles = employeeRequestDto.getRole();
+            Set<String> strRoles = employeeRequestDto.getRoles();
 
             if (strRoles == null) {
                 Role cashierRole = roleService.getRoleByName(ERole.ROLE_CASHIER);
@@ -134,7 +145,10 @@ public class EmployeeController {
 
         employeeService.saveEmployee(employee);
 
-        return ResponseEntity.ok(new MessageResponse("Empleado " + employee.getFirstName() + " registrado con exito!", employee));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new MessageResponse(
+                        String.format("Empleado %s registrado con exito!", employee.getFirstName()), employee));
     }
 
     @PutMapping
@@ -145,7 +159,8 @@ public class EmployeeController {
 
         if (Objects.nonNull(employeeToUpdate)) {
             if (employeeService.existsBySsn(employeeToUpdate.getSsn())) {
-                return ResponseEntity.badRequest()
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(
                                 String.format("No se puede actualizar el empleado %s, el empleado ya se encuentra registrado", employeeRequestDto.getEmployeeId()),
                                 employeeRequestDto));
@@ -161,11 +176,14 @@ public class EmployeeController {
 
             employeeService.updateEmployee(employeeToUpdate);
 
-            return ResponseEntity.ok(new MessageResponse(
-                    String.format("Cliente %s agregado con exito!", employeeToUpdate.getFirstName()), employeeToUpdate));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse(
+                    String.format("Empleado %s actualizado con exito!", employeeToUpdate.getFirstName()), employeeToUpdate));
         }
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(new MessageResponse(
                         String.format("No existe el empleado %s.", employeeRequestDto.getFirstName()), employeeRequestDto));
 
@@ -177,18 +195,15 @@ public class EmployeeController {
         Employee employeeToDelete = employeeService.getEmployeeById(employeeId);
 
         if (Objects.nonNull(employeeToDelete)) {
-            if (!employeeToDelete.getIsActivate()) {
-                return ResponseEntity.ok(employeeToDelete);
-            }
-
             employeeService.deleteEmployee(employeeToDelete.getId());
-
-            return ResponseEntity.ok(new MessageResponse("Empleado eliminado con exitoso!", employeeToDelete));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse("Empleado eliminado con exitoso!", employeeToDelete));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("No se encontro el empleado que desea borrar.", null));
         }
-
-        return ResponseEntity.badRequest()
-                .body(new MessageResponse("No se encontro el empleado que desea borrar.", null));
-
     }
 
 }
