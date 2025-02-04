@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/presentation")
 public class PresentationController {
 
+    private final PresentationServiceImpl presentationService;
+
     @Autowired
-    private PresentationServiceImpl presentationService;
+    public PresentationController(PresentationServiceImpl presentationService) {
+        this.presentationService = presentationService;
+    }
 
     @GetMapping("/getAllPresentations")
     public ResponseEntity<?> getAllPresentations() {

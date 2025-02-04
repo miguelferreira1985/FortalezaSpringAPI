@@ -22,8 +22,12 @@ import java.util.Objects;
 @RequestMapping("/api/v1/supplier")
 public class SupplierController {
 
+    private final SupplierServiceImpl supplierService;
+
     @Autowired
-    private SupplierServiceImpl supplierService;
+    public SupplierController(SupplierServiceImpl supplierService) {
+        this.supplierService = supplierService;
+    }
 
     @GetMapping("/getAllSuppliers")
     public ResponseEntity<?> getAllSuppliers(@RequestParam("isActivate") boolean isActivate) {
@@ -66,7 +70,8 @@ public class SupplierController {
         if (supplierService.existsBySupplierName(supplierRequestDto.getName())) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse("Este proveedor ya esta registrado!", supplierRequestDto));
+                    .body(new MessageResponse(
+                            String.format("El proveedor %s ya esta registrado!", supplierRequestDto.getName()), supplierRequestDto));
         }
 
         Supplier newSupplier = SupplierMapperDto.toEntity(supplierRequestDto);
@@ -78,7 +83,8 @@ public class SupplierController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new MessageResponse("Proveedor " + newSupplier.getName() + " agregado correctamente.", newSupplier));
+                .body(new MessageResponse(
+                        String.format("Proveedor %s agregado correctamente.", newSupplier.getName()), newSupplier));
     }
 
     @PutMapping
@@ -90,7 +96,9 @@ public class SupplierController {
             if (supplierService.existsBySupplierName(supplierRequestDto.getName())) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body(new MessageResponse("No se pudo actualizar el proveedor " + supplierRequestDto.getName() + " , el proveedor ya se encuentra registrado.", supplierRequestDto));
+                        .body(new MessageResponse(
+                                String.format("No se pudo actualizar el proveedor %s, el proveedor ya se encuentra registrado.", supplierRequestDto.getName()),
+                                supplierRequestDto));
             }
 
             supplierToUpdate = SupplierMapperDto.toEntity(supplierRequestDto);
@@ -100,11 +108,13 @@ public class SupplierController {
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new MessageResponse(" Proveerdor " + supplierToUpdate.getName() + " actualizado correctament.", supplierToUpdate));
+                    .body(new MessageResponse(
+                            String.format(" Proveerdor %s actualizado correctament.", supplierToUpdate.getName()), supplierToUpdate));
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new MessageResponse("No existe el proveedor " + supplierRequestDto.getName() + ".", null));
+                    .body(new MessageResponse(
+                            String.format("No existe el proveedor %s.", supplierRequestDto.getName()), null));
         }
     }
 
