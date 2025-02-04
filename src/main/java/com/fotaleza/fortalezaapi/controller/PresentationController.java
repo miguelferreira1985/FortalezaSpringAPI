@@ -17,8 +17,5 @@ public class PresentationController {
     private PresentationServiceImpl presentationService;
 
     @GetMapping("/getAllPresentations")
-    public List<Presentation> getAllPresentations() {
-        return presentationService.getAllPresentations();
-    }
-
+    public List<Presentation> getAllActivatePresentations() { return presentationService.getAllPresentations(); }
 }

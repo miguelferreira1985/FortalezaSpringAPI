@@ -36,15 +36,18 @@ public class EmployeeController {
     PasswordEncoder encoder;
 
     @GetMapping
-    @RequestMapping("/getAllActiveEmployees")
-    public List<Employee> getAllActiveEmployees() {
-        return employeeService.getAllActiveEmployees();
-    }
+    @RequestMapping("/getAllEmployees")
+    public ResponseEntity<?> getAllEmployees(@RequestParam("isActivate") boolean isActivate) {
 
-    @GetMapping
-    @RequestMapping("/getAllInactiveEmployees")
-    public List<Employee> getAllInactiveEmployees() {
-        return employeeService.getAllInactivateEmployees();
+        List<Employee> employees;
+
+        if (isActivate) {
+            employees = employeeService.getAllActiveEmployees();
+        } else {
+            employees = employeeService.getAllInactivateEmployees();
+        }
+
+        return ResponseEntity.ok(employees);
     }
 
     @GetMapping

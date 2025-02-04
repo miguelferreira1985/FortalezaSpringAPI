@@ -24,8 +24,23 @@ public class ColorController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
     @GetMapping("/getAllColors")
-    public List<Color> getAllColors() {
-        return colorService.getAllColors();
+    public ResponseEntity<?> getAllColors(@RequestParam("isActivate") boolean isActivate) {
+
+        List<Color> colors;
+
+        if (isActivate) {
+            colors = colorService.getAllActivateColors();
+        } else {
+            colors = colorService.getAllInactivateColors();
+        }
+
+        return ResponseEntity.ok(colors);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
+    @GetMapping("/getAllInactivateColors")
+    public List<Color> getAllInactivateColors() {
+        return colorService.getAllInactivateColors();
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")

@@ -20,8 +20,21 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     @Override
-    public List<Supplier> getAllSuppliers() {
-        return supplierRepository.findAll().stream().toList();
+    public List<Supplier> getAllActivateSuppliers() {
+        return supplierRepository
+                .findAll()
+                .stream()
+                .filter(supplier -> supplier.getIsActivate().equals(Boolean.TRUE))
+                .toList();
+    }
+
+    @Override
+    public List<Supplier> getAllInactivateSuppliers() {
+        return supplierRepository
+                .findAll()
+                .stream()
+                .filter(supplier -> supplier.getIsActivate().equals(Boolean.FALSE))
+                .toList();
     }
 
     @Override

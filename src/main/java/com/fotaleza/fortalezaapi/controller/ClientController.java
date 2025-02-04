@@ -23,14 +23,20 @@ public class ClientController {
     private ClientServiceImpl clientService;
 
     @GetMapping
-    @RequestMapping("/getAllActiveClients")
-    public List<Client> getAllActiveClients() { return clientService.getAllActiveClients(); }
+    @RequestMapping("/getAllClients")
+    public ResponseEntity<?> getAllClients(@RequestParam("isActivate") boolean isActivate) {
 
-    @GetMapping
-    @RequestMapping("/getAllInactiveClients")
-    public List<Client> getAllInactiveClients() {
-        return clientService.getAllInactiveClients();
+        List<Client> clients;
+
+        if (isActivate) {
+            clients = clientService.getAllActiveClients();
+        } else {
+            clients = clientService.getAllInactiveClients();
+        }
+
+        return ResponseEntity.ok(clients);
     }
+
 
     @GetMapping
     public ResponseEntity<?> getClientById(@RequestParam("clientId") Integer clientId) {
