@@ -3,6 +3,7 @@ package com.fotaleza.fortalezaapi.controller;
 import com.fotaleza.fortalezaapi.dto.request.ClientRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.ClientResponseDto;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
+import com.fotaleza.fortalezaapi.mapper.ClientMapperDto;
 import com.fotaleza.fortalezaapi.model.Client;
 import com.fotaleza.fortalezaapi.service.impl.ClientServiceImpl;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -26,15 +28,15 @@ public class ClientController {
     @RequestMapping("/getAllClients")
     public ResponseEntity<?> getAllClients(@RequestParam("isActivate") boolean isActivate) {
 
-        List<Client> clients;
+        List<ClientResponseDto> clientResponseDtoList = new ArrayList<>();
 
         if (isActivate) {
-            clients = clientService.getAllActiveClients();
+            clientResponseDtoList = ClientMapperDto.toModelList(clientService.getAllActiveClients());
         } else {
-            clients = clientService.getAllInactiveClients();
+            clientResponseDtoList = ClientMapperDto.toModelList(clientService.getAllInactiveClients());
         }
 
-        return ResponseEntity.ok(clients);
+        return ResponseEntity.ok(clientResponseDtoList);
     }
 
 
@@ -45,18 +47,7 @@ public class ClientController {
 
         if (Objects.nonNull(client)) {
 
-            ClientResponseDto clientResponseDto = new ClientResponseDto();
-            clientResponseDto.setId(client.getId());
-            clientResponseDto.setCompanyName(client.getCompanyName());
-            clientResponseDto.setFirstName(client.getFirstName());
-            clientResponseDto.setLastName(client.getLastName());
-            clientResponseDto.setAddress(client.getAddress());
-            clientResponseDto.setEmail(client.getEmail());
-            clientResponseDto.setPhone(client.getPhone());
-            clientResponseDto.setRfc(client.getRfc());
-            clientResponseDto.setCreatedDateTime(client.getCreatedDateTime());
-            clientResponseDto.setUpdatedDateTime(client.getUpdatedDateTime());
-            clientResponseDto.setIsActivate(client.getIsActivate());
+            ClientResponseDto clientResponseDto = ClientMapperDto.toModel(client);
 
             return ResponseEntity.ok(clientResponseDto);
         } else {
@@ -72,18 +63,10 @@ public class ClientController {
                     .body(new MessageResponse("Este RFC ya esta registrado para un cliente!", clientRequestDto.getRfc()));
         }
 
-        Client newClient = new Client();
-        newClient.setCompanyName(clientRequestDto.getCompanyName());
-        newClient.setFirstName(clientRequestDto.getFirstName());
-        newClient.setLastName(clientRequestDto.getLastName());
-        newClient.setAddress(clientRequestDto.getAddress());
-        newClient.setEmail(clientRequestDto.getEmail());
-        newClient.setPhone(clientRequestDto.getPhone());
-        newClient.setRfc(clientRequestDto.getRfc());
+        Client newClient = ClientMapperDto.toEntity(clientRequestDto);
         newClient.setCreatedDateTime(new Date());
         newClient.setUpdatedDateTime(new Date());
         newClient.setIsActivate(true);
-
 
         clientService.saveClient(newClient);
 
@@ -104,13 +87,7 @@ public class ClientController {
                                 clientRequestDto));
             }
 
-            clientToUpdate.setCompanyName(clientRequestDto.getCompanyName());
-            clientToUpdate.setFirstName(clientRequestDto.getFirstName());
-            clientToUpdate.setLastName(clientRequestDto.getLastName());
-            clientToUpdate.setAddress(clientRequestDto.getAddress());
-            clientToUpdate.setEmail(clientRequestDto.getEmail());
-            clientToUpdate.setPhone(clientRequestDto.getPhone());
-            clientToUpdate.setRfc(clientRequestDto.getRfc());
+            clientToUpdate = ClientMapperDto.toEntity(clientRequestDto);
             clientToUpdate.setUpdatedDateTime(new Date());
 
             clientService.updateClient(clientToUpdate);
@@ -129,21 +106,11 @@ public class ClientController {
         Client clientToDelete = clientService.getClientById(clientId);
 
         if ( Objects.nonNull(clientToDelete) ) {
-            if (!clientToDelete.getIsActivate()) {
-                return ResponseEntity.badRequest()
-                        .body(new MessageResponse(
-                                "El cliente ya estaba eliminado!",
-                                clientToDelete));
-            }
-
             clientService.deleteClient(clientId);
-
             return ResponseEntity.ok(new MessageResponse("Client eliminado exitosamente!", clientToDelete));
         } else {
             return ResponseEntity.badRequest()
                     .body(new MessageResponse("No se encontro el cliente que desea eliminar", null));
         }
-        
     }
-
 }
