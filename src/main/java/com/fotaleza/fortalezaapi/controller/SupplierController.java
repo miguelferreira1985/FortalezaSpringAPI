@@ -9,6 +9,7 @@ import com.fotaleza.fortalezaapi.service.impl.SupplierServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,9 @@ public class SupplierController {
             supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllInactivateSuppliers());
         }
 
-        return ResponseEntity.ok(supplierResponseDtoList);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(supplierResponseDtoList);
     }
 
     @GetMapping()
@@ -47,9 +50,13 @@ public class SupplierController {
 
             SupplierResponseDto supplierResponseDto = SupplierMapperDto.toModel(supplier);
 
-            return ResponseEntity.ok(supplierResponseDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(supplierResponseDto);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Proveedor no encontrado.", supplierId));
         }
     }
 
@@ -57,7 +64,8 @@ public class SupplierController {
     public ResponseEntity<?> createSupplier(@Valid @RequestBody SupplierRequestDto supplierRequestDto) {
 
         if (supplierService.existsBySupplierName(supplierRequestDto.getName())) {
-            return ResponseEntity.badRequest()
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse("Este proveedor ya esta registrado!", supplierRequestDto));
         }
 
@@ -68,7 +76,9 @@ public class SupplierController {
 
         supplierService.saveSupplier(newSupplier);
 
-        return ResponseEntity.ok(new MessageResponse("Proveedor " + newSupplier.getName() + " agregado correctamente.", newSupplier));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new MessageResponse("Proveedor " + newSupplier.getName() + " agregado correctamente.", newSupplier));
     }
 
     @PutMapping
@@ -78,7 +88,8 @@ public class SupplierController {
 
         if (Objects.nonNull(supplierToUpdate)) {
             if (supplierService.existsBySupplierName(supplierRequestDto.getName())) {
-                return ResponseEntity.badRequest()
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse("No se pudo actualizar el proveedor " + supplierRequestDto.getName() + " , el proveedor ya se encuentra registrado.", supplierRequestDto));
             }
 
@@ -87,9 +98,12 @@ public class SupplierController {
 
             supplierService.updateSupplier(supplierToUpdate);
 
-            return ResponseEntity.ok(new MessageResponse(" Proveerdor " + supplierToUpdate.getName() + " actualizado correctament.", supplierToUpdate));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse(" Proveerdor " + supplierToUpdate.getName() + " actualizado correctament.", supplierToUpdate));
         } else {
-            return ResponseEntity.badRequest()
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse("No existe el proveedor " + supplierRequestDto.getName() + ".", supplierRequestDto));
         }
     }
@@ -101,11 +115,13 @@ public class SupplierController {
 
         if (Objects.nonNull(supplierToDelete)) {
             supplierService.deleteSupplier(supplierToDelete.getId());
-            return ResponseEntity.ok(new MessageResponse("Empleado eliminado con exitoso!", supplierToDelete));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new MessageResponse("Empleado eliminado con exitoso!", supplierToDelete));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("No se encontro el empleado que desea borrar.", null));
         }
-
-        return ResponseEntity.badRequest()
-                .body(new MessageResponse("No se encontro el empleado que desea borrar.", null));
-
     }
 }
