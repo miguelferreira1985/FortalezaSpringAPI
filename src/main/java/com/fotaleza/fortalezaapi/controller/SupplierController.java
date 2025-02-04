@@ -32,7 +32,7 @@ public class SupplierController {
     @GetMapping("/getAllSuppliers")
     public ResponseEntity<?> getAllSuppliers(@RequestParam("isActivate") boolean isActivate) {
 
-        List<SupplierResponseDto> supplierResponseDtoList = new ArrayList<>();
+        List<SupplierResponseDto> supplierResponseDtoList;
 
         if (isActivate) {
             supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllActivateSuppliers());
