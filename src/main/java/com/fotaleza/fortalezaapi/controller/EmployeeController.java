@@ -3,6 +3,7 @@ package com.fotaleza.fortalezaapi.controller;
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDto;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
+import com.fotaleza.fortalezaapi.mapper.EmployeeMapperDto;
 import com.fotaleza.fortalezaapi.model.ERole;
 import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.Role;
@@ -41,17 +42,17 @@ public class EmployeeController {
     @RequestMapping("/getAllEmployees")
     public ResponseEntity<?> getAllEmployees(@RequestParam("isActivate") boolean isActivate) {
 
-        List<Employee> employees;
+        List<EmployeeResponseDto> employeeResponseDtoList;
 
         if (isActivate) {
-            employees = employeeService.getAllActiveEmployees();
+            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllActiveEmployees());
         } else {
-            employees = employeeService.getAllInactivateEmployees();
+            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllInactivateEmployees());
         }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(employees);
+                .body(employeeResponseDtoList);
     }
 
     @GetMapping
@@ -61,19 +62,7 @@ public class EmployeeController {
 
         if(Objects.nonNull(employee)) {
 
-            EmployeeResponseDto employeeResponseDto = new EmployeeResponseDto();
-            employeeResponseDto.setEmployeeId(employee.getId());
-            employeeResponseDto.setFirstName(employee.getFirstName());
-            employeeResponseDto.setLastName(employee.getLastName());
-            employeeResponseDto.setEmail(employee.getEmail());
-            employeeResponseDto.setPhone(employee.getPhone());
-            employeeResponseDto.setAddress(employee.getAddress());
-            employeeResponseDto.setSsn(employeeResponseDto.getSsn());
-            employeeResponseDto.setUsername(employee.getUser().getUsername());
-            employeeResponseDto.setRoles(employee.getUser().getRoles().stream().toList());
-            employeeResponseDto.setCreatedDateTime(employee.getCreatedDateTime());
-            employeeResponseDto.setUpdatedDateTime(employee.getUpdatedDateTime());
-            employeeResponseDto.setIsActivate(employee.getIsActivate());
+            EmployeeResponseDto employeeResponseDto = EmployeeMapperDto.toModel(employee);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -131,13 +120,7 @@ public class EmployeeController {
             user.setRoles(roles);
         }
 
-        Employee employee = new Employee();
-        employee.setFirstName(employeeRequestDto.getFirstName());
-        employee.setLastName(employeeRequestDto.getLastName());
-        employee.setEmail(employeeRequestDto.getEmail());
-        employee.setPhone(employeeRequestDto.getPhone());
-        employee.setAddress(employeeRequestDto.getAddress());
-        employee.setSsn(employeeRequestDto.getSsn());
+        Employee employee = EmployeeMapperDto.toEntity(employeeRequestDto);
         employee.setUser(user);
         employee.setCreatedDateTime(new Date());
         employee.setUpdatedDateTime(new Date());
@@ -166,12 +149,7 @@ public class EmployeeController {
                                 employeeRequestDto));
             }
 
-            employeeToUpdate.setFirstName(employeeRequestDto.getFirstName());
-            employeeToUpdate.setLastName(employeeRequestDto.getLastName());
-            employeeToUpdate.setEmail(employeeRequestDto.getEmail());
-            employeeToUpdate.setPhone(employeeRequestDto.getPhone());
-            employeeToUpdate.setAddress(employeeRequestDto.getAddress());
-            employeeToUpdate.setSsn(employeeRequestDto.getSsn());
+            employeeToUpdate = EmployeeMapperDto.toEntity(employeeRequestDto);
             employeeToUpdate.setUpdatedDateTime(new Date());
 
             employeeService.updateEmployee(employeeToUpdate);

@@ -2,6 +2,7 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.request.ColorRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.ColorResponseDto;
+import com.fotaleza.fortalezaapi.mapper.ColorMapperDto;
 import com.fotaleza.fortalezaapi.model.Color;
 import com.fotaleza.fortalezaapi.dto.response.MessageResponse;
 import com.fotaleza.fortalezaapi.service.impl.ColorServiceImpl;
@@ -31,17 +32,17 @@ public class ColorController {
     @GetMapping("/getAllColors")
     public ResponseEntity<?> getAllColors(@RequestParam("isActivate") boolean isActivate) {
 
-        List<Color> colors;
+        List<ColorResponseDto> colorResponseDtoList;
 
         if (isActivate) {
-            colors = colorService.getAllActivateColors();
+            colorResponseDtoList = ColorMapperDto.toModelList(colorService.getAllActivateColors());
         } else {
-            colors = colorService.getAllInactivateColors();
+            colorResponseDtoList = ColorMapperDto.toModelList(colorService.getAllInactivateColors());
         }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(colors);
+                .body(colorResponseDtoList);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CASHIER')")
@@ -52,11 +53,7 @@ public class ColorController {
 
         if (Objects.nonNull(color)) {
 
-            ColorResponseDto colorResponseDto = new ColorResponseDto();
-            colorResponseDto.setId(color.getId());
-            colorResponseDto.setName(color.getName());
-            colorResponseDto.setCreatedDateTime(color.getCreatedDateTime());
-            colorResponseDto.setUpdatedDateTime(color.getUpdatedDateTime());
+            ColorResponseDto colorResponseDto = ColorMapperDto.toModel(color);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -76,13 +73,13 @@ public class ColorController {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(
-                            String.format("El color %s ya esta registrado", colorRequestDto.getName()), colorRequestDto));
+                            String.format("El color %s ya esta registrado.", colorRequestDto.getName()), colorRequestDto));
         }
 
-        Color newColor = new Color();
-        newColor.setName(colorRequestDto.getName());
+        Color newColor = ColorMapperDto.toEntity(colorRequestDto);
         newColor.setCreatedDateTime(new Date());
         newColor.setUpdatedDateTime(new Date());
+        newColor.setIsActivate(true);
 
         colorService.saveColor(newColor);
 
@@ -106,8 +103,7 @@ public class ColorController {
                                 String.format("No se pudo actualizar el color %s, el color ya existe.", colorRequestDto.getName()), colorRequestDto));
             }
 
-            colorToUpdated.setId(colorToUpdated.getId());
-            colorToUpdated.setName(colorRequestDto.getName());
+            colorToUpdated = ColorMapperDto.toEntity(colorRequestDto);
             colorToUpdated.setUpdatedDateTime(new Date());
 
             colorService.updateColor(colorToUpdated);
