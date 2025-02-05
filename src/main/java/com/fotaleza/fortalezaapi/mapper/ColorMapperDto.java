@@ -3,7 +3,6 @@ package com.fotaleza.fortalezaapi.mapper;
 import com.fotaleza.fortalezaapi.dto.request.ColorRequestDto;
 import com.fotaleza.fortalezaapi.dto.response.ColorResponseDto;
 import com.fotaleza.fortalezaapi.model.Color;
-import com.fotaleza.fortalezaapi.repository.ColorRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
