@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class ColorServiceImpl implements IColorService {
 
+    private final ColorRepository colorRepository;
+
     @Autowired
-    private ColorRepository colorRepository;
+    public ColorServiceImpl(ColorRepository colorRepository) {
+        this.colorRepository = colorRepository;
+    }
 
     @Override
     public Color saveColor(Color color) {

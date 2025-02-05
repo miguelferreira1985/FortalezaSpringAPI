@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class SupplierServiceImpl implements ISupplierService {
 
+    private final SupplierRepository supplierRepository;
+
     @Autowired
-    private SupplierRepository supplierRepository;
+    public SupplierServiceImpl(SupplierRepository supplierRepository) {
+        this.supplierRepository = supplierRepository;
+    }
 
     @Override
     public Supplier saveSupplier(Supplier supplier) {

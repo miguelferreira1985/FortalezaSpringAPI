@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class PresentationServiceImpl implements IPresentationService {
 
+    private final PresentationRepository presentationRepository;
+
     @Autowired
-    private PresentationRepository presentationRepository;
+    public PresentationServiceImpl(PresentationRepository presentationRepository) {
+        this.presentationRepository = presentationRepository;
+    }
 
     @Override
     public List<Presentation> getAllPresentations() {
