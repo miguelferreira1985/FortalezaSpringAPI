@@ -11,6 +11,7 @@ public class ColumnNames {
     public static final String COLUMN_CLIENT_ID = "clientId";
     public static final String COLUMN_EMPLOYEE_ID = "employeeId";
     public static final String COLUMN_PRODUCT_ID = "productId";
+    public static final String COLUMN_SUBCATEGORY_ID = "subcategoryId";
     public static final String COLUMN_CREATED_DATE_TIME = "createdDateTime";
     public static final String COLUMN_UPDATED_DATE_TIME = "updatedDateTime";
     public static final String COLUMN_IS_ACTIVATE = "isActivate";

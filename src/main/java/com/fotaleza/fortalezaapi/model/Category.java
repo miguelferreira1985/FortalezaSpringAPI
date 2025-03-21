@@ -25,4 +25,9 @@ public class Category {
     @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
     private ECategory name;
+
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY,
+            mappedBy = "category", cascade = CascadeType.PERSIST)
+    private Subcategory subcategory;
 }
