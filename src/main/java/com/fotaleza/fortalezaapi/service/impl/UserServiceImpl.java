@@ -23,7 +23,13 @@ public class UserServiceImpl implements IUserService {
     public User saveUser(User user) { return userRepository.save(user); }
 
     @Override
-    public List<User> getAllUsers() { return userRepository.findAll(); }
+    public List<User> getAllUsers(Boolean isActivate) {
+        return userRepository
+                .findAll()
+                .stream()
+                .filter(user-> user.getIsActivate().equals(isActivate))
+                .toList();
+    }
 
     @Override
     public User getUserById(long userId) {

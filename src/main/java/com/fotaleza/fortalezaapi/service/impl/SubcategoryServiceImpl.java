@@ -24,20 +24,11 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     }
 
     @Override
-    public List<Subcategory> getAllActiveSubcategories() {
+    public List<Subcategory> getAllSubcategories(Boolean isActivate) {
         return subcategoryRepository
                 .findAll()
                 .stream()
-                .filter(subcategory -> subcategory.getIsActivate().equals(Boolean.TRUE))
-                .toList();
-    }
-
-    @Override
-    public List<Subcategory> getAllInactivateSubcategories() {
-        return subcategoryRepository
-                .findAll()
-                .stream()
-                .filter(subcategory -> subcategory.getIsActivate().equals(Boolean.TRUE))
+                .filter(subcategory -> subcategory.getIsActivate().equals(isActivate))
                 .toList();
     }
 

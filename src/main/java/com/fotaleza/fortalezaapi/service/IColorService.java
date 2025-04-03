@@ -7,8 +7,7 @@ import java.util.List;
 public interface IColorService {
 
     Color saveColor(Color color);
-    List<Color> getAllActivateColors();
-    List<Color> getAllInactivateColors();
+    List<Color> getAllColors(Boolean isActivate);
     Color getColorById(Integer colorId);
     Color getColorByName(String colorName);
     Boolean existsByColorName(String colorName);

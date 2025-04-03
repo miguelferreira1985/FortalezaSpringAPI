@@ -42,12 +42,12 @@ public class EmployeeController {
     @RequestMapping("/getAllEmployees")
     public ResponseEntity<?> getAllEmployees(@RequestParam("isActivate") boolean isActivate) {
 
-        List<EmployeeResponseDto> employeeResponseDtoList;
+        List<EmployeeResponseDto> employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllEmployees(isActivate));
 
         if (isActivate) {
-            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllActiveEmployees());
-        } else {
-            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllInactivateEmployees());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Empleados no encontrados", null));
         }
 
         return ResponseEntity
