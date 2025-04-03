@@ -21,7 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getAllCategories")
-    public ResponseEntity<?> getAllCategories(@RequestParam("isActivate") boolean isActivate) {
+    public ResponseEntity<?> getAllCategories() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categoryService.getAllCategories());

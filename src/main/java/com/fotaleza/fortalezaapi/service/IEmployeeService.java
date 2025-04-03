@@ -7,8 +7,7 @@ import java.util.List;
 public interface IEmployeeService {
 
     Employee saveEmployee(Employee employee);
-    List<Employee> getAllActiveEmployees();
-    List<Employee> getAllInactivateEmployees();
+    List<Employee> getAllEmployees(Boolean isActivate);
     Employee getEmployeeById(Integer employeeId);
     Boolean existsBySsn(String ssn);
     Employee updateEmployee(Employee employee);

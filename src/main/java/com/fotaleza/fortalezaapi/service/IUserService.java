@@ -7,7 +7,7 @@ import java.util.List;
 public interface IUserService {
 
     User saveUser(User user);
-    List<User> getAllUsers();
+    List<User> getAllUsers(Boolean isActivate);
     User getUserById(long userId);
     User getByUserName(String userName);
     Boolean existsByUserName(String userName);

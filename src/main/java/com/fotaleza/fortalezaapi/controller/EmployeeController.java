@@ -13,6 +13,7 @@ import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +43,12 @@ public class EmployeeController {
     @RequestMapping("/getAllEmployees")
     public ResponseEntity<?> getAllEmployees(@RequestParam("isActivate") boolean isActivate) {
 
-        List<EmployeeResponseDto> employeeResponseDtoList;
+        List<EmployeeResponseDto> employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllEmployees(isActivate));
 
         if (isActivate) {
-            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllActiveEmployees());
-        } else {
-            employeeResponseDtoList = EmployeeMapperDto.toModelList(employeeService.getAllInactivateEmployees());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Empleados no encontrados", null));
         }
 
         return ResponseEntity

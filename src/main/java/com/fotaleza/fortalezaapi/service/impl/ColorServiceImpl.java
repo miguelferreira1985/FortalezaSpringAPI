@@ -24,20 +24,11 @@ public class ColorServiceImpl implements IColorService {
     }
 
     @Override
-    public List<Color> getAllActivateColors() {
+    public List<Color> getAllColors(Boolean isActivate) {
         return colorRepository
                 .findAll()
                 .stream()
-                .filter(color -> color.getIsActivate().equals(Boolean.TRUE))
-                .toList();
-    }
-
-    @Override
-    public List<Color> getAllInactivateColors() {
-        return colorRepository
-                .findAll()
-                .stream()
-                .filter(color -> color.getIsActivate().equals(Boolean.FALSE))
+                .filter(color -> color.getIsActivate().equals(isActivate))
                 .toList();
     }
 

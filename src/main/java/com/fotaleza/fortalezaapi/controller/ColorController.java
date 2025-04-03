@@ -32,12 +32,12 @@ public class ColorController {
     @GetMapping("/getAllColors")
     public ResponseEntity<?> getAllColors(@RequestParam("isActivate") boolean isActivate) {
 
-        List<ColorResponseDto> colorResponseDtoList;
+        List<ColorResponseDto> colorResponseDtoList = ColorMapperDto.toModelList(colorService.getAllColors(isActivate));
 
-        if (isActivate) {
-            colorResponseDtoList = ColorMapperDto.toModelList(colorService.getAllActivateColors());
-        } else {
-            colorResponseDtoList = ColorMapperDto.toModelList(colorService.getAllInactivateColors());
+        if (colorResponseDtoList.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Colores no encontrados", null));
         }
 
         return ResponseEntity

@@ -24,17 +24,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
-    public List<Employee> getAllActiveEmployees() {
+    public List<Employee> getAllEmployees(Boolean isActivate) {
         return employeeRepository
                 .findAll()
                 .stream()
-                .filter(employee -> employee.getIsActivate().equals(Boolean.TRUE))
+                .filter(employee -> employee.getIsActivate().equals(isActivate))
                 .toList();
-    }
-
-    @Override
-    public List<Employee> getAllInactivateEmployees() {
-        return List.of();
     }
 
     @Override

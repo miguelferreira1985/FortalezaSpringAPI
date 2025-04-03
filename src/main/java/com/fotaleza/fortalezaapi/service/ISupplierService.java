@@ -7,8 +7,7 @@ import java.util.List;
 public interface ISupplierService {
 
     Supplier saveSupplier(Supplier supplier);
-    List<Supplier> getAllActivateSuppliers();
-    List<Supplier> getAllInactivateSuppliers();
+    List<Supplier> getAllSuppliers(Boolean isActivated);
     Supplier getSupplierById(Integer supplierId);
     Supplier getSupplierByName(String supplierName);
     Boolean existsBySupplierName(String supplierName);

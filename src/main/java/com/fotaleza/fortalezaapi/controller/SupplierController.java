@@ -31,12 +31,12 @@ public class SupplierController {
     @GetMapping("/getAllSuppliers")
     public ResponseEntity<?> getAllSuppliers(@RequestParam("isActivate") boolean isActivate) {
 
-        List<SupplierResponseDto> supplierResponseDtoList;
+        List<SupplierResponseDto> supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllSuppliers(isActivate));
 
         if (isActivate) {
-            supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllActivateSuppliers());
-        } else {
-            supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllInactivateSuppliers());
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Proveedores no encontrados", null));
         }
 
         return ResponseEntity
@@ -126,11 +126,11 @@ public class SupplierController {
             supplierService.deleteSupplier(supplierToDelete.getId());
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new MessageResponse("Empleado eliminado con exitoso!", supplierToDelete));
+                    .body(new MessageResponse("El Proveedor eliminado!", supplierToDelete));
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new MessageResponse("No se encontro el empleado que desea borrar.", null));
+                    .body(new MessageResponse("No se encontró el proveedor que desea borrar.", null));
         }
     }
 }

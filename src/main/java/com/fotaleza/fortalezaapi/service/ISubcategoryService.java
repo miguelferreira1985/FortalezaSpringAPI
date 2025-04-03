@@ -7,8 +7,7 @@ import java.util.List;
 public interface ISubcategoryService {
 
     Subcategory saveSubcategory(Subcategory subcategory);
-    List<Subcategory> getAllActiveSubcategories();
-    List<Subcategory> getAllInactivateSubcategories();
+    List<Subcategory> getAllSubcategories(Boolean isActivate);
     Subcategory getSubcategoryById(Integer subcagoryId);
     Subcategory getSubcategoryByName(String subcategoryName);
     Boolean existsBySubcategoryName(String subcategoryName);

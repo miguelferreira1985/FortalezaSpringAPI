@@ -24,20 +24,11 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
-    public List<Client> getAllActiveClients() {
+    public List<Client> getAllClients(Boolean isActivate) {
         return clientRepository
                 .findAll()
                 .stream()
-                .filter(client -> client.getIsActivate().equals(Boolean.TRUE))
-                .toList();
-    }
-
-    @Override
-    public List<Client> getAllInactiveClients() {
-        return clientRepository
-                .findAll()
-                .stream()
-                .filter(client -> client.getIsActivate().equals(Boolean.FALSE))
+                .filter(client -> client.getIsActivate().equals(isActivate))
                 .toList();
     }
 
