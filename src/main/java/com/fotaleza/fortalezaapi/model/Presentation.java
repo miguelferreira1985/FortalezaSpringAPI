@@ -6,24 +6,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
-@Table(name = TableNames.TABLE_PRESENTATIONS,
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = ColumnNames.COLUMN_NAME)
-    })
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = TableNames.TABLE_PRESENTATIONS)
 public class Presentation {
 
     @Id
     @Column(name = ColumnNames.COLUMN_PRESENTATION_ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
+    @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private EPresentation name;
 
 }
