@@ -6,10 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
