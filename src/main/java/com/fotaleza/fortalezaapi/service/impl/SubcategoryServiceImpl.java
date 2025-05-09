@@ -3,58 +3,64 @@ package com.fotaleza.fortalezaapi.service.impl;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
 import com.fotaleza.fortalezaapi.service.ISubcategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class SubcategoryServiceImpl implements ISubcategoryService {
 
     private final SubcategoryRepository subcategoryRepository;
 
-    @Autowired
-    public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository) {
-        this.subcategoryRepository = subcategoryRepository;
-    }
-
     @Override
-    public Subcategory saveSubcategory(Subcategory subcategory) {
+    public Subcategory createSubcategory(Subcategory subcategory) {
+        if (subcategoryRepository.existsByName(subcategory.getName())) {
+            throw new IllegalArgumentException("La Subcategoria ya existe.");
+        }
         return subcategoryRepository.save(subcategory);
     }
 
     @Override
-    public List<Subcategory> getAllSubcategories(Boolean isActivate) {
-        return subcategoryRepository
-                .findAll()
-                .stream()
-                .filter(subcategory -> subcategory.getIsActivate().equals(isActivate))
-                .toList();
-    }
+    public Subcategory updateSubcategory(Integer subcategoryId, Subcategory subcategory) {
+        Subcategory subcategoryToUpdate = subcategoryRepository.findById(subcategoryId)
+                .orElseThrow(() -> new IllegalArgumentException("La Subcategoria no existe."));
 
-    @Override
-    public Subcategory getSubcategoryById(Integer subcagoryId) {
-        return subcategoryRepository.findById(subcagoryId).orElse(null);
-    }
+        subcategoryToUpdate.setName(subcategory.getName());
+        subcategoryToUpdate.setDescription(subcategory.getDescription());
+        subcategoryToUpdate.setCategory(subcategory.getCategory());
+        subcategoryToUpdate.setProducts(subcategory.getProducts());
+        subcategoryToUpdate.setIsActivate(subcategory.getIsActivate());
 
-    @Override
-    public Subcategory getSubcategoryByName(String subcategoryName) {
-        return subcategoryRepository.findByName(subcategoryName)
-                .orElseThrow(() -> new RuntimeException(String.format("Subactegoria no encontrada con el nombre: %s", subcategoryName)));
-    }
-
-    @Override
-    public Boolean existsBySubcategoryName(String subcategoryName) {
-        return subcategoryRepository.existsByName(subcategoryName);
-    }
-
-    @Override
-    public Subcategory updateSubcategory(Subcategory subcategory) {
         return subcategoryRepository.save(subcategory);
     }
 
     @Override
     public void deleteSubcategory(Integer subcategoryId) {
-        subcategoryRepository.deleteById(subcategoryId);
+        Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
+                .orElseThrow(() -> new IllegalArgumentException("La Subcategoria no existe."));
+        subcategory.setIsActivate(false);
+        subcategoryRepository.save(subcategory);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Subcategory> getSubcategoryById(Integer subcategoryId) { return subcategoryRepository.findById(subcategoryId); }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Subcategory> getAllSubcategories( ) { return subcategoryRepository.findAll(); }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Subcategory> getActiveSubcategories() {
+        return subcategoryRepository.findAll()
+                .stream()
+                .filter(Subcategory::getIsActivate)
+                .toList();
     }
 }

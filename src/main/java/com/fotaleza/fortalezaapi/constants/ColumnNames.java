@@ -28,6 +28,10 @@ public class ColumnNames {
     public static final String COLUMN_ADDRESS = "address";
     public static final String COLUMN_CONTACT = "contact";
     public static final String COLUMN_SSN = "ssn";
-    public static final String COLUMNS_STOCK = "stock";
+    public static final String COLUMN_STOCK = "stock";
+    public static final String COLUMN_CODE = "code";
+    public static final String COLUMN_PRICE = "price";
+    public static final String COLUMN_COST = "cost";
+    public static final String COLUMN_MINIMUM_STOCK = "minimumStock";
 
 }

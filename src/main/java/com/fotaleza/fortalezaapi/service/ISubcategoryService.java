@@ -3,14 +3,15 @@ package com.fotaleza.fortalezaapi.service;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ISubcategoryService {
 
-    Subcategory saveSubcategory(Subcategory subcategory);
-    List<Subcategory> getAllSubcategories(Boolean isActivate);
-    Subcategory getSubcategoryById(Integer subcagoryId);
-    Subcategory getSubcategoryByName(String subcategoryName);
-    Boolean existsBySubcategoryName(String subcategoryName);
-    Subcategory updateSubcategory(Subcategory subcategory);
+    Subcategory createSubcategory(Subcategory subcategory);
+    Subcategory updateSubcategory(Integer subcategoryId, Subcategory subcategory);
     void deleteSubcategory(Integer subcategoryId);
+    Optional<Subcategory> getSubcategoryById(Integer subcategoryId);
+    List<Subcategory> getAllSubcategories();
+    List<Subcategory> getActiveSubcategories();
+
 }
