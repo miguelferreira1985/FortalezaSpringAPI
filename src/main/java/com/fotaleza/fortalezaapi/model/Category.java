@@ -5,16 +5,17 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Table(name = TableNames.TABLE_CATEGORIES,
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = ColumnNames.COLUMN_NAME)
-    })
+@ToString(exclude = "subcategories")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = TableNames.TABLE_CATEGORIES)
 public class Category {
 
     @Id
@@ -23,11 +24,9 @@ public class Category {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = ColumnNames.COLUMN_NAME, length = 50, nullable = false)
+    @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private ECategory name;
 
-    @ToString.Exclude
-    @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "category", cascade = CascadeType.PERSIST)
-    private Subcategory subcategory;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Subcategory> subcategories = new HashSet<>();
 }
