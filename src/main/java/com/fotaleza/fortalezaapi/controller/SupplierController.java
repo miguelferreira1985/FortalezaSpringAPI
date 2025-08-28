@@ -31,7 +31,7 @@ public class SupplierController {
     @GetMapping("/getAllSuppliers")
     public ResponseEntity<?> getAllSuppliers(@RequestParam("isActivate") boolean isActivate) {
 
-        List<SupplierResponseDto> supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllSuppliers(isActivate));
+        List<SupplierResponseDto> supplierResponseDtoList = SupplierMapperDto.toModelListResponse(supplierService.getAllSuppliers());
 
         if (isActivate) {
             return ResponseEntity
@@ -78,7 +78,7 @@ public class SupplierController {
         newSupplier.setUpdatedDateTime(new Date());
         newSupplier.setIsActivate(true);
 
-        supplierService.saveSupplier(newSupplier);
+        supplierService.createSupplier(newSupplier);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -103,7 +103,7 @@ public class SupplierController {
             supplierToUpdate = SupplierMapperDto.toEntity(supplierRequestDto);
             supplierToUpdate.setUpdatedDateTime(new Date());
 
-            supplierService.updateSupplier(supplierToUpdate);
+            supplierService.updateSupplier(, supplierToUpdate);
 
             return ResponseEntity
                     .status(HttpStatus.OK)

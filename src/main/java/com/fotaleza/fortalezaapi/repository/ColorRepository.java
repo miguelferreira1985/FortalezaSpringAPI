@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface ColorRepository extends JpaRepository<Color, Integer> {
 
     Optional<Color> findByName(String colorName);
-    Boolean existsByName(String colorName);
+    boolean existsByName(String colorName);
 
 }

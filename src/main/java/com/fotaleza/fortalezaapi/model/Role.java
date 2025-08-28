@@ -6,24 +6,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
-@Table(name = TableNames.TABLE_ROLES,
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = ColumnNames.COLUMN_NAME)
-    })
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = TableNames.TABLE_ROLES)
 public class Role {
 
     @Id
     @Column(name = ColumnNames.COLUMN_ROLE_ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = ColumnNames.COLUMN_NAME, length = 20, nullable = false)
+    @Column(name = ColumnNames.COLUMN_NAME, length = 20, unique = true, nullable = false)
     private ERole name;
 
 }
