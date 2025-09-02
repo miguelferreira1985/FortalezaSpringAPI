@@ -4,17 +4,14 @@ import com.fotaleza.fortalezaapi.exception.UserAlreadyExistsException;
 import com.fotaleza.fortalezaapi.model.ERole;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
-import com.fotaleza.fortalezaapi.repository.RoleRepository;
 import com.fotaleza.fortalezaapi.repository.UserRepository;
 import com.fotaleza.fortalezaapi.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -68,11 +65,6 @@ public class UserServiceImpl implements IUserService {
     public User getByUserName(String userName) {
         return userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el nombre: " + userName));
-    }
-
-    @Override
-    public Boolean existsByUserName(String userName) {
-        return userRepository.existsByUsername(userName);
     }
 
 }
