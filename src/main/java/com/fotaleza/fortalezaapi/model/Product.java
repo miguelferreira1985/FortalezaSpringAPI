@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,38 +33,26 @@ public class Product {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 
-    @NotBlank
-    @Size(max = 20)
     @Column(name = ColumnNames.COLUMN_CODE, length = 20, unique = true, nullable = false)
     private String code;
 
     @Column(name = ColumnNames.COLUMN_DESCRIPTION)
     private String description;
 
-    @NotNull
-    @DecimalMin("0.0")
     @Column(name = ColumnNames.COLUMN_PRICE, nullable = false)
-    private Double price;
+    private BigDecimal price;
 
-    @NotNull
-    @DecimalMin("0.0")
     @Column(name = ColumnNames.COLUMN_COST, nullable = false)
-    private Double cost;
+    private BigDecimal cost;
 
-    @NotNull
-    @Min(0)
     @Column(name = ColumnNames.COLUMN_STOCK, nullable = false)
-    private Double stock;
+    private BigDecimal stock;
 
-    @NotNull
-    @Min(0)
     @Column(name = ColumnNames.COLUMN_MINIMUM_STOCK, nullable = false)
-    private Double minimumStock;
+    private BigDecimal minimumStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ColumnNames.COLUMN_SUBCATEGORY_ID)
@@ -87,6 +76,7 @@ public class Product {
     @PrePersist
     protected void onCreate() {
         this.createdDatetime = LocalDateTime.now();
+        this.isActivate = true;
     }
 
     @PreUpdate

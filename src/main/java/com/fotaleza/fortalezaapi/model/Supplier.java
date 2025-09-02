@@ -27,20 +27,15 @@ public class Supplier {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_CONTACT, length = 50)
     private String contact;
 
-    @Size(max = 100)
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @Email
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
@@ -57,7 +52,10 @@ public class Supplier {
     private Boolean isActivate;
 
     @PrePersist
-    protected void onCreate() { this.createdDateTime = LocalDateTime.now(); }
+    protected void onCreate() {
+        this.createdDateTime = LocalDateTime.now();
+        this.isActivate = true;
+    }
 
     @PreUpdate
     protected void onUpdate() {

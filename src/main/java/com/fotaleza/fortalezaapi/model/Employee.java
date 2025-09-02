@@ -3,9 +3,6 @@ package com.fotaleza.fortalezaapi.model;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,29 +24,21 @@ public class Employee {
     @EqualsAndHashCode.Include
     private Integer Id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
     private String firstName;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
     private String lastName;
 
-    @Email
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
     @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
     private String phone;
 
-    @Size(max = 100)
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @NotBlank
-    @Size(max = 20)
     @Column(name = ColumnNames.COLUMN_SSN, length = 20, unique = true, nullable = false)
     private String ssn;
 
@@ -69,6 +58,7 @@ public class Employee {
     @PrePersist
     protected void onCreate() {
         this.createdDateTime = LocalDateTime.now();
+        this.isActivate = true;
     }
 
     @PreUpdate

@@ -27,33 +27,24 @@ public class Client {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_COMPANY_NAME, length = 50)
     private String companyName;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
     private String firstName;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
     private String lastName;
 
-    @Size(max = 100)
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @Email
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
     @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
     private String phone;
 
-    @NotBlank
-    @Size(max = 20)
     @Column(name = ColumnNames.COLUMN_RFC, length = 20, unique = true, nullable = false)
     private String rfc;
 
@@ -69,7 +60,9 @@ public class Client {
     @PrePersist
     protected void onCreate() {
         this.createdDateTime = LocalDateTime.now();
+        this.isActivate = true;
     }
+
 
     @PreUpdate
     protected void onUpdate() {

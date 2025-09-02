@@ -30,8 +30,6 @@ public class Subcategory {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50,unique = true,  nullable = false)
     private String name;
 
@@ -57,10 +55,12 @@ public class Subcategory {
     @PrePersist
     protected void onCreate() {
         this.createdDateTime = LocalDateTime.now();
+        this.isActivate = true;
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedDateTime = LocalDateTime.now();
     }
+
 }

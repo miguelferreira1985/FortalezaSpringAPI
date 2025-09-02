@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto.request;
+package com.fotaleza.fortalezaapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthRequestDto {
+public class AuthRequestDTO {
 
     @NotBlank
     private String username;

@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.response.AuthResponseDto;
-import com.fotaleza.fortalezaapi.dto.request.AuthRequestDto;
+import com.fotaleza.fortalezaapi.dto.AuthResponseDTO;
+import com.fotaleza.fortalezaapi.dto.AuthRequestDTO;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDTO authRequestDto) {
 
         try {
             Authentication authentication = authenticationManager
@@ -49,7 +49,7 @@ public class AuthController {
             String jwt = jwtUtils.generateToken(userDetails, roles);
             String refreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
 
-            AuthResponseDto authResponseDto = new AuthResponseDto();
+            AuthResponseDTO authResponseDto = new AuthResponseDTO();
             authResponseDto.setToken(jwt);
             authResponseDto.setRefreshToken(refreshToken);
 
@@ -83,7 +83,7 @@ public class AuthController {
                 String newJwt = jwtUtils.generateToken(userDetails, roles);
                 String newRefreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
 
-                AuthResponseDto authResponseDto = new AuthResponseDto();
+                AuthResponseDTO authResponseDto = new AuthResponseDTO();
                 authResponseDto.setToken(newJwt);
                 authResponseDto.setRefreshToken(newRefreshToken);
 

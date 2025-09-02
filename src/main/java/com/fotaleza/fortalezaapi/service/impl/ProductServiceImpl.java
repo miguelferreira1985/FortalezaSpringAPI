@@ -1,6 +1,10 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 
+import com.fotaleza.fortalezaapi.dto.ProductDTO;
+import com.fotaleza.fortalezaapi.exception.ProductAlreadyExistsException;
+import com.fotaleza.fortalezaapi.exception.ProductNotFoundException;
+import com.fotaleza.fortalezaapi.mapper.ProductMapper;
 import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.service.IProductService;
@@ -17,66 +21,72 @@ import java.util.Optional;
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Override
-    public Product createProduct(Product product) {
-        if (productRepository.existsByCode(product.getCode()) || productRepository.existsByName(product.getName())) {
-            throw new IllegalArgumentException("El codigo del producto ya existe.");
-        }
-        return productRepository.save(product);
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        productRepository.findByNameOrCode(productDTO.getName(), productDTO.getCode())
+                .ifPresent(p -> {
+                    throw new ProductAlreadyExistsException("El producto con el código o nomre ya existe.");
+                });
+        Product product = productMapper.toEntity(productDTO);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toDTO(savedProduct);
     }
 
     @Override
-    public Product updateProduct(Integer productId, Product product) {
+    public ProductDTO updateProduct(Integer productId, ProductDTO productDTO) {
         Product productToUpdate =productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("El producto no existe"));
+                .orElseThrow(() -> new ProductNotFoundException("El producto no existe"));
 
-        productToUpdate.setName(product.getName());
-        productToUpdate.setCode(product.getCode());
-        productToUpdate.setDescription(product.getDescription());
-        productToUpdate.setPrice(product.getPrice());
-        productToUpdate.setCost(product.getCost());
-        productToUpdate.setStock(product.getStock());
-        productToUpdate.setMinimumStock(product.getMinimumStock());
-        productToUpdate.setSubcategory(product.getSubcategory());
-        productToUpdate.setSuppliers(product.getSuppliers());
-        productToUpdate.setIsActivate(product.getIsActivate());
+        productRepository.findByNameOrCode(productDTO.getName(), productDTO.getCode())
+                .ifPresent(p -> {
+                    throw new ProductAlreadyExistsException("El producto con el código o nomre ya existe.");
+                });
 
-        return productRepository.save(productToUpdate);
+        productMapper.updateEntityFromDTO(productDTO, productToUpdate);
+
+        Product updatedProduct = productRepository.save(productToUpdate);
+        return productMapper.toDTO(updatedProduct);
     }
 
     @Override
     public void deleteProduct(Integer productId) {
         Product product =productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("El producto no existe"));
+                .orElseThrow(() -> new ProductNotFoundException("El producto no existe"));
         product.setIsActivate(false);
         productRepository.save(product);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Product> getProductById(Integer productId) {
-        return productRepository.findById(productId);
+    public ProductDTO getProductById(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("El producto no existe."));
+        return productMapper.toDTO(product);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts(Boolean isActivate) {
+
+        List<Product> products;
+
+        if(isActivate != null) {
+            products = productRepository.findByIsActivate(isActivate);
+        } else {
+            products = productRepository.findAll();
+        }
+        return productMapper.toDTOList(products);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Product> getProductByCode(String code) {
-        return productRepository.findByCode(code);
-    }
+    public ProductDTO getProductByCode(String code) {
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Product> getActiveProducts() {
-        return productRepository.findAll()
-                .stream()
-                .filter(Product::getIsActivate)
-                .toList();
+        Product product = productRepository.findByCode(code)
+                .orElseThrow(() -> new ProductNotFoundException("El producto no existe."));
+        return productMapper.toDTO(product);
+
     }
 }

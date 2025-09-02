@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -19,22 +20,24 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductServiceImpl productService;
-    private final ProductMapper productMapper;
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        Product productToSave = productMapper.toEntity(productDTO);
-        Product savedProduct = productService.createProduct(productToSave);
 
-        return ResponseEntity.created(URI.create("/api/v1/products" + savedProduct.getId()))
-                .body(productMapper.toDTO(savedProduct));
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdProduct.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(createdProduct);
+
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Integer id,
                                              @Valid @RequestBody ProductDTO productDTO) {
-        Product productUpdated = productService.updateProduct(id, productMapper.toEntity(productDTO));
-        return ResponseEntity.ok(productMapper.toDTO(productUpdated));
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
@@ -45,29 +48,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id) {
-        Optional<Product> productOptional = productService.getProductById(id);
-
-        return productOptional.map(product -> ResponseEntity.ok(productMapper.toDTO(product)))
-                .orElse(ResponseEntity.notFound().build());
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts()
-                .stream()
-                .map(productMapper::toDTO)
-                .toList();
-
+    @GetMapping("/getAllProducts")
+    public ResponseEntity<List<ProductDTO>> getAllProducts(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+        List<ProductDTO> products = productService.getAllProducts(isActivate);
         return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/active")
-    private ResponseEntity<List<ProductDTO>> getActivateProducts() {
-        List<ProductDTO> activeProducts = productService.getActiveProducts()
-                .stream()
-                .map(productMapper::toDTO)
-                .toList();
-
-        return ResponseEntity.ok().body(activeProducts);
     }
 }

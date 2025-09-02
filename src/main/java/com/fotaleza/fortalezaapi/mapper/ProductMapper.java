@@ -2,72 +2,29 @@ package com.fotaleza.fortalezaapi.mapper;
 
 import com.fotaleza.fortalezaapi.dto.ProductDTO;
 import com.fotaleza.fortalezaapi.model.Product;
-import com.fotaleza.fortalezaapi.model.Subcategory;
-import com.fotaleza.fortalezaapi.model.Supplier;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-@Component
-public class ProductMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ProductMapper {
 
-    public Product toEntity(ProductDTO dto) {
-        Product product = Product.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .code(dto.getCode())
-                .description(dto.getDescription())
-                .price(dto.getPrice())
-                .cost(dto.getCost())
-                .stock(dto.getStock())
-                .minimumStock(dto.getMinimumStock())
-                .isActivate(dto.getIsActivate())
-                .build();
+    @Mapping(target = "subcategoryId", source = "subcategory.id")
+    @Mapping(target = "supplierIds", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getId()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")    ProductDTO toDTO(Product product);
 
-        if (dto.getSubcategoryId() != null) {
-            Subcategory subcategory = new Subcategory();
-            subcategory.setId(dto.getSubcategoryId());
-            product.setSubcategory(subcategory);
-        }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "suppliers", ignore = true)
+    Product toEntity(ProductDTO productDTO);
 
-        if (dto.getSupplierIds() != null) {
-            Set<Supplier> suppliers =  new HashSet<>();
-            for (Integer supplierId : dto.getSupplierIds()){
-                Supplier supplier = new Supplier();
-                supplier.setId(supplierId);
-                suppliers.add(supplier);
-            }
-            product.setSuppliers(suppliers);
-        }
-        return product;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "suppliers", ignore = true)
+    void updateEntityFromDTO(ProductDTO productDTO, @MappingTarget Product product);
 
-    public ProductDTO toDTO(Product product) {
-        ProductDTO dto = new ProductDTO();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setCode(product.getCode());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setCost(product.getCost());
-        dto.setStock(product.getStock());
-        dto.setMinimumStock(product.getMinimumStock());
-        dto.setIsActivate(product.getIsActivate());
+    List<ProductDTO> toDTOList(List<Product> products);
 
-        if (product.getSubcategory() != null) {
-            dto.setSubcategoryId(product.getSubcategory().getId());
-        }
-
-        if (product.getSuppliers() != null) {
-            Set<Integer> suppliersId = product.getSuppliers().stream()
-                    .map(Supplier::getId)
-                    .collect(Collectors.toSet());
-
-            dto.setSupplierIds(suppliersId);
-        }
-
-        return dto;
-    }
 }

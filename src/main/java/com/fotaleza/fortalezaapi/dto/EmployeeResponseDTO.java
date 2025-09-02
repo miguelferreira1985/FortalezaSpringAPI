@@ -1,0 +1,24 @@
+package com.fotaleza.fortalezaapi.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class EmployeeResponseDTO {
+
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String address;
+    private String ssn;
+    private Long userId;
+    private Boolean isActivate;
+
+}

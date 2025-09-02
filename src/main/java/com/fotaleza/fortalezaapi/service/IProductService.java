@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.service;
 
+import com.fotaleza.fortalezaapi.dto.ProductDTO;
 import com.fotaleza.fortalezaapi.model.Product;
 
 import java.util.List;
@@ -7,12 +8,11 @@ import java.util.Optional;
 
 public interface IProductService {
 
-    Product createProduct(Product product);
-    Product updateProduct(Integer productId, Product product);
+    ProductDTO createProduct(ProductDTO productDTO);
+    ProductDTO updateProduct(Integer productId, ProductDTO productDTO);
     void deleteProduct(Integer productId);
-    Optional<Product> getProductById(Integer productId);
-    List<Product> getAllProducts();
-    Optional<Product> getProductByCode(String code);
-    List<Product> getActiveProducts();
+    ProductDTO getProductById(Integer productId);
+    List<ProductDTO> getAllProducts(Boolean isActivate);
+    ProductDTO getProductByCode(String code);
 
 }

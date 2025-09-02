@@ -1,9 +1,9 @@
-package com.fotaleza.fortalezaapi.dto.response;
+package com.fotaleza.fortalezaapi.dto;
 
 import lombok.Data;
 
 @Data
-public class AuthResponseDto {
+public class AuthResponseDTO {
 
     private String token;
     private String refreshToken;

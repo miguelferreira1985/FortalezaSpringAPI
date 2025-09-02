@@ -1,5 +1,10 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
+import com.fotaleza.fortalezaapi.dto.ClientDTO;
+import com.fotaleza.fortalezaapi.dto.SupplierDTO;
+import com.fotaleza.fortalezaapi.exception.SupplierAlreadyExistsException;
+import com.fotaleza.fortalezaapi.exception.SupplierNotFoundException;
+import com.fotaleza.fortalezaapi.mapper.SupplierMapper;
 import com.fotaleza.fortalezaapi.model.Supplier;
 import com.fotaleza.fortalezaapi.repository.SupplierRepository;
 import com.fotaleza.fortalezaapi.service.ISupplierService;
@@ -16,52 +21,62 @@ import java.util.Optional;
 public class SupplierServiceImpl implements ISupplierService {
 
     private final SupplierRepository supplierRepository;
+    private final SupplierMapper supplierMapper;
 
     @Override
-    public Supplier createSupplier(Supplier supplier) {
-        if (supplierRepository.existsByName(supplier.getName())) {
-            throw new IllegalArgumentException("El proveedor ya existe.")
-        }
-        return supplierRepository.save(supplier);
+    public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
+        supplierRepository.findByName(supplierDTO.getName())
+                .ifPresent(p -> {
+                    throw new SupplierAlreadyExistsException("El proveedor con el nombre ya existe.");
+                });
+        Supplier supplier = supplierMapper.toEntity(supplierDTO);
+        Supplier savedSupplier = supplierRepository.save(supplier);
+        return supplierMapper.toDTO(savedSupplier);
     }
 
     @Override
-    public Supplier updateSupplier(Integer supplierId, Supplier supplier) {
+    public SupplierDTO updateSupplier(Integer supplierId, SupplierDTO supplierDTO) {
         Supplier supplierToUpdate = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new IllegalArgumentException("El proveedor no existe."));
+                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
 
-        supplierToUpdate.setName(supplier.getName());
-        supplierToUpdate.setContact(supplier.getContact());
-        supplierToUpdate.setAddress(supplier.getAddress());
-        supplierToUpdate.setEmail(supplier.getEmail());
-        supplierToUpdate.setPhone(supplier.getPhone());
-        supplierToUpdate.setIsActivate(supplier.getIsActivate());
+        supplierRepository.findByName(supplierDTO.getName())
+                .ifPresent(p -> {
+                    throw new SupplierAlreadyExistsException("El proveedor con el nombre ya existe.");
+                });
 
-        return supplierRepository.save(supplier);
+        supplierMapper.updateEntityFromDTO(supplierDTO, supplierToUpdate);
+
+        Supplier updatedSupplier = supplierRepository.save(supplierToUpdate);
+        return supplierMapper.toDTO(updatedSupplier);
     }
 
     @Override
     public void deleteSupplier(Integer supplierId) {
         Supplier supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new IllegalArgumentException("El proveedor no existe."));
+                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
         supplier.setIsActivate(false);
         supplierRepository.deleteById(supplierId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Supplier> getSupplierById(Integer supplierId) { return supplierRepository.findById(supplierId); }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Supplier> getAllSuppliers() { return supplierRepository.findAll(); }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Supplier> getActiveSuppliers() {
-        return supplierRepository.findAll()
-                .stream()
-                .filter(Supplier::getIsActivate)
-                .toList();
+    public SupplierDTO getSupplierById(Integer supplierId) {
+        Supplier supplier = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
+        return supplierMapper.toDTO(supplier);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SupplierDTO> getAllSuppliers(Boolean isActivate) {
+        List<Supplier> suppliers;
+
+        if (isActivate != null) {
+            suppliers = supplierRepository.findByIsActivate(isActivate);
+        } else {
+            suppliers = supplierRepository.findAll();
+        }
+        return supplierMapper.toDTOList(suppliers);
+    }
+
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,12 +47,23 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private Date createdDateTime;
+    private LocalDateTime createdDateTime;
 
     @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
     private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDateTime = LocalDateTime.now();
+        this.isActivate = true;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDateTime = LocalDateTime.now();
+    }
 
 }
