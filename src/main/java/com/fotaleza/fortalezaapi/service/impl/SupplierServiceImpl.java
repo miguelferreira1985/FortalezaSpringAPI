@@ -1,6 +1,5 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.ClientDTO;
 import com.fotaleza.fortalezaapi.dto.SupplierDTO;
 import com.fotaleza.fortalezaapi.exception.SupplierAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.SupplierNotFoundException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

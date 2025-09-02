@@ -1,7 +1,6 @@
 package com.fotaleza.fortalezaapi.handler;
 
 import com.fotaleza.fortalezaapi.exception.*;
-import com.fotaleza.fortalezaapi.model.Category;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

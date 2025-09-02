@@ -1,8 +1,6 @@
 package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.ProductDTO;
-import com.fotaleza.fortalezaapi.mapper.ProductMapper;
-import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.service.impl.ProductServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/products")
