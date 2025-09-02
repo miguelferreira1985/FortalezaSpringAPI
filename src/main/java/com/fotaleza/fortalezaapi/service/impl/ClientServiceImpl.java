@@ -8,7 +8,6 @@ import com.fotaleza.fortalezaapi.model.Client;
 import com.fotaleza.fortalezaapi.repository.ClientRepository;
 import com.fotaleza.fortalezaapi.service.IClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -3,12 +3,9 @@ package com.fotaleza.fortalezaapi.controller;
 import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.service.impl.EmployeeServiceImpl;
-import com.fotaleza.fortalezaapi.service.impl.RoleServiceImpl;
-import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,9 +18,6 @@ import java.util.*;
 public class EmployeeController {
 
     private final EmployeeServiceImpl employeeService;
-    private final UserServiceImpl userService;
-    private final RoleServiceImpl roleService;
-    private final PasswordEncoder encoder;
 
     @PostMapping()
     public ResponseEntity<EmployeeResponseDTO> createEmployeeAndUser(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {

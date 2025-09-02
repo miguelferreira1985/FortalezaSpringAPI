@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -80,13 +79,4 @@ public class ProductServiceImpl implements IProductService {
         return productMapper.toDTOList(products);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public ProductDTO getProductByCode(String code) {
-
-        Product product = productRepository.findByCode(code)
-                .orElseThrow(() -> new ProductNotFoundException("El producto no existe."));
-        return productMapper.toDTO(product);
-
-    }
 }
