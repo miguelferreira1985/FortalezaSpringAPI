@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,16 +14,15 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString(exclude = {"suppliers", "subcategory"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(
         name = TableNames.TABLE_PRODUCTS,
         indexes = {
             @Index(name = "idx_product_name", columnList = ColumnNames.COLUMN_NAME),
                 @Index(name = "idx_product_code", columnList = ColumnNames.COLUMN_CODE)
         })
-public class Product {
+public class Product extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_PRODUCT_ID)
@@ -63,24 +61,38 @@ public class Product {
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_SUPPLIER_ID))
     private Set<Supplier> suppliers = new HashSet<>();
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME, updatable = false)
-    private LocalDateTime createdDatetime;
+    @Transient
+    public boolean isBelowOrEqualMinimumStock() {
+        return stock != null && minimumStock != null && stock.compareTo(minimumStock) <= 0;
+    }
 
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDatetime;
+    @Transient
+    public BigDecimal getProfitMargin() {
+        if (price != null && cost != null) {
+            return price.subtract(cost);
+        }
+        return BigDecimal.ZERO;
+    }
 
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
+    @Transient
+    public BigDecimal getProfitValue() {
+        if (stock != null && price != null && cost != null) {
+            return (price.subtract(cost).multiply(stock));
+        }
+        return BigDecimal.ZERO;
+    }
+
+    @Transient
+    public BigDecimal getInventoryValue() {
+        if (stock != null && cost != null) {
+            return stock.multiply(cost);
+        }
+        return BigDecimal.ZERO;
+    }
 
     @PrePersist
     protected void onCreate() {
-        this.createdDatetime = LocalDateTime.now();
-        this.isActivate = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDatetime = LocalDateTime.now();
+        super.onCreate();
     }
 
 }

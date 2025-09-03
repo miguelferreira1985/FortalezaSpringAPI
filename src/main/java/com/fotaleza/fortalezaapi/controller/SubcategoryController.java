@@ -1,13 +1,15 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryDTO;
-import com.fotaleza.fortalezaapi.mapper.SubcategoryMapper;
+import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
 import com.fotaleza.fortalezaapi.model.Subcategory;
+import com.fotaleza.fortalezaapi.service.ISubcategoryService;
 import com.fotaleza.fortalezaapi.service.impl.SubcategoryServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -18,23 +20,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubcategoryController {
 
-    private final SubcategoryServiceImpl subcategoryService;
-    private final SubcategoryMapper subcategoryMapper;
+    private final ISubcategoryService subcategoryService;
 
     @PostMapping
-    public ResponseEntity<SubcategoryDTO> createSubcategory(@Valid @RequestBody SubcategoryDTO subCategoryDTO) {
-        Subcategory subcategoryToSave = subcategoryMapper.toEntity(subCategoryDTO);
-        Subcategory subcategorySaved = subcategoryService.createSubcategory(subcategoryToSave);
-
-        return ResponseEntity.created(URI.create("/api/v1/subcategories" + subcategorySaved.getId()))
-                .body(subcategoryMapper.toDto(subcategorySaved));
+    public ResponseEntity<SubcategoryResponseDTO> createSubcategory(@Valid @RequestBody SubcategoryRequestDTO subcategoryRequestDTO) {
+        SubcategoryResponseDTO createdSubcategory = subcategoryService.createSubcategory(subcategoryRequestDTO);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdSubcategory.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(createdSubcategory);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SubcategoryDTO> updateSubcategory(@PathVariable Integer id,
-                                                 @Valid @RequestBody SubcategoryDTO subcategoryDTO) {
-        Subcategory subcategoryUpdated = subcategoryService.updateSubcategory(id, subcategoryMapper.toEntity(subcategoryDTO));
-        return ResponseEntity.ok(subcategoryMapper.toDto(subcategoryUpdated));
+    public ResponseEntity<SubcategoryResponseDTO> updateSubcategory(@PathVariable Integer id,
+                                                 @Valid @RequestBody SubcategoryRequestDTO subcategoryRequestDTO) {
+        SubcategoryResponseDTO updatedSubcategory = subcategoryService.updateSubcategory(id, subcategoryRequestDTO);
+        return ResponseEntity.ok(updatedSubcategory);
     }
 
     @DeleteMapping("/{id}")
@@ -44,30 +46,15 @@ public class SubcategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubcategoryDTO> getSubcategoryById(@PathVariable Integer id) {
-        Optional<Subcategory> subcategoryOptional = subcategoryService.getSubcategoryById(id);
-
-        return subcategoryOptional.map(subcategory -> ResponseEntity.ok(subcategoryMapper.toDto(subcategory)))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<SubcategoryResponseDTO> getSubcategoryById(@PathVariable Integer id) {
+        SubcategoryResponseDTO subcategory = subcategoryService.getSubcategoryById(id);
+        return ResponseEntity.ok(subcategory);
     }
 
     @GetMapping
-    public ResponseEntity<List<SubcategoryDTO>> getAllSubcategories() {
-        List<SubcategoryDTO> subcategories = subcategoryService.getAllSubcategories()
-                .stream()
-                .map(subcategoryMapper::toDto)
-                .toList();
-
+    public ResponseEntity<List<SubcategoryResponseDTO>> getAllSubcategories(@RequestParam(name = "isACtivate", required = false) Boolean isActivate) {
+        List<SubcategoryResponseDTO> subcategories = subcategoryService.getAllSubcategories(isActivate);
         return ResponseEntity.ok(subcategories);
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<SubcategoryDTO>> getActiveSubcategories() {
-        List<SubcategoryDTO> subcategories = subcategoryService.getActiveSubcategories()
-                .stream()
-                .map(subcategoryMapper::toDto)
-                .toList();
-
-        return ResponseEntity.ok(subcategories);
-    }
 }

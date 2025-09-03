@@ -1,9 +1,12 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
+import com.fotaleza.fortalezaapi.dto.ProductDTO;
 import com.fotaleza.fortalezaapi.dto.SupplierDTO;
-import com.fotaleza.fortalezaapi.exception.SupplierAlreadyExistsException;
-import com.fotaleza.fortalezaapi.exception.SupplierNotFoundException;
+import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
+import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
+import com.fotaleza.fortalezaapi.mapper.ProductMapper;
 import com.fotaleza.fortalezaapi.mapper.SupplierMapper;
+import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.model.Supplier;
 import com.fotaleza.fortalezaapi.repository.SupplierRepository;
 import com.fotaleza.fortalezaapi.service.ISupplierService;
@@ -20,12 +23,13 @@ public class SupplierServiceImpl implements ISupplierService {
 
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
+    private final ProductMapper productMapper;
 
     @Override
     public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
         supplierRepository.findByName(supplierDTO.getName())
                 .ifPresent(p -> {
-                    throw new SupplierAlreadyExistsException("El proveedor con el nombre ya existe.");
+                    throw new ResourceAlreadyExistsException("El proveedor con el nombre ya existe.");
                 });
         Supplier supplier = supplierMapper.toEntity(supplierDTO);
         Supplier savedSupplier = supplierRepository.save(supplier);
@@ -35,11 +39,13 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public SupplierDTO updateSupplier(Integer supplierId, SupplierDTO supplierDTO) {
         Supplier supplierToUpdate = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
 
         supplierRepository.findByName(supplierDTO.getName())
                 .ifPresent(p -> {
-                    throw new SupplierAlreadyExistsException("El proveedor con el nombre ya existe.");
+                    if (!p.getId().equals(supplierId)) {
+                        throw new ResourceAlreadyExistsException("El proveedor con el nombre ya existe.");
+                    }
                 });
 
         supplierMapper.updateEntityFromDTO(supplierDTO, supplierToUpdate);
@@ -51,16 +57,16 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     public void deleteSupplier(Integer supplierId) {
         Supplier supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
         supplier.setIsActivate(false);
-        supplierRepository.deleteById(supplierId);
+        supplierRepository.save(supplier);
     }
 
     @Override
     @Transactional(readOnly = true)
     public SupplierDTO getSupplierById(Integer supplierId) {
         Supplier supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new SupplierNotFoundException("El proveedor no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
         return supplierMapper.toDTO(supplier);
     }
 
@@ -75,6 +81,18 @@ public class SupplierServiceImpl implements ISupplierService {
             suppliers = supplierRepository.findAll();
         }
         return supplierMapper.toDTOList(suppliers);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDTO> getProductsOfSupplier(Integer supplierId) {
+        Supplier supplier = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
+
+        return supplier.getProducts().stream()
+                .filter(Product::getIsActivate)
+                .map(productMapper::toDTO)
+                .toList();
     }
 
 }

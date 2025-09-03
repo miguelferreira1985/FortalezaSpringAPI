@@ -1,17 +1,16 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.model.Subcategory;
+import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ISubcategoryService {
 
-    Subcategory createSubcategory(Subcategory subcategory);
-    Subcategory updateSubcategory(Integer subcategoryId, Subcategory subcategory);
+    SubcategoryResponseDTO createSubcategory(SubcategoryRequestDTO subcategoryRequestDTO);
+    SubcategoryResponseDTO updateSubcategory(Integer subcategoryId, SubcategoryRequestDTO subcategoryRequestDTO);
     void deleteSubcategory(Integer subcategoryId);
-    Optional<Subcategory> getSubcategoryById(Integer subcategoryId);
-    List<Subcategory> getAllSubcategories();
-    List<Subcategory> getActiveSubcategories();
+    SubcategoryResponseDTO getSubcategoryById(Integer subcategoryId);
+    List<SubcategoryResponseDTO> getAllSubcategories(Boolean isActivate);
 
 }

@@ -1,7 +1,9 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.ClientDTO;
-import com.fotaleza.fortalezaapi.service.impl.ClientServiceImpl;
+
+import com.fotaleza.fortalezaapi.dto.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.ClientResponseDTO;
+import com.fotaleza.fortalezaapi.service.IClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +14,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/client")
+@RequestMapping("/api/v1/clients")
 @RequiredArgsConstructor
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
+    private final IClientService clientService;
 
     @PostMapping
-    public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) {
-        ClientDTO createdClient = clientService.createClient(clientDTO);
+    public ResponseEntity<ClientResponseDTO> createClient(@Valid @RequestBody ClientRequestDTO clientRequestDTO) {
+        ClientResponseDTO createdClient = clientService.createClient(clientRequestDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(createdClient.getId())
@@ -29,8 +31,8 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable Integer id, @Valid @RequestBody ClientDTO clientDTO) {
-        ClientDTO updatedClient = clientService.updateClient(id, clientDTO);
+    public ResponseEntity<ClientResponseDTO> updateClient(@PathVariable Integer id, @Valid @RequestBody ClientRequestDTO clientRequestDTO) {
+        ClientResponseDTO updatedClient = clientService.updateClient(id, clientRequestDTO);
         return ResponseEntity.ok(updatedClient);
     }
 
@@ -41,15 +43,14 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> getClientById(@PathVariable Integer id) {
-        ClientDTO client = clientService.getClientById(id);
+    public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable Integer id) {
+        ClientResponseDTO client = clientService.getClientById(id);
         return ResponseEntity.ok(client);
     }
 
     @GetMapping
-    @RequestMapping("/getAllClients")
-    public ResponseEntity<List<ClientDTO>> getAllClients(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
-        List<ClientDTO> clients = clientService.getAllClients(isActivate);
+    public ResponseEntity<List<ClientResponseDTO>> getAllClients(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+        List<ClientResponseDTO> clients = clientService.getAllClients(isActivate);
         return ResponseEntity.ok(clients);
     }
 

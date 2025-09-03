@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,13 +14,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Table(name = TableNames.TABLE_USERS,
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_USERNAME)
     })
 @SQLDelete(sql = "UPDATE users SET isActivate = false WHERE userId = ?")
-public class User {
+public class User extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_USER_ID)
@@ -45,24 +44,9 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
     @PrePersist
     protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-        this.isActivate = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
+        super.onCreate();
     }
 
 }

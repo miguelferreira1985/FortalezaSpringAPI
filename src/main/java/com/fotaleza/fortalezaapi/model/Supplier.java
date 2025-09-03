@@ -5,18 +5,18 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "products")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true,callSuper = false)
 @Table(name = TableNames.TABLE_SUPPLIERS)
-public class Supplier {
+public class Supplier extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_SUPPLIER_ID)
@@ -33,29 +33,18 @@ public class Supplier {
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
+    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50, unique = true)
     private String email;
 
     @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
     private String phone;
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
+    @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
+    private Set<Product> products = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-        this.isActivate = true;
+        super.onCreate();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
-    }
 }

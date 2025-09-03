@@ -5,8 +5,6 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = TableNames.TABLE_CLIENTS)
-public class Client {
+public class Client extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_CLIENT_ID)
@@ -45,24 +43,18 @@ public class Client {
     @Column(name = ColumnNames.COLUMN_RFC, length = 20, unique = true, nullable = false)
     private String rfc;
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
     @PrePersist
     protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-        this.isActivate = true;
+        if (this.rfc != null) {
+            this.rfc = this.rfc.toUpperCase();
+        }
     }
-
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
+        if (this.rfc != null) {
+            this.rfc = this.rfc.toUpperCase();
+        }
     }
+
 }

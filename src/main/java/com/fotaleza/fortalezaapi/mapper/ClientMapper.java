@@ -1,6 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.ClientDTO;
+import com.fotaleza.fortalezaapi.dto.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.model.Client;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,14 +13,16 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ClientMapper {
 
-    ClientDTO toDTO(Client client);
+    ClientResponseDTO toResponseDTO(Client client);
+
+    List<ClientResponseDTO> toResponseDTOList(List<Client> clients);
 
     @Mapping(target = "id", ignore = true)
-    Client toEntity(ClientDTO clientDTO);
+    @Mapping(target = "rfc", expression = "java(clientRequestDTO.getRfc() != null ? clientRequestDTO.getRfc().toUpperCase() : null)")
+    Client toEntity(ClientRequestDTO clientRequestDTO);
 
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromDTO(ClientDTO clientDTO, @MappingTarget Client client);
-
-    List<ClientDTO> toDTOList(List<Client> clients);
+    @Mapping(target = "rfc", expression = "java(clientRequestDTO.getRfc() != null ? clientRequestDTO.getRfc().toUpperCase() : null)")
+    void updateEntityFromRequestDTO(ClientRequestDTO clientRequestDTO, @MappingTarget Client client);
 
 }

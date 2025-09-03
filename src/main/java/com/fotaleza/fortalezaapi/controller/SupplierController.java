@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.dto.ProductDTO;
 import com.fotaleza.fortalezaapi.dto.SupplierDTO;
 import com.fotaleza.fortalezaapi.service.impl.SupplierServiceImpl;
 import jakarta.validation.Valid;
@@ -12,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/supplier")
+@RequestMapping("/api/v1/suppliers")
 @RequiredArgsConstructor
 public class SupplierController {
 
@@ -46,10 +47,18 @@ public class SupplierController {
         return ResponseEntity.ok(supplier);
     }
 
-    @GetMapping("/getAllSuppliers")
+    @GetMapping()
     public ResponseEntity<List<SupplierDTO>> getAllSuppliers(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
         List<SupplierDTO> suppliers = supplierService.getAllSuppliers(isActivate);
         return ResponseEntity.ok(suppliers);
     }
+
+    @GetMapping("/{id}/products")
+    public ResponseEntity<List<ProductDTO>> getProductsBySupplier(@PathVariable("id") Integer id) {
+        List<ProductDTO> products = supplierService.getProductsOfSupplier(id);
+        return ResponseEntity.ok(products);
+    }
+
+
 
 }

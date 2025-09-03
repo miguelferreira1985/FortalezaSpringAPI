@@ -1,6 +1,13 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
+import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
+import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
+import com.fotaleza.fortalezaapi.mapper.SubcategoryMapper;
+import com.fotaleza.fortalezaapi.model.Category;
 import com.fotaleza.fortalezaapi.model.Subcategory;
+import com.fotaleza.fortalezaapi.repository.CategoryRepository;
 import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
 import com.fotaleza.fortalezaapi.service.ISubcategoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,55 +19,75 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SubcategoryServiceImpl implements ISubcategoryService {
 
     private final SubcategoryRepository subcategoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final SubcategoryMapper subcategoryMapper;
 
     @Override
-    public Subcategory createSubcategory(Subcategory subcategory) {
-        if (subcategoryRepository.existsByName(subcategory.getName())) {
-            throw new IllegalArgumentException("La Subcategoria ya existe.");
-        }
-        return subcategoryRepository.save(subcategory);
+    @Transactional
+    public SubcategoryResponseDTO createSubcategory(SubcategoryRequestDTO subcategoryRequestDTO) {
+        validateNameUnique(subcategoryRequestDTO.getName(), null);
+
+        Subcategory subcategory = subcategoryMapper.toEntity(subcategoryRequestDTO);
+
+        Category category = categoryRepository.findById(subcategoryRequestDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("La categoria no existe."));
+        subcategory.setCategory(category);
+
+        Subcategory savedSubcategory = subcategoryRepository.save(subcategory);
+
+        return subcategoryMapper.toResponseDTO(savedSubcategory);
+
     }
 
     @Override
-    public Subcategory updateSubcategory(Integer subcategoryId, Subcategory subcategory) {
+    @Transactional
+    public SubcategoryResponseDTO updateSubcategory(Integer subcategoryId, SubcategoryRequestDTO subcategoryRequestDTO) {
         Subcategory subcategoryToUpdate = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new IllegalArgumentException("La Subcategoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
 
-        subcategoryToUpdate.setName(subcategory.getName());
-        subcategoryToUpdate.setDescription(subcategory.getDescription());
-        subcategoryToUpdate.setCategory(subcategory.getCategory());
-        subcategoryToUpdate.setProducts(subcategory.getProducts());
-        subcategoryToUpdate.setIsActivate(subcategory.getIsActivate());
+        validateNameUnique(subcategoryRequestDTO.getName(), subcategoryId);
 
-        return subcategoryRepository.save(subcategory);
+        subcategoryMapper.updateEntityFromRequestDTO(subcategoryRequestDTO, subcategoryToUpdate);
+
+        Subcategory updatedSubcategory = subcategoryRepository.save(subcategoryToUpdate);
+        return subcategoryMapper.toResponseDTO(updatedSubcategory);
     }
 
     @Override
     public void deleteSubcategory(Integer subcategoryId) {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new IllegalArgumentException("La Subcategoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
+
         subcategory.setIsActivate(false);
         subcategoryRepository.save(subcategory);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Subcategory> getSubcategoryById(Integer subcategoryId) { return subcategoryRepository.findById(subcategoryId); }
+    public SubcategoryResponseDTO getSubcategoryById(Integer subcategoryId) {
+        Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
+
+        return subcategoryMapper.toResponseDTO(subcategory);
+    }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Subcategory> getAllSubcategories( ) { return subcategoryRepository.findAll(); }
+    public List<SubcategoryResponseDTO> getAllSubcategories(Boolean isActivate) {
+        List<Subcategory> subcategories = Optional.ofNullable(isActivate)
+                .map(subcategoryRepository::findByIsActivate)
+                .orElseGet(subcategoryRepository::findAll);
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Subcategory> getActiveSubcategories() {
-        return subcategoryRepository.findAll()
-                .stream()
-                .filter(Subcategory::getIsActivate)
-                .toList();
+        return subcategoryMapper.toResponseDTOList(subcategories);
+    }
+
+    private void validateNameUnique(String name, Integer subcategoryId) {
+        subcategoryRepository.findByName(name)
+                .ifPresent(sc -> {
+                    if (subcategoryId == null || !sc.getId().equals(subcategoryId)) {
+                        throw new ResourceAlreadyExistsException("La subcategoria con el nombre ya existe.");
+                    }
+                });
     }
 }

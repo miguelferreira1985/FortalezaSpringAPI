@@ -5,18 +5,15 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString(exclude = "user")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_EMPLOYEES)
-public class Employee {
+public class Employee extends  AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_EMPLOYEE_ID)
@@ -46,24 +43,9 @@ public class Employee {
     @JoinColumn(name = ColumnNames.COLUMN_USER_ID)
     private User user;
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
     @PrePersist
     protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-        this.isActivate = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
+        super.onCreate();
     }
 
 }

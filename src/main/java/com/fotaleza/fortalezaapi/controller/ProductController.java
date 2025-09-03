@@ -49,9 +49,19 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/getAllProducts")
-    public ResponseEntity<List<ProductDTO>> getAllProducts(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+    @GetMapping()
+    public ResponseEntity<List<ProductDTO>> getAllProducts(
+            @RequestParam(name = "isActivate", required = false) Boolean isActivate) {
         List<ProductDTO> products = productService.getAllProducts(isActivate);
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductDTO>> getLowStockProducts() {
+        List<ProductDTO> allProducts = productService.getAllProducts(true);
+        List<ProductDTO> lowStock = allProducts.stream()
+                .filter(ProductDTO::getIsBelowOrEqualMinimumStock)
+                .toList();
+        return ResponseEntity.ok(lowStock);
     }
 }

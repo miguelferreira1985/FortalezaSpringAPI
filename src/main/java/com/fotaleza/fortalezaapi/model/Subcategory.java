@@ -5,7 +5,6 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -15,12 +14,13 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @ToString(exclude = {"category", "products"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_SUBCATEGORIES,
     indexes = {
-        @Index(name = "idx_subcategory_name", columnList = ColumnNames.COLUMN_NAME)
+        @Index(name = "idx_subcategory_name", columnList = ColumnNames.COLUMN_NAME),
+            @Index(name = "idx_subcategory_category_name", columnList = ColumnNames.COLUMN_CATEGORY_ID + "," + ColumnNames.COLUMN_NAME)
     })
-public class Subcategory {
+public class Subcategory extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_SUBCATEGORY_ID)
@@ -38,27 +38,7 @@ public class Subcategory {
     @JoinColumn(name = ColumnNames.COLUMN_CATEGORY_ID, nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "subcategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();
-
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME, updatable = false)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-        this.isActivate = true;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
-    }
 
 }

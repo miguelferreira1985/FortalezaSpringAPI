@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientDTO {
+public class ClientRequestDTO {
 
     private Integer id;
 

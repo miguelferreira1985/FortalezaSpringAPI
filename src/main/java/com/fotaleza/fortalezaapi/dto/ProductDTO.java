@@ -44,4 +44,9 @@ public class ProductDTO {
     private Integer subcategoryId;
     private Set<Integer> supplierIds;
     private Boolean isActivate;
+
+    private BigDecimal profitMargin;
+    private BigDecimal profitValue;
+    private BigDecimal inventoryValue;
+    private Boolean isBelowOrEqualMinimumStock;
 }
