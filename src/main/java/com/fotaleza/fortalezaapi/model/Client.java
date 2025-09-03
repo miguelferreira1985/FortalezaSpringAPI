@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_CLIENTS)
 public class Client extends AuditableEntity {
 

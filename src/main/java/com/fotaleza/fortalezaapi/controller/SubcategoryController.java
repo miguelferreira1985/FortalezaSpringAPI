@@ -2,9 +2,7 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
 import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
-import com.fotaleza.fortalezaapi.model.Subcategory;
 import com.fotaleza.fortalezaapi.service.ISubcategoryService;
-import com.fotaleza.fortalezaapi.service.impl.SubcategoryServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/subcategories")
