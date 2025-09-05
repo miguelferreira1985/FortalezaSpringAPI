@@ -2,8 +2,8 @@ package com.fotaleza.fortalezaapi.service.impl;
 
 import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
-import com.fotaleza.fortalezaapi.exception.EmployeeAlreadyExistsException;
-import com.fotaleza.fortalezaapi.exception.EmployeeNotFoundException;
+import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
+import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.EmployeeMapper;
 import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.User;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class EmployeeServiceImpl implements IEmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -27,10 +27,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 
     @Override
+    @Transactional
     public EmployeeResponseDTO crreateEmployee(EmployeeRequestDTO employeeRequestDTO) {
-        if (employeeRepository.findBySsn(employeeRequestDTO.getSsn()).isPresent()) {
-            throw new EmployeeAlreadyExistsException("El NSS ya existe.");
-        }
+        validateSsnUnique(employeeRequestDTO.getSsn(), null);
 
         User user = userService.createUser(
                 employeeRequestDTO.getUserData().getUsername(),
@@ -47,14 +46,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeResponseDTO updateEmployee(Integer employeeId, EmployeeRequestDTO employeeRequestDTO) {
         Employee employeeToUpdate = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException("El empleado no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
 
-        employeeRepository.findBySsn(employeeRequestDTO.getSsn())
-                .ifPresent(e -> {
-                    throw new EmployeeAlreadyExistsException("El NSS ya esta registrado.");
-                });
+        validateSsnUnique(employeeRequestDTO.getSsn(), employeeId);
 
         employeeMapper.updateEntityFromRequestDTO(employeeRequestDTO, employeeToUpdate);
 
@@ -63,9 +60,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
+    @Transactional
     public void deleteEmployee(Integer employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException("El empleado no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
         employee.setIsActivate(false);
         employeeRepository.save(employee);
     }
@@ -73,19 +71,24 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public EmployeeResponseDTO getEmployeeById(Integer employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException("El empleado no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
         return employeeMapper.toResponseDTO(employee);
     }
 
     @Override
     public List<EmployeeResponseDTO> getAllEmployees(Boolean isActivate) {
-        List<Employee> employees;
-
-        if (isActivate != null) {
-            employees = employeeRepository.findByIsActivate(isActivate);
-        } else {
-            employees = employeeRepository.findAll();
-        }
+        List<Employee> employees = Optional.ofNullable(isActivate)
+                .map(employeeRepository::findByIsActivate)
+                .orElseGet(employeeRepository::findAll);
         return employeeMapper.toResponseDTOList(employees);
+    }
+
+    private void validateSsnUnique(String ssn, Integer employeeId) {
+        employeeRepository.findBySsn(ssn)
+                .ifPresent(e -> {
+                    if (employeeId == null || e.getId().equals(employeeId)) {
+                        throw new ResourceAlreadyExistsException("El empleado con el NSS ya existe.");
+                    }
+                });
     }
 }

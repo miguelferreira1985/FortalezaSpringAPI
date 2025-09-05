@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.exception.UserAlreadyExistsException;
-import com.fotaleza.fortalezaapi.model.ERole;
+import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
+import com.fotaleza.fortalezaapi.enums.ERole;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.repository.UserRepository;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User createUser(String userName, String password, Set<String> strRoles) {
         if (userRepository.existsByUsername(userName)) {
-            throw new UserAlreadyExistsException("El usario ya existe.");
+            throw new ResourceAlreadyExistsException("El usario ya existe.");
         }
 
         User user = new User();

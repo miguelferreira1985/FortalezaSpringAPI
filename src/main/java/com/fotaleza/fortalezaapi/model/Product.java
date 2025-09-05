@@ -90,9 +90,4 @@ public class Product extends AuditableEntity {
         return BigDecimal.ZERO;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        super.onCreate();
-    }
-
 }

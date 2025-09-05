@@ -1,8 +1,9 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.ProductDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierDTO;
-import com.fotaleza.fortalezaapi.service.impl.SupplierServiceImpl;
+import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.SupplierRequestDTO;
+import com.fotaleza.fortalezaapi.dto.SupplierResponseDTO;
+import com.fotaleza.fortalezaapi.service.ISupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SupplierController {
 
-    private final SupplierServiceImpl supplierService;
+    private final ISupplierService supplierService;
 
     @PostMapping
-    public ResponseEntity<SupplierDTO> createSupplier(@Valid @RequestBody SupplierDTO supplierDTO) {
-        SupplierDTO createdSupplier = supplierService.createSupplier(supplierDTO);
+    public ResponseEntity<SupplierResponseDTO> createSupplier(@Valid @RequestBody SupplierRequestDTO supplierRequestDTO) {
+        SupplierResponseDTO createdSupplier = supplierService.createSupplier(supplierRequestDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(createdSupplier.getId())
@@ -30,8 +31,8 @@ public class SupplierController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable Integer id, @Valid @RequestBody SupplierDTO supplierDTO) {
-        SupplierDTO updatedSupplier = supplierService.updateSupplier(id, supplierDTO);
+    public ResponseEntity<SupplierResponseDTO> updateSupplier(@PathVariable Integer id, @Valid @RequestBody SupplierRequestDTO supplierRequestDTO) {
+        SupplierResponseDTO updatedSupplier = supplierService.updateSupplier(id, supplierRequestDTO);
         return ResponseEntity.ok(updatedSupplier);
     }
 
@@ -42,20 +43,20 @@ public class SupplierController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable Integer id) {
-        SupplierDTO supplier = supplierService.getSupplierById(id);
+    public ResponseEntity<SupplierResponseDTO> getSupplierById(@PathVariable Integer id) {
+        SupplierResponseDTO supplier = supplierService.getSupplierById(id);
         return ResponseEntity.ok(supplier);
     }
 
     @GetMapping()
-    public ResponseEntity<List<SupplierDTO>> getAllSuppliers(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
-        List<SupplierDTO> suppliers = supplierService.getAllSuppliers(isActivate);
+    public ResponseEntity<List<SupplierResponseDTO>> getAllSuppliers(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+        List<SupplierResponseDTO> suppliers = supplierService.getAllSuppliers(isActivate);
         return ResponseEntity.ok(suppliers);
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<List<ProductDTO>> getProductsBySupplier(@PathVariable("id") Integer id) {
-        List<ProductDTO> products = supplierService.getProductsOfSupplier(id);
+    public ResponseEntity<List<ProductResponseDTO>> getProductsBySupplier(@PathVariable("id") Integer id) {
+        List<ProductResponseDTO> products = supplierService.getProductsOfSupplier(id);
         return ResponseEntity.ok(products);
     }
 

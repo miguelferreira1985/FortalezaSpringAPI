@@ -43,9 +43,4 @@ public class Employee extends  AuditableEntity {
     @JoinColumn(name = ColumnNames.COLUMN_USER_ID)
     private User user;
 
-    @PrePersist
-    protected void onCreate() {
-        super.onCreate();
-    }
-
 }

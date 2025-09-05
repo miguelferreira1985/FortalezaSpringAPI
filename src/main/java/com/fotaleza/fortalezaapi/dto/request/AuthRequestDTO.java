@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

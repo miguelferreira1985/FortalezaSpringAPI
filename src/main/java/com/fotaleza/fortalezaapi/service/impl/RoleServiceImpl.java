@@ -1,6 +1,6 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.model.ERole;
+import com.fotaleza.fortalezaapi.enums.ERole;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.repository.RoleRepository;
 import com.fotaleza.fortalezaapi.service.IRoleService;

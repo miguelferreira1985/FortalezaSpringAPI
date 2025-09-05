@@ -1,6 +1,8 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.service.IPresentationService;
 import com.fotaleza.fortalezaapi.service.impl.PresentationServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,17 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/presentation")
+@RequestMapping("/api/v1/presentations")
+@RequiredArgsConstructor
 public class PresentationController {
 
-    private final PresentationServiceImpl presentationService;
+    private final IPresentationService presentationService;
 
-    @Autowired
-    public PresentationController(PresentationServiceImpl presentationService) {
-        this.presentationService = presentationService;
-    }
-
-    @GetMapping("/getAllPresentations")
+    @GetMapping()
     public ResponseEntity<?> getAllPresentations() {
         return ResponseEntity
                 .status(HttpStatus.OK)

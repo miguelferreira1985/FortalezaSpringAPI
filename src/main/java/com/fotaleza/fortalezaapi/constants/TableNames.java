@@ -4,7 +4,6 @@ public class TableNames {
 
     public static final String TABLE_USERS = "users";
     public static final String TABLE_ROLES = "roles";
-    public static final String TABLE_COLORS = "colors";
     public static final String TABLE_USER_ROLES = "user_roles";
     public static final String TABLE_PRESENTATIONS = "presentations";
     public static final String TABLE_CATEGORIES = "categories";
@@ -14,5 +13,10 @@ public class TableNames {
     public static final String TABLE_SUBCATEGORIES = "subcategories";
     public static final String TABLE_PRODUCTS = "products";
     public static final String TABLE_PRODUCTS_SUPPLIERS = "product_suppiers";
+    public static final String TABLE_CASH_START = "cashStart";
+    public static final String TABLE_CASH_CUT = "cashCut";
+    public static final String TABLE_CASH_OUT_FLOW = "cashOutFlow";
+    public static final String TABLE_SALE = "sales";
+    public static final String TABLE_SALE_ITEMS = "saleItems";
 
 }

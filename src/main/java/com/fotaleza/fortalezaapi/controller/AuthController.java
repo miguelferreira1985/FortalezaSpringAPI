@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.AuthResponseDTO;
-import com.fotaleza.fortalezaapi.dto.AuthRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.AuthResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.AuthRequestDTO;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;

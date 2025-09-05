@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.model;
+package com.fotaleza.fortalezaapi.enums;
 
 public enum ERole {
 

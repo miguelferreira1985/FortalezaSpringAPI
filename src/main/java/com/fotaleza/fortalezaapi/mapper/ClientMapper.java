@@ -19,10 +19,20 @@ public interface ClientMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "rfc", expression = "java(clientRequestDTO.getRfc() != null ? clientRequestDTO.getRfc().toUpperCase() : null)")
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Client toEntity(ClientRequestDTO clientRequestDTO);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "rfc", expression = "java(clientRequestDTO.getRfc() != null ? clientRequestDTO.getRfc().toUpperCase() : null)")
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     void updateEntityFromRequestDTO(ClientRequestDTO clientRequestDTO, @MappingTarget Client client);
 
 }

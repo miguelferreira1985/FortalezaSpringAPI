@@ -10,7 +10,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_CLIENTS)
@@ -45,6 +44,7 @@ public class Client extends AuditableEntity {
 
     @PrePersist
     protected void onCreate() {
+        super.onCreate();
         if (this.rfc != null) {
             this.rfc = this.rfc.toUpperCase();
         }
@@ -52,6 +52,7 @@ public class Client extends AuditableEntity {
 
     @PreUpdate
     protected void onUpdate() {
+        super.onUpdate();
         if (this.rfc != null) {
             this.rfc = this.rfc.toUpperCase();
         }

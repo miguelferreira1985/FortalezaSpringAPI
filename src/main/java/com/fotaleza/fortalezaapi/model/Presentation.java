@@ -2,6 +2,7 @@ package com.fotaleza.fortalezaapi.model;
 
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
+import com.fotaleza.fortalezaapi.enums.EPresentation;
 import jakarta.persistence.*;
 import lombok.*;
 

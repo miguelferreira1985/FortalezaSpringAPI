@@ -23,5 +23,6 @@ public class ClientResponseDTO {
 
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;
-
+    private String createdBy;
+    private String updatedBy;
 }

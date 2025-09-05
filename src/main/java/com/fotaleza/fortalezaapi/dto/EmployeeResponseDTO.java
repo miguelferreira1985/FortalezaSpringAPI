@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,5 +22,10 @@ public class EmployeeResponseDTO {
     private String ssn;
     private Long userId;
     private Boolean isActivate;
+
+    private LocalDateTime createdDateTime;
+    private LocalDateTime updatedDateTime;
+    private String createdBy;
+    private String updatedBy;
 
 }

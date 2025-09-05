@@ -22,10 +22,14 @@ public interface SubcategoryMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "category.id", source = "categoryId")
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
     Subcategory toEntity(SubcategoryRequestDTO subcategoryRequestDTO);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "category.id", source = "categoryId")
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
     void updateEntityFromRequestDTO(SubcategoryRequestDTO subcategoryRequestDTO, @MappingTarget Subcategory subcategory);
 }

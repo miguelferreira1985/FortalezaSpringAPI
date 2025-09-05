@@ -42,9 +42,4 @@ public class Supplier extends AuditableEntity {
     @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();
 
-    @PrePersist
-    protected void onCreate() {
-        super.onCreate();
-    }
-
 }

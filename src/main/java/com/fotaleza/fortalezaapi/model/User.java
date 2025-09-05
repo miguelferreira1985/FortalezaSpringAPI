@@ -44,9 +44,4 @@ public class User extends AuditableEntity {
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
 
-    @PrePersist
-    protected void onCreate() {
-        super.onCreate();
-    }
-
 }

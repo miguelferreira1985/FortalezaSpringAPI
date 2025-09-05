@@ -2,7 +2,7 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
-import com.fotaleza.fortalezaapi.service.impl.EmployeeServiceImpl;
+import com.fotaleza.fortalezaapi.service.IEmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,11 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/employee")
+@RequestMapping("/api/v1/employees")
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final EmployeeServiceImpl employeeService;
+    private final IEmployeeService employeeService;
 
     @PostMapping()
     public ResponseEntity<EmployeeResponseDTO> createEmployeeAndUser(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
@@ -36,7 +36,6 @@ public class EmployeeController {
     }
 
     @GetMapping
-    @RequestMapping("/getAllEmployees")
     public ResponseEntity<List<EmployeeResponseDTO>> getAllEmployees(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
         List<EmployeeResponseDTO> employees = employeeService.getAllEmployees(isActivate);
         return ResponseEntity.ok(employees);

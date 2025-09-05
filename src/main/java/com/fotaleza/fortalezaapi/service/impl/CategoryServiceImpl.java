@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 import com.fotaleza.fortalezaapi.dto.CategoryDTO;
-import com.fotaleza.fortalezaapi.exception.CategoryNotFoundException;
+import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.CategoryMapper;
 import com.fotaleza.fortalezaapi.model.Category;
 import com.fotaleza.fortalezaapi.repository.CategoryRepository;
@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public CategoryDTO getCategoryById(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("La categoria no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoria no existe"));
         return categoryMapper.toDTO(category);
     }
 

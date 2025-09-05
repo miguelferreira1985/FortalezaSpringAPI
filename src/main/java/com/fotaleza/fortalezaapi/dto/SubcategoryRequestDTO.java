@@ -2,21 +2,24 @@ package com.fotaleza.fortalezaapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
-public class SubcategoryDTO {
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class SubcategoryRequestDTO {
 
     private Integer id;
 
-    @NotBlank
-    @Size(max = 50)
+    @NotBlank(message = "El nombre no puede estar en blanco.")
+    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres.")
     private String name;
 
     private String description;
     private Integer categoryId;
-    private Set<Integer> productIds;
-    private Boolean isActivate;
+
 }
