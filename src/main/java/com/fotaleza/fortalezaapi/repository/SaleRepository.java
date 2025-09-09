@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
-    @Query("SELECT COALESCE(SUM(s.totalAmount), 0) FROM Sales s WHERE s.cashStart.id = :cashStartId AND s.paymentType = :paymentType")
+    @Query("SELECT COALESCE(SUM(s.totalAmount), 0) FROM Sale s WHERE s.cashStart.id = :cashStartId AND s.paymentType = :paymentType")
     BigDecimal sumTotalAmountByCashStartIdAndPaymentType(@Param("cashStartId") Integer cashStartId, @Param("paymentType")PaymentType paymentType);
 
 }
