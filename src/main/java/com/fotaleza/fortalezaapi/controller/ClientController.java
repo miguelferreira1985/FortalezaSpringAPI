@@ -1,8 +1,8 @@
 package com.fotaleza.fortalezaapi.controller;
 
 
-import com.fotaleza.fortalezaapi.dto.ClientRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ClientResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.service.IClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -93,7 +93,7 @@ public class AuthController {
             } else {
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
-                        .body("Token para refrescar invalido.");
+                        .body("Token para refrescar inválido.");
             }
         } catch (Exception e) {
             return ResponseEntity

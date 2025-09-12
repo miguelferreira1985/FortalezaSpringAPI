@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.SupplierRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SupplierRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SupplierResponseDTO;
 import com.fotaleza.fortalezaapi.model.Supplier;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

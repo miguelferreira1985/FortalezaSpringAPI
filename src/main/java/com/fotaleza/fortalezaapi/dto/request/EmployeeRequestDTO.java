@@ -1,5 +1,6 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.request;
 
+import com.fotaleza.fortalezaapi.dto.UserDataDTO;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -9,6 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeRequestDTO {
+
+    private Integer id;
 
     @NotBlank(message = "El nombre no puede estar en blanco.")
     @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres.")

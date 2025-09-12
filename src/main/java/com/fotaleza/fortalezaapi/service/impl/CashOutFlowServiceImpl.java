@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.CashOutFlowRequestDTO;
-import com.fotaleza.fortalezaapi.dto.CashOutFlowResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.CashOutFlowRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.CashOutFlowResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.CashOutFlowMapper;
 import com.fotaleza.fortalezaapi.model.CashOutFlow;

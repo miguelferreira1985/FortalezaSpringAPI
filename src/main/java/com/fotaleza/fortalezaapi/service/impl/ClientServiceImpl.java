@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.ClientRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ClientResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ClientMapper;

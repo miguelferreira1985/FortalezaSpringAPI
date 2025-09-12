@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.request;
 
 import com.fotaleza.fortalezaapi.enums.PaymentType;
 import jakarta.validation.Valid;

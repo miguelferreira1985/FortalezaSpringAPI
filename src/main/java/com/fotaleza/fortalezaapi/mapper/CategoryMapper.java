@@ -1,8 +1,10 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.CategoryDTO;
+import com.fotaleza.fortalezaapi.dto.request.CategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.CategoryResponseDTO;
 import com.fotaleza.fortalezaapi.model.Category;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
@@ -11,9 +13,14 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CategoryMapper {
 
-    CategoryDTO toDTO(Category category);
-    Category toEntity(CategoryDTO categoryDTO);
-    void updateEntityFromDTO(CategoryDTO categoryDTO, @MappingTarget Category category);
-    List<CategoryDTO> toDTOList(List<Category> categories);
+    CategoryResponseDTO toResponseDTO(Category category);
+
+    @Mapping(target = "id", ignore = true)
+    Category toEntity(CategoryRequestDTO categoryRequestDTO);
+
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromRequestDTO(CategoryRequestDTO categoryRequestDTO, @MappingTarget Category category);
+
+    List<CategoryResponseDTO> toResponseDTOList(List<Category> categories);
 
 }

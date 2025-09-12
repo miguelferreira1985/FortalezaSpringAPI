@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SubcategoryRequestDTO;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

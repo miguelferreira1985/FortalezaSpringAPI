@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
-import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.dto.UserDataDTO;
 import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.User;

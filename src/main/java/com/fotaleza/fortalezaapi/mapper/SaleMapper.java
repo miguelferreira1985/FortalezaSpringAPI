@@ -1,9 +1,9 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.SaleItemRequestDto;
-import com.fotaleza.fortalezaapi.dto.SaleItemResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SaleRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SaleResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SaleItemRequestDto;
+import com.fotaleza.fortalezaapi.dto.response.SaleItemResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SaleRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SaleResponseDTO;
 import com.fotaleza.fortalezaapi.model.Sale;
 import com.fotaleza.fortalezaapi.model.SaleItem;
 import org.mapstruct.Mapper;

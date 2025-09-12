@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.ProductRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 import com.fotaleza.fortalezaapi.service.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -72,10 +73,16 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PatchMapping("/{id}/deactivate")
+    @PatchMapping("/{id}/desactivate")
     public ResponseEntity<ProductResponseDTO> deactivateProduct(@PathVariable Integer id) {
         ProductResponseDTO product = productService.deactivateProduct(id);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/inventory-value")
+    public ResponseEntity<BigDecimal> getInventoryValue() {
+        BigDecimal totalValue = productService.getInventoryValue();
+        return ResponseEntity.ok(totalValue);
     }
 
 }

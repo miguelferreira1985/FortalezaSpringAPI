@@ -1,8 +1,8 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 
-import com.fotaleza.fortalezaapi.dto.ProductRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ProductMapper;
@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -119,13 +120,25 @@ public class ProductServiceImpl implements IProductService {
         return productMapper.toResponseDTO(savedProduct);
     }
 
+    @Override
+    public BigDecimal getInventoryValue() {
+        return productRepository.calculateTotalInventoryValue();
+    }
+
     private void validateNameOrCodeUnique(String name, String code, Integer productId) {
-        productRepository.findByNameOrCode(name, code)
-                .ifPresent(p -> {
-                    if (productId == null || p.getId().equals(productId)) {
+
+        if (productId == null) {
+            productRepository.findByNameOrCode(name, code)
+                    .ifPresent(p -> {
+                            throw new ResourceAlreadyExistsException("El producto con el nombre o codigo ya existe.;");
+                    });
+        } else {
+            productRepository.findByNameOrCodeAndIdNot(name, code, productId)
+                    .ifPresent(p -> {
                         throw new ResourceAlreadyExistsException("El producto con el nombre o codigo ya existe.;");
-                    }
-                });
+                    });
+        }
+
     }
 
 }

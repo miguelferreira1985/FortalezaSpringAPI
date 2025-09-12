@@ -36,8 +36,11 @@ public class Supplier extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50, unique = true)
     private String email;
 
-    @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
-    private String phone;
+    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 20)
+    private String contactPhone;
+
+    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 20)
+    private String officePhone;
 
     @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
     private Set<Product> products = new HashSet<>();

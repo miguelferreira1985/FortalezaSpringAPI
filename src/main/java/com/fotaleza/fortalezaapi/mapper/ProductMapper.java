@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.ProductRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 import com.fotaleza.fortalezaapi.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,7 +14,9 @@ import java.util.List;
 public interface ProductMapper {
 
     @Mapping(target = "subcategoryId", source = "subcategory.id")
+    @Mapping(target = "subcategoryName", source = "subcategory.name")
     @Mapping(target = "supplierIds", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getId()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
+    @Mapping(target = "supplierNames", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getName()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
     @Mapping(target = "profitMargin", expression = "java(product.getProfitMargin())")
     @Mapping(target = "profitValue", expression = "java(product.getProfitValue())")
     @Mapping(target = "inventoryValue", expression = "java(product.getInventoryValue())")

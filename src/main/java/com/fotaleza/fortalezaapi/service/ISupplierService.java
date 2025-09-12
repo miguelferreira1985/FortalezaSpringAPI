@@ -1,8 +1,8 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierResponseDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SupplierRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SupplierResponseDTO;
 
 import java.util.List;
 

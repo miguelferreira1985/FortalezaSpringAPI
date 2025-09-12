@@ -24,9 +24,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
-    private ECategory name;
+    private String name;
+
+    @Column(name = ColumnNames.COLUMN_DESCRIPTION, length = 200)
+    private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subcategory> subcategories = new HashSet<>();

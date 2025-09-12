@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.dto.ClientRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ClientResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 
 import java.util.List;
 

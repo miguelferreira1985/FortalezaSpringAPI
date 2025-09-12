@@ -1,8 +1,8 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SupplierResponseDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SupplierRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SupplierResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ProductMapper;
@@ -41,7 +41,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Transactional
     public SupplierResponseDTO updateSupplier(Integer supplierId, SupplierRequestDTO supplierRequestDTO) {
         Supplier supplierToUpdate = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("El proveedor %s que desea actualizar no existe.", supplierRequestDTO.getName())));
 
         validateNameUnique(supplierRequestDTO.getName(), supplierId);
 
@@ -55,7 +55,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Transactional
     public void deleteSupplier(Integer supplierId) {
         Supplier supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea borrar no existe."));
         supplier.setIsActivate(false);
         supplierRepository.save(supplier);
     }

@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.dto.CashStartRequestDTO;
-import com.fotaleza.fortalezaapi.dto.CashStartResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.CashStartRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.CashStartResponseDTO;
 
 public interface ICashStartService {
 

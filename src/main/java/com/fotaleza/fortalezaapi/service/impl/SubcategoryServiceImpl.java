@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SubcategoryRequestDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.SubcategoryMapper;

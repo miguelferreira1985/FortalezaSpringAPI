@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
-import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.EmployeeMapper;
@@ -28,7 +28,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     @Transactional
-    public EmployeeResponseDTO crreateEmployee(EmployeeRequestDTO employeeRequestDTO) {
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDTO) {
         validateSsnUnique(employeeRequestDTO.getSsn(), null);
 
         User user = userService.createUser(

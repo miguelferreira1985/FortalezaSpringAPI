@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +8,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class CashCutResponseDTO {
+public class CashOutFlowResponseDTO {
 
     private Integer id;
-    private Integer cashStartId; // The ID of the cash shift that was cut
-    private BigDecimal startAmount;
-    private BigDecimal finalAmount;
-    private BigDecimal difference;
+    private BigDecimal amount;
+    private String reason;
+    private Integer cashStartId;
     private Boolean isActivate;
 
     private LocalDateTime createdDateTime;

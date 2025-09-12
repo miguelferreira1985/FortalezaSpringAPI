@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.response;
 
 import com.fotaleza.fortalezaapi.enums.PaymentType;
 import lombok.Getter;

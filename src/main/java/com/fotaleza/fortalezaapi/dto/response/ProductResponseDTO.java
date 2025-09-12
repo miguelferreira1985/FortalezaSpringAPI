@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.response;
 
 import lombok.*;
 
@@ -21,8 +21,11 @@ public class ProductResponseDTO {
     private BigDecimal cost;
     private BigDecimal stock;
     private BigDecimal minimumStock;
+    private BigDecimal recommendedStock;
     private Integer subcategoryId;
+    private String subcategoryName;
     private Set<Integer> supplierIds;
+    private Set<String> supplierNames;
     private Boolean isActivate;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

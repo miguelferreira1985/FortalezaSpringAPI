@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
-import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SubcategoryRequestDTO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.SaleRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SaleResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SaleRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SaleResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.SaleMapper;
 import com.fotaleza.fortalezaapi.model.CashStart;

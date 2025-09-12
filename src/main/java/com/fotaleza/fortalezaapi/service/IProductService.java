@@ -1,8 +1,9 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.dto.ProductRequestDTO;
-import com.fotaleza.fortalezaapi.dto.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IProductService {
@@ -14,5 +15,6 @@ public interface IProductService {
     List<ProductResponseDTO> getAllProducts(Boolean isActivate);
     ProductResponseDTO activateProduct(Integer productId);
     ProductResponseDTO deactivateProduct(Integer productId);
+    BigDecimal getInventoryValue();
 
 }

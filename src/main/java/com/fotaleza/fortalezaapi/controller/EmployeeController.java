@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.EmployeeRequestDTO;
-import com.fotaleza.fortalezaapi.dto.EmployeeResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.service.IEmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class EmployeeController {
 
     @PostMapping()
     public ResponseEntity<EmployeeResponseDTO> createEmployeeAndUser(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
-        EmployeeResponseDTO employeeCreated = employeeService.crreateEmployee(employeeRequestDTO);
+        EmployeeResponseDTO employeeCreated = employeeService.createEmployee(employeeRequestDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(employeeCreated.getId())

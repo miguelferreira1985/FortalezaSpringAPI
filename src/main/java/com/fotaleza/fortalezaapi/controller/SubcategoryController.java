@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryRequestDTO;
-import com.fotaleza.fortalezaapi.dto.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SubcategoryRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SubcategoryResponseDTO;
 import com.fotaleza.fortalezaapi.service.ISubcategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

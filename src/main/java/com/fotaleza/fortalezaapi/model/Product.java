@@ -51,6 +51,9 @@ public class Product extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_MINIMUM_STOCK, nullable = false)
     private BigDecimal minimumStock;
 
+    @Column(name = ColumnNames.COlUMN_RECOMMENDED_STOCK, nullable = false)
+    private BigDecimal recommendedStock;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ColumnNames.COLUMN_SUBCATEGORY_ID)
     private Subcategory subcategory;

@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +8,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class CashOutFlowResponseDTO {
+public class CashStartResponseDTO {
 
     private Integer id;
-    private BigDecimal amount;
-    private String reason;
-    private Integer cashStartId;
+    private BigDecimal startAmount;
+    private LocalDateTime endDateTime;
+    private BigDecimal finalAmount;
+    private BigDecimal difference;
     private Boolean isActivate;
 
     private LocalDateTime createdDateTime;

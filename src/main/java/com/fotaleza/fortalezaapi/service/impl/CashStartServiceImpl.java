@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
-import com.fotaleza.fortalezaapi.dto.CashStartRequestDTO;
-import com.fotaleza.fortalezaapi.dto.CashStartResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.CashStartRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.CashStartResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.mapper.CashStartMapper;
 import com.fotaleza.fortalezaapi.model.CashStart;

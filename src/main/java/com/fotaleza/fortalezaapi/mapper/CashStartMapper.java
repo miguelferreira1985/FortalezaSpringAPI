@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.CashStartRequestDTO;
-import com.fotaleza.fortalezaapi.dto.CashStartResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.CashStartRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.CashStartResponseDTO;
 import com.fotaleza.fortalezaapi.model.CashStart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

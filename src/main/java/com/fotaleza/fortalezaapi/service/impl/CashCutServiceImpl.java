@@ -1,7 +1,7 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 import com.fotaleza.fortalezaapi.dto.CashCutReportDTO;
-import com.fotaleza.fortalezaapi.dto.CashCutRequestDTO;
+import com.fotaleza.fortalezaapi.dto.request.CashCutRequestDTO;
 import com.fotaleza.fortalezaapi.enums.PaymentType;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.CashCutMapper;

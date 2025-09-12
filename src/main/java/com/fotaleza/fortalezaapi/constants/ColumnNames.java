@@ -27,6 +27,8 @@ public class ColumnNames {
     public static final String COLUMN_LAST_NAME = "lastName";
     public static final String COLUMN_RFC = "rfc";
     public static final String COLUMN_COMPANY_NAME = "companyName";
+    public static final String COLUMN_CONTACT_PHONE = "contactPhone";
+    public static final String COLUMN_OFFICE_PHONE = "officePhone";
     public static final String COLUMN_PHONE = "phone";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address";
@@ -50,5 +52,6 @@ public class ColumnNames {
     public static final String COLUMN_QUANTITY = "quantity";
     public static final String COLUMN_UNIT_PRICE = "unitPrice";
     public static final String COLUMN_SUBTOTAL = "subtotal";
+    public static final String COlUMN_RECOMMENDED_STOCK = "recommendedStock";
 
 }

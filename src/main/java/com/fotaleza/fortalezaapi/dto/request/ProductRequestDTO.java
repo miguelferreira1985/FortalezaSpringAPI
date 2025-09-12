@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -43,6 +43,10 @@ public class ProductRequestDTO {
     @NotNull(message = "El stock mínimo no puede ser nulo.")
     @DecimalMin(value = "0.0", message = "El stock mínimo debe ser mayor o igual a 0.")
     private BigDecimal minimumStock;
+
+    @NotNull(message = "El stock recomendado no puede ser nulo.")
+    @DecimalMin(value = "0.0", message = "El stock recomendado debe ser mayor o igual a 0.")
+    private BigDecimal recommendedStock;
 
     private Integer subcategoryId;
     private Set<Integer> supplierIds;
