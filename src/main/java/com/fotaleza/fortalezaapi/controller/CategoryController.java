@@ -26,7 +26,7 @@ public class CategoryController {
                 .path("/{id}")
                 .buildAndExpand(createdCategory.getId())
                 .toUri();
-        return  ResponseEntity.ok(createdCategory);
+        return  ResponseEntity.created(location).body(createdCategory);
     }
 
     @PutMapping("/{id}")
