@@ -13,23 +13,26 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SubcategoryMapper {
 
-    @Mapping(target = "categoryId", source = "category.id")
-    @Mapping(target = "productIds", expression = "java(subcategory.getProducts() != null ? subcategory.getProducts().stream().map(p -> p.getId()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
+    @Mapping(target = "category", source = "category")
     SubcategoryResponseDTO toResponseDTO(Subcategory subcategory);
 
     List<SubcategoryResponseDTO> toResponseDTOList(List<Subcategory> subcategories);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "products", ignore = true)
-    @Mapping(target = "category.id", source = "categoryId")
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Subcategory toEntity(SubcategoryRequestDTO subcategoryRequestDTO);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "products", ignore = true)
-    @Mapping(target = "category.id", source = "categoryId")
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     void updateEntityFromRequestDTO(SubcategoryRequestDTO subcategoryRequestDTO, @MappingTarget Subcategory subcategory);
 }

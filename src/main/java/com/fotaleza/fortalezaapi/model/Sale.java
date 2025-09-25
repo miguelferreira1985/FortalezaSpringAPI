@@ -1,6 +1,7 @@
 package com.fotaleza.fortalezaapi.model;
 
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
+import com.fotaleza.fortalezaapi.constants.TableNames;
 import com.fotaleza.fortalezaapi.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(callSuper = true, exclude = {"saleItems", "cashStart"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@Table
+@Table(name = TableNames.TABLE_SALES)
 public class Sale extends AuditableEntity {
 
     @Id

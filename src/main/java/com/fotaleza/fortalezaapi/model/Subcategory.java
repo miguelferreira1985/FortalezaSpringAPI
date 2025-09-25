@@ -5,14 +5,12 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"category", "products"})
+@ToString(exclude = {"category"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_SUBCATEGORIES,
     indexes = {
@@ -33,11 +31,8 @@ public class Subcategory extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_DESCRIPTION)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = ColumnNames.COLUMN_CATEGORY_ID, nullable = false)
     private Category category;
-
-    @OneToMany(mappedBy = "subcategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false, fetch = FetchType.LAZY)
-    private Set<Product> products = new HashSet<>();
 
 }

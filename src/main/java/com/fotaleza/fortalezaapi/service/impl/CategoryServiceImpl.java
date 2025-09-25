@@ -24,10 +24,8 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
-        categoryRepository.findByName(categoryRequestDTO.getName())
-                .ifPresent(c -> {
-                    throw new ResourceAlreadyExistsException("La categoria ya existe");
-                });
+
+        validateNameUnique(categoryRequestDTO.getName(), null);
 
         Category category = categoryMapper.toEntity(categoryRequestDTO);
         Category savedCategory = categoryRepository.save(category);
@@ -39,14 +37,9 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     public CategoryResponseDTO updateCategory(Integer categoryId, CategoryRequestDTO categoryRequestDTO) {
         Category categoryToUpdate = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La categoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoria que desea actualiza no existe."));
 
-        categoryRepository.findByName(categoryRequestDTO.getName())
-                .ifPresent( c -> {
-                    if (c.getId().equals(categoryId)) {
-                        throw new ResourceAlreadyExistsException("El nombre de la categoria ya existe.");
-                    }
-                });
+        validateNameUnique(categoryRequestDTO.getName(), categoryId);
 
         categoryMapper.updateEntityFromRequestDTO(categoryRequestDTO, categoryToUpdate);
 
@@ -59,7 +52,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public CategoryResponseDTO getCategoryById(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La categoria no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría no existe"));
         return categoryMapper.toResponseDTO(category);
     }
 
@@ -67,6 +60,21 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryResponseDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categoryMapper.toResponseDTOList(categories);
+    }
+
+    private void validateNameUnique(String name, Integer categoryId) {
+
+        if (categoryId == null) {
+            categoryRepository.findByName(name)
+                    .ifPresent(c -> {
+                        throw new ResourceAlreadyExistsException("Ya existe una Categorìa con este nombre.");
+                    });
+        } else {
+            categoryRepository.findByNameAndIdNot(name, categoryId)
+                    .ifPresent(c -> {
+                        throw new ResourceAlreadyExistsException("Ya existe una Categorìa con este nombre.");
+                    });
+        }
     }
 
 }

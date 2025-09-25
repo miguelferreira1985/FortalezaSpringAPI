@@ -39,7 +39,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
         Employee employee = employeeMapper.toEntity(employeeRequestDTO);
         employee.setUser(user);
-        employee.setIsActivate(true);
 
         Employee savedEmployed = employeeRepository.save(employee);
         return employeeMapper.toResponseDTO(savedEmployed);

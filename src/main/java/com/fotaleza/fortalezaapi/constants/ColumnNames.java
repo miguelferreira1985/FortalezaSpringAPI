@@ -53,5 +53,6 @@ public class ColumnNames {
     public static final String COLUMN_UNIT_PRICE = "unitPrice";
     public static final String COLUMN_SUBTOTAL = "subtotal";
     public static final String COlUMN_RECOMMENDED_STOCK = "recommendedStock";
+    public static final String COLUMN_ABBREVIATION = "abbreviation";
 
 }

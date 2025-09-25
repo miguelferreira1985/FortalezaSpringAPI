@@ -13,7 +13,6 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SupplierMapper {
 
-    @Mapping(target = "productIds", expression = "java(supplier.getProducts() != null ? supplier.getProducts().stream().map(p -> p.getId()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
     SupplierResponseDTO toResponseDTO(Supplier supplier);
 
     List<SupplierResponseDTO> toResponseDTOList(List<Supplier> suppliers);

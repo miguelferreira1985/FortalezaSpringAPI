@@ -19,7 +19,6 @@ public class SupplierResponseDTO {
     private String email;
     private String contactPhone;
     private String officePhone;
-    private Set<Integer> productIds;
     private Boolean isActivate;
 
     private LocalDateTime createdDateTime;

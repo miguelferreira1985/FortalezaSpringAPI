@@ -2,12 +2,12 @@ package com.fotaleza.fortalezaapi.model;
 
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
-import com.fotaleza.fortalezaapi.enums.EPresentation;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -21,8 +21,10 @@ public class Presentation {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
-    private EPresentation name;
+    private String name;
+
+    @Column(name = ColumnNames.COLUMN_ABBREVIATION, length =  10, nullable = false)
+    private String abbreviation;
 
 }

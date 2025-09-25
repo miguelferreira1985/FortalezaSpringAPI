@@ -13,10 +13,10 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductMapper {
 
-    @Mapping(target = "subcategoryId", source = "subcategory.id")
-    @Mapping(target = "subcategoryName", source = "subcategory.name")
-    @Mapping(target = "supplierIds", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getId()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
-    @Mapping(target = "supplierNames", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getName()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
+    @Mapping(target = "subcategory", source = "subcategory")
+    @Mapping(target = "presentation", source = "presentation")
+    @Mapping(target = "suppliers", source = "suppliers")
+    //@Mapping(target = "supplierNames", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getName()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
     @Mapping(target = "profitMargin", expression = "java(product.getProfitMargin())")
     @Mapping(target = "profitValue", expression = "java(product.getProfitValue())")
     @Mapping(target = "inventoryValue", expression = "java(product.getInventoryValue())")
@@ -27,6 +27,7 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "presentation", ignore = true)
     @Mapping(target = "suppliers", ignore = true)
     @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
@@ -37,6 +38,7 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "presentation", ignore = true)
     @Mapping(target = "suppliers", ignore = true)
     @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)

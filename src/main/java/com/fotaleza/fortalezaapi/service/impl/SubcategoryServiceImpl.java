@@ -52,6 +52,10 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
 
         subcategoryMapper.updateEntityFromRequestDTO(subcategoryRequestDTO, subcategoryToUpdate);
 
+        Category category = categoryRepository.findById(subcategoryRequestDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría seleccionada no existe."));
+        subcategoryToUpdate.setCategory(category);
+
         Subcategory updatedSubcategory = subcategoryRepository.save(subcategoryToUpdate);
         return subcategoryMapper.toResponseDTO(updatedSubcategory);
     }

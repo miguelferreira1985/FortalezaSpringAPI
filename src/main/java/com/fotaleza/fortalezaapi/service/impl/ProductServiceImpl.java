@@ -6,9 +6,11 @@ import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ProductMapper;
+import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 import com.fotaleza.fortalezaapi.model.Supplier;
+import com.fotaleza.fortalezaapi.repository.PresentationRepository;
 import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
 import com.fotaleza.fortalezaapi.repository.SupplierRepository;
@@ -29,6 +31,7 @@ public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
     private final SubcategoryRepository subcategoryRepository;
+    private final PresentationRepository presentationRepository;
     private final SupplierRepository supplierRepository;
     private final ProductMapper productMapper;
 
@@ -43,6 +46,10 @@ public class ProductServiceImpl implements IProductService {
         Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Subcategoria no encontrada."));
         product.setSubcategory(subcategory);
+
+        Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Presentación no encontrada."));
+        product.setPresentation(presentation);
 
         Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
         product.setSuppliers(suppliers);
@@ -64,6 +71,10 @@ public class ProductServiceImpl implements IProductService {
         Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Subcategoria no encontrada."));
         productToUpdate.setSubcategory(subcategory);
+
+        Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Presentación no encontrada."));
+        productToUpdate.setPresentation(presentation);
 
         Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
         productToUpdate.setSuppliers(suppliers);

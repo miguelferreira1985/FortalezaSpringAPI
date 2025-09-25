@@ -16,7 +16,7 @@ public class TableNames {
     public static final String TABLE_CASH_START = "cashStart";
     public static final String TABLE_CASH_CUT = "cashCut";
     public static final String TABLE_CASH_OUT_FLOW = "cashOutFlow";
-    public static final String TABLE_SALE = "sales";
+    public static final String TABLE_SALES = "sales";
     public static final String TABLE_SALE_ITEMS = "saleItems";
 
 }

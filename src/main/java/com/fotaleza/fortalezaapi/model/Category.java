@@ -5,15 +5,12 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "subcategories")
+@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = TableNames.TABLE_CATEGORIES)
 public class Category {
@@ -28,7 +25,4 @@ public class Category {
 
     @Column(name = ColumnNames.COLUMN_DESCRIPTION, length = 200)
     private String description;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Subcategory> subcategories = new HashSet<>();
 }

@@ -49,6 +49,7 @@ public class ProductRequestDTO {
     private BigDecimal recommendedStock;
 
     private Integer subcategoryId;
+    private Integer presentationId;
     private Set<Integer> supplierIds;
 
 }

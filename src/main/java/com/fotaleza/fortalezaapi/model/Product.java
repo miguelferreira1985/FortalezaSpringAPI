@@ -54,9 +54,13 @@ public class Product extends AuditableEntity {
     @Column(name = ColumnNames.COlUMN_RECOMMENDED_STOCK, nullable = false)
     private BigDecimal recommendedStock;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = ColumnNames.COLUMN_SUBCATEGORY_ID)
     private Subcategory subcategory;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = ColumnNames.COLUMN_PRESENTATION_ID)
+    private Presentation presentation;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableNames.TABLE_PRODUCTS_SUPPLIERS,

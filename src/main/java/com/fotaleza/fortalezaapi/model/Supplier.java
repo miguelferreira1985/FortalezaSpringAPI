@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
@@ -43,6 +44,7 @@ public class Supplier extends AuditableEntity {
     private String officePhone;
 
     @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
 }

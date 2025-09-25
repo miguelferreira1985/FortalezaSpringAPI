@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.dto.response;
 
+import com.fotaleza.fortalezaapi.model.Category;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,7 @@ public class SubcategoryResponseDTO {
     private Integer id;
     private String name;
     private String description;
-    private Integer categoryId;
-    private Set<Integer> productIds;
+    private Category category;
     private Boolean isActivate;
 
     private LocalDateTime createdDateTime;
