@@ -1,64 +1,38 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.SubcategoryDTO;
-import com.fotaleza.fortalezaapi.model.Category;
-import com.fotaleza.fortalezaapi.model.Product;
+import com.fotaleza.fortalezaapi.dto.response.SubcategoryResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SubcategoryRequestDTO;
 import com.fotaleza.fortalezaapi.model.Subcategory;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-@Component
-public class SubcategoryMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface SubcategoryMapper {
 
-    public Subcategory toEntity(SubcategoryDTO dto) {
-        Subcategory subcategory = Subcategory.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .build();
+    @Mapping(target = "category", source = "category")
+    SubcategoryResponseDTO toResponseDTO(Subcategory subcategory);
 
-        if (dto.getCategoryId() != null) {
-            Category category = new Category();
-            category.setId(dto.getCategoryId());
-            subcategory.setCategory(category);
-        }
+    List<SubcategoryResponseDTO> toResponseDTOList(List<Subcategory> subcategories);
 
-        if (dto.getProductIds() != null) {
-            Set<Product> products = new HashSet<>();
-            for (Integer productId : dto.getProductIds()) {
-                Product product = new Product();
-                product.setId(productId);
-                products.add(product);
-            }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    Subcategory toEntity(SubcategoryRequestDTO subcategoryRequestDTO);
 
-        }
-
-
-        return subcategory;
-    }
-
-    public SubcategoryDTO toDto(Subcategory subcategory) {
-        SubcategoryDTO dto = new SubcategoryDTO();
-        dto.setId(subcategory.getId());
-        dto.setName(subcategory.getName());
-        dto.setDescription(subcategory.getDescription());
-
-        if (subcategory.getCategory() != null) {
-            dto.setCategoryId(subcategory.getCategory().getId());
-        }
-
-        if (subcategory.getProducts() != null) {
-            Set<Integer> productsId = subcategory.getProducts()
-                    .stream()
-                    .map(Product::getId)
-                    .collect(Collectors.toSet());
-
-            dto.setProductIds(productsId);
-        }
-
-        return dto;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    void updateEntityFromRequestDTO(SubcategoryRequestDTO subcategoryRequestDTO, @MappingTarget Subcategory subcategory);
 }

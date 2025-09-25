@@ -1,17 +1,16 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.model.Client;
+import com.fotaleza.fortalezaapi.dto.request.ClientRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 
 import java.util.List;
 
 public interface IClientService {
 
-    Client saveClient(Client client);
-    List<Client> getAllClients(Boolean isActivate);
-    Client getClientById(Integer clientId);
-    //Client getClientByName(String clientName);
-    //Boolean existsByClientName(String clientName);
-    Boolean existsByRfc(String rfc);
-    Client updateClient(Client client);
+    ClientResponseDTO createClient(ClientRequestDTO clientRequestDTO);
+    ClientResponseDTO updateClient(Integer clientId, ClientRequestDTO clientRequestDTO);
     void deleteClient(Integer clientId);
+    ClientResponseDTO getClientById(Integer clientId);
+    List<ClientResponseDTO> getAllClients(Boolean isActivate);
+
 }

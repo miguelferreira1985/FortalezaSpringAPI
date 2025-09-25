@@ -1,25 +1,23 @@
 package com.fotaleza.fortalezaapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "products")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true,callSuper = false)
 @Table(name = TableNames.TABLE_SUPPLIERS)
-public class Supplier {
+public class Supplier extends AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_SUPPLIER_ID)
@@ -27,40 +25,26 @@ public class Supplier {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_CONTACT, length = 50)
     private String contact;
 
-    @Size(max = 100)
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @Email
-    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
+    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50, unique = true)
     private String email;
 
-    @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
-    private String phone;
+    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 20)
+    private String contactPhone;
 
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
+    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 20)
+    private String officePhone;
 
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
+    @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
 
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
-    @PrePersist
-    protected void onCreate() { this.createdDateTime = LocalDateTime.now(); }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
-    }
 }

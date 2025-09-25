@@ -1,18 +1,20 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.model.Product;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 public interface IProductService {
 
-    Product createProduct(Product product);
-    Product updateProduct(Integer productId, Product product);
+    ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO);
+    ProductResponseDTO updateProduct(Integer productId, ProductRequestDTO productRequestDTO);
     void deleteProduct(Integer productId);
-    Optional<Product> getProductById(Integer productId);
-    List<Product> getAllProducts();
-    Optional<Product> getProductByCode(String code);
-    List<Product> getActiveProducts();
+    ProductResponseDTO getProductById(Integer productId);
+    List<ProductResponseDTO> getAllProducts(Boolean isActivate);
+    ProductResponseDTO activateProduct(Integer productId);
+    ProductResponseDTO deactivateProduct(Integer productId);
+    BigDecimal getInventoryValue();
 
 }
