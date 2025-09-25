@@ -3,7 +3,6 @@ package com.fotaleza.fortalezaapi.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter

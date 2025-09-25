@@ -4,7 +4,6 @@ import com.fotaleza.fortalezaapi.model.Category;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
