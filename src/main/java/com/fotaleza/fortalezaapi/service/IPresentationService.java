@@ -2,7 +2,6 @@ package com.fotaleza.fortalezaapi.service;
 
 import com.fotaleza.fortalezaapi.dto.request.PresentationRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.PresentationResponseDTO;
-import com.fotaleza.fortalezaapi.model.Presentation;
 
 import java.util.List;
 
