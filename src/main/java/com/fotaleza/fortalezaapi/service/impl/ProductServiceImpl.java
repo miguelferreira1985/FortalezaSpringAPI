@@ -88,8 +88,24 @@ public class ProductServiceImpl implements IProductService {
     public void deleteProduct(Integer productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("El producto no existe"));
-        product.setIsActivate(false);
-        productRepository.save(product);
+
+        boolean isStockZero = product.getStock().compareTo(BigDecimal.ZERO) == 0;
+        boolean isNotActive = !product.getIsActivate();
+
+        if (isStockZero && isNotActive) {
+            productRepository.deleteById(productId);
+        } else {
+            String message = "";
+            if (!isStockZero) {
+                message = "El stock tiene que estar en 0 para poder eliminar el producto.";
+            }
+
+            if (!isNotActive) {
+                message = "El producto debe esta desactivado para poder eliminarlo.";
+            }
+
+            throw new IllegalStateException(message);
+        }
     }
 
     @Override
@@ -135,6 +151,8 @@ public class ProductServiceImpl implements IProductService {
     public BigDecimal getInventoryValue() {
         return productRepository.calculateTotalInventoryValue();
     }
+
+
 
     private void validateNameOrCodeUnique(String name, String code, Integer productId) {
 

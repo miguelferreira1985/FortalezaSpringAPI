@@ -88,12 +88,18 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     private void validateNameUnique(String name, Integer supplierId) {
-        supplierRepository.findByName(name)
-                .ifPresent(s -> {
-                    if (supplierId == null || s.getId().equals(supplierId)) {
-                        throw new ResourceAlreadyExistsException("El proveedor con el nombre ya existe.");
-                    }
-                });
+
+        if (supplierId == null) {
+            supplierRepository.findByName(name)
+                    .ifPresent(s -> {
+                        throw new ResourceAlreadyExistsException("Ya existe un proveedor con este nombre.");
+                    });
+        } else {
+            supplierRepository.findByNameAndIdNot(name, supplierId)
+                    .ifPresent(s -> {
+                        throw new ResourceAlreadyExistsException("Ya existe un proveedor con este nombre.");
+                    });
+        }
     }
 
 }
