@@ -9,6 +9,7 @@ import com.fotaleza.fortalezaapi.mapper.ProductMapper;
 import com.fotaleza.fortalezaapi.mapper.SupplierMapper;
 import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.model.Supplier;
+import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.repository.SupplierRepository;
 import com.fotaleza.fortalezaapi.service.ISupplierService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SupplierServiceImpl implements ISupplierService {
 
     private final SupplierRepository supplierRepository;
+    private final ProductRepository productRepository;
     private final SupplierMapper supplierMapper;
     private final ProductMapper productMapper;
 
@@ -53,11 +56,19 @@ public class SupplierServiceImpl implements ISupplierService {
 
     @Override
     @Transactional
-    public void deleteSupplier(Integer supplierId) {
-        Supplier supplier = supplierRepository.findById(supplierId)
+    public void deleteSupplierAndReassignProducts(Integer supplierId) {
+        Supplier supplierToDelete = supplierRepository.findById(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea borrar no existe."));
-        supplier.setIsActivate(false);
-        supplierRepository.save(supplier);
+
+        Set<Product> associateProducts = supplierToDelete.getProducts();
+
+        for (Product product : associateProducts) {
+            product.getSuppliers().remove(supplierToDelete);
+        }
+
+        productRepository.saveAll(associateProducts);
+
+        supplierRepository.deleteById(supplierId);
     }
 
     @Override

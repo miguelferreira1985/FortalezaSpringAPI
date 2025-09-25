@@ -68,6 +68,11 @@ public class Product extends AuditableEntity {
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_SUPPLIER_ID))
     private Set<Supplier> suppliers = new HashSet<>();
 
+    public void removeSuppliers(Supplier supplier) {
+        this.suppliers.remove(supplier);
+        supplier.getProducts().remove(supplier);
+    }
+
     @Transient
     public boolean isBelowOrEqualMinimumStock() {
         return stock != null && minimumStock != null && stock.compareTo(minimumStock) <= 0;

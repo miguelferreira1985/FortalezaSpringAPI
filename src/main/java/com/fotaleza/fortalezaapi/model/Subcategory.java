@@ -32,7 +32,7 @@ public class Subcategory extends AuditableEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = ColumnNames.COLUMN_CATEGORY_ID, nullable = false)
+    @JoinColumn(name = ColumnNames.COLUMN_CATEGORY_ID)
     private Category category;
 
 }

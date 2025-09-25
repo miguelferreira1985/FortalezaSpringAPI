@@ -10,7 +10,7 @@ public interface ISupplierService {
 
     SupplierResponseDTO createSupplier(SupplierRequestDTO supplierRequestDTO);
     SupplierResponseDTO updateSupplier(Integer supplierId, SupplierRequestDTO supplierRequestDTO);
-    void deleteSupplier(Integer supplierId);
+    void deleteSupplierAndReassignProducts(Integer supplierId);
     SupplierResponseDTO getSupplierById(Integer supplierId);
     List<SupplierResponseDTO> getAllSuppliers(Boolean isActivate);
     List<ProductResponseDTO> getProductsOfSupplier(Integer supplierId);
