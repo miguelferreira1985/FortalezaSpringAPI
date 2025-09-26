@@ -1,17 +1,18 @@
 package com.fotaleza.fortalezaapi.service;
 
-import com.fotaleza.fortalezaapi.model.Supplier;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.dto.request.SupplierRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.SupplierResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ISupplierService {
 
-    Supplier createSupplier(Supplier supplier);
-    Supplier updateSupplier(Integer supplierId, Supplier supplier);
-    void deleteSupplier(Integer supplierId);
-    Optional<Supplier> getSupplierById(Integer supplierId);
-    List<Supplier> getAllSuppliers();
-    List<Supplier> getActiveSuppliers();
+    SupplierResponseDTO createSupplier(SupplierRequestDTO supplierRequestDTO);
+    SupplierResponseDTO updateSupplier(Integer supplierId, SupplierRequestDTO supplierRequestDTO);
+    void deleteSupplierAndReassignProducts(Integer supplierId);
+    SupplierResponseDTO getSupplierById(Integer supplierId);
+    List<SupplierResponseDTO> getAllSuppliers(Boolean isActivate);
+    List<ProductResponseDTO> getProductsOfSupplier(Integer supplierId);
 
 }

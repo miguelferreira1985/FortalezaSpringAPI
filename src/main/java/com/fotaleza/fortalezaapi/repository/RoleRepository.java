@@ -1,6 +1,6 @@
 package com.fotaleza.fortalezaapi.repository;
 
-import com.fotaleza.fortalezaapi.model.ERole;
+import com.fotaleza.fortalezaapi.enums.ERole;
 import com.fotaleza.fortalezaapi.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

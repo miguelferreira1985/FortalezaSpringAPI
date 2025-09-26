@@ -2,7 +2,6 @@ package com.fotaleza.fortalezaapi.constants;
 
 public class ColumnNames {
 
-    public static final String COLUMN_COLOR_ID = "colorId";
     public static final String COLUMN_PRESENTATION_ID = "presentationId";
     public static final String COLUMN_SUPPLIER_ID = "supplierId";
     public static final String COLUMN_USER_ID = "userId";
@@ -12,6 +11,11 @@ public class ColumnNames {
     public static final String COLUMN_EMPLOYEE_ID = "employeeId";
     public static final String COLUMN_PRODUCT_ID = "productId";
     public static final String COLUMN_SUBCATEGORY_ID = "subcategoryId";
+    public static final String COLUMN_CASH_START_ID = "cashStartId";
+    public static final String COLUMN_CASH_CUT_ID = "cashCutId";
+    public static final String COLUMN_CASH_OUT_FLOW_ID = "cashOutFlowId";
+    public static final String COLUMN_SALE_ID = "saleId";
+    public static final String COLUMN_SALE_ITEM_ID = "saleItemId";
     public static final String COLUMN_CREATED_DATE_TIME = "createdDateTime";
     public static final String COLUMN_UPDATED_DATE_TIME = "updatedDateTime";
     public static final String COLUMN_IS_ACTIVATE = "isActivate";
@@ -23,6 +27,8 @@ public class ColumnNames {
     public static final String COLUMN_LAST_NAME = "lastName";
     public static final String COLUMN_RFC = "rfc";
     public static final String COLUMN_COMPANY_NAME = "companyName";
+    public static final String COLUMN_CONTACT_PHONE = "contactPhone";
+    public static final String COLUMN_OFFICE_PHONE = "officePhone";
     public static final String COLUMN_PHONE = "phone";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_ADDRESS = "address";
@@ -33,5 +39,20 @@ public class ColumnNames {
     public static final String COLUMN_PRICE = "price";
     public static final String COLUMN_COST = "cost";
     public static final String COLUMN_MINIMUM_STOCK = "minimumStock";
+    public static final String COLUMN_CREATED_BY = "createdBy";
+    public static final String COLUMN_UPDATED_BY = "updatedBy";
+    public static final String COLUMN_START_AMOUNT = "startAmount";
+    public static final String COLUMN_END_DATE_TIME = "endDateTime";
+    public static final String COLUMN_FINAL_AMOUNT = "finalAmount";
+    public static final String COLUMN_DIFFERENCE = "difference";
+    public static final String COLUMN_AMOUNT = "amount";
+    public static final String COLUMN_REASON = "reason";
+    public static final String COLUMN_PAYMENT_TYPE = "paymentType";
+    public static final String COLUMN_TOTAL_AMOUNT = "totalAmount";
+    public static final String COLUMN_QUANTITY = "quantity";
+    public static final String COLUMN_UNIT_PRICE = "unitPrice";
+    public static final String COLUMN_SUBTOTAL = "subtotal";
+    public static final String COlUMN_RECOMMENDED_STOCK = "recommendedStock";
+    public static final String COLUMN_ABBREVIATION = "abbreviation";
 
 }

@@ -3,23 +3,17 @@ package com.fotaleza.fortalezaapi.model;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString(exclude = "user")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_EMPLOYEES)
-public class Employee {
+public class Employee extends  AuditableEntity {
 
     @Id
     @Column(name = ColumnNames.COLUMN_EMPLOYEE_ID)
@@ -27,53 +21,26 @@ public class Employee {
     @EqualsAndHashCode.Include
     private Integer Id;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
     private String firstName;
 
-    @NotBlank
-    @Size(max = 50)
     @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
     private String lastName;
 
-    @Email
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
     @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
     private String phone;
 
-    @Size(max = 100)
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @NotBlank
-    @Size(max = 20)
     @Column(name = ColumnNames.COLUMN_SSN, length = 20, unique = true, nullable = false)
     private String ssn;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ColumnNames.COLUMN_USER_ID)
     private User user;
-
-    @Column(name = ColumnNames.COLUMN_CREATED_DATE_TIME)
-    private LocalDateTime createdDateTime;
-
-    @Column(name = ColumnNames.COLUMN_UPDATED_DATE_TIME)
-    private LocalDateTime updatedDateTime;
-
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdDateTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedDateTime = LocalDateTime.now();
-    }
 
 }

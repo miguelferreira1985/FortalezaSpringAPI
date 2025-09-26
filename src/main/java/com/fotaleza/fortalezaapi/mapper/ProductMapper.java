@@ -1,73 +1,50 @@
 package com.fotaleza.fortalezaapi.mapper;
 
-import com.fotaleza.fortalezaapi.dto.ProductDTO;
+import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
 import com.fotaleza.fortalezaapi.model.Product;
-import com.fotaleza.fortalezaapi.model.Subcategory;
-import com.fotaleza.fortalezaapi.model.Supplier;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-@Component
-public class ProductMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ProductMapper {
 
-    public Product toEntity(ProductDTO dto) {
-        Product product = Product.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .code(dto.getCode())
-                .description(dto.getDescription())
-                .price(dto.getPrice())
-                .cost(dto.getCost())
-                .stock(dto.getStock())
-                .minimumStock(dto.getMinimumStock())
-                .isActivate(dto.getIsActivate())
-                .build();
+    @Mapping(target = "subcategory", source = "subcategory")
+    @Mapping(target = "presentation", source = "presentation")
+    @Mapping(target = "suppliers", source = "suppliers")
+    //@Mapping(target = "supplierNames", expression = "java(product.getSuppliers() != null ? product.getSuppliers().stream().map(s -> s.getName()).collect(java.util.stream.Collectors.toSet()) : java.util.Collections.emptySet())")
+    @Mapping(target = "profitMargin", expression = "java(product.getProfitMargin())")
+    @Mapping(target = "profitValue", expression = "java(product.getProfitValue())")
+    @Mapping(target = "inventoryValue", expression = "java(product.getInventoryValue())")
+    @Mapping(target = "isBelowOrEqualMinimumStock", expression = "java(product.isBelowOrEqualMinimumStock())")
+    ProductResponseDTO toResponseDTO(Product product);
 
-        if (dto.getSubcategoryId() != null) {
-            Subcategory subcategory = new Subcategory();
-            subcategory.setId(dto.getSubcategoryId());
-            product.setSubcategory(subcategory);
-        }
+    List<ProductResponseDTO> toResponseDTOList(List<Product> products);
 
-        if (dto.getSupplierIds() != null) {
-            Set<Supplier> suppliers =  new HashSet<>();
-            for (Integer supplierId : dto.getSupplierIds()){
-                Supplier supplier = new Supplier();
-                supplier.setId(supplierId);
-                suppliers.add(supplier);
-            }
-            product.setSuppliers(suppliers);
-        }
-        return product;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "presentation", ignore = true)
+    @Mapping(target = "suppliers", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    Product toEntity(ProductRequestDTO productRequestDTO);
 
-    public ProductDTO toDTO(Product product) {
-        ProductDTO dto = new ProductDTO();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setCode(product.getCode());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setCost(product.getCost());
-        dto.setStock(product.getStock());
-        dto.setMinimumStock(product.getMinimumStock());
-        dto.setIsActivate(product.getIsActivate());
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "subcategory", ignore = true)
+    @Mapping(target = "presentation", ignore = true)
+    @Mapping(target = "suppliers", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    void updateEntityFromRequestDTO(ProductRequestDTO productRequestDTO, @MappingTarget Product product);
 
-        if (product.getSubcategory() != null) {
-            dto.setSubcategoryId(product.getSubcategory().getId());
-        }
-
-        if (product.getSuppliers() != null) {
-            Set<Integer> suppliersId = product.getSuppliers().stream()
-                    .map(Supplier::getId)
-                    .collect(Collectors.toSet());
-
-            dto.setSupplierIds(suppliersId);
-        }
-
-        return dto;
-    }
 }
