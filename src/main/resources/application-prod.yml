@@ -30,4 +30,4 @@ fortaleza:
     jwtSecret: =======================BezKoder=Spring=======================
     jwtExpirationMs: 86400000
     cors:
-      allowed-origins: "https://fortaleza-admin.vercel.app"
+      allowed-origins: "https://fortalezaadmin.vercel.app"
