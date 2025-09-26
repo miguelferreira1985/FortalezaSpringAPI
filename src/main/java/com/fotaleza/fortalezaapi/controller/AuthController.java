@@ -1,7 +1,9 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.dto.UserDataDTO;
 import com.fotaleza.fortalezaapi.dto.response.AuthResponseDTO;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDTO;
+import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
@@ -31,6 +33,17 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtUtils = jwtUtils;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDataDTO> registerUser(@Valid @RequestBody UserDataDTO userDataDTO) {
+        User user = userService.createUser(
+                userDataDTO.getUsername(),
+                userDataDTO.getPassword(),
+                userDataDTO.getRoles()
+        );
+
+        return ResponseEntity.ok(userDataDTO);
     }
 
     @PostMapping("/login")
