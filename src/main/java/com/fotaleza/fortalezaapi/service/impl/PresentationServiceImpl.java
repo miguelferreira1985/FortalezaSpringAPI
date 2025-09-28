@@ -74,15 +74,17 @@ public class PresentationServiceImpl implements IPresentationService {
 
     private void validateNameAndAbbreviationUnique(String name, String abbreviation, Integer presentationId) {
 
+        final String errorMessage = String.format("Ya existe una presentación con el nombre %s o con la abreviación %s.", name.toUpperCase(), abbreviation.toUpperCase());
+
         if (presentationId == null) {
             presentationRepository.findByNameOrAbbreviation(name, abbreviation)
                     .ifPresent(p -> {
-                        throw new ResourceAlreadyExistsException(String.format("Ya existe una presentación con el nombre %s o con la abreviación %s.", name, abbreviation));
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         } else {
             presentationRepository.findByNameOrAbbreviationAndIdNot(name, abbreviation, presentationId)
                     .ifPresent(p -> {
-                        throw new ResourceAlreadyExistsException(String.format("Ya existe una presentación con el nombre %s o con la abreviación %s.", name, abbreviation));
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         }
     }
