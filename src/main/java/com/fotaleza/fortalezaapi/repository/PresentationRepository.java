@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface PresentationRepository extends JpaRepository<Presentation, Integer> {
 
     Optional<Presentation> findByName(String name);
+
     @Query("SELECT p FROM Presentation p WHERE p.name = :name AND p.id != :id")
     Optional<Presentation> findByNameAndIdNot(@Param("name") String presentationName, @Param("id") Integer presentationId);
 

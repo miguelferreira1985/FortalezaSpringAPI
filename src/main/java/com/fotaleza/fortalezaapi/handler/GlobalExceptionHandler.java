@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.groupingBy(
-                        fe -> fe.getField(),
+                        FieldError::getField,
                         Collectors.mapping(fe -> Optional.ofNullable(fe.getDefaultMessage()).orElse("Inválido"), Collectors.toList())
                 ));
 
@@ -89,7 +90,7 @@ public class GlobalExceptionHandler {
     // 409 – Conflictos de datos (FK/UK)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex) {
-        return build(HttpStatus.CONFLICT, "Conflicto de datos", Optional.ofNullable(ex.getMostSpecificCause()).map(Throwable::getMessage).orElse(ex.getMessage()));
+        return build(HttpStatus.CONFLICT, "Conflicto de datos", Optional.of(ex.getMostSpecificCause()).map(Throwable::getMessage).orElse(ex.getMessage()));
     }
 
     // 404 – Entidad no encontrada (si tienes tu propia excepción)

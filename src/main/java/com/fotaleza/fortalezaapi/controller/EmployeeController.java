@@ -2,7 +2,6 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
-import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.service.IEmployeeService;
 import jakarta.validation.Valid;
@@ -10,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.*;
 

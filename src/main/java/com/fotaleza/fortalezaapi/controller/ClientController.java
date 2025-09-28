@@ -3,7 +3,6 @@ package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.request.ClientRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
-import com.fotaleza.fortalezaapi.dto.response.CategoryResponseDTO;
 import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.service.IClientService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
