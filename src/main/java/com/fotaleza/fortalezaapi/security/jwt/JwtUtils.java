@@ -85,7 +85,7 @@ public class JwtUtils {
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(key())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    url: /v3/api-docs
+    path: /swagger-ui.html        # ruta del Swagger UI

@@ -1,15 +1,19 @@
 package com.fotaleza.fortalezaapi.controller;
 
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
+import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
+import com.fotaleza.fortalezaapi.dto.response.ClientResponseDTO;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.service.IEmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -20,25 +24,48 @@ public class EmployeeController {
     private final IEmployeeService employeeService;
 
     @PostMapping()
-    public ResponseEntity<EmployeeResponseDTO> createEmployeeAndUser(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
-        EmployeeResponseDTO employeeCreated = employeeService.createEmployee(employeeRequestDTO);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(employeeCreated.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(employeeCreated);
+    public ResponseEntity<ApiResponse<EmployeeResponseDTO>> createEmployeeAndUser(@Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+
+        EmployeeResponseDTO createdEmployee = employeeService.createEmployee(employeeRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.<EmployeeResponseDTO>builder()
+                        .status(HttpStatus.CREATED.value())
+                        .message("Empleado creado existosamente.")
+                        .data(createdEmployee)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<EmployeeResponseDTO>> getEmployeeById(@PathVariable Integer id) {
+
         EmployeeResponseDTO employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+
+        return ResponseEntity.ok(
+                ApiResponse.<EmployeeResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Empleado obtenido existosamente.")
+                        .data(employee)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeResponseDTO>> getAllEmployees(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+    public ResponseEntity<ApiResponse<List<EmployeeResponseDTO>>> getAllEmployees(@RequestParam(name = "isActivate", required = false) Boolean isActivate) {
+
         List<EmployeeResponseDTO> employees = employeeService.getAllEmployees(isActivate);
-        return ResponseEntity.ok(employees);
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<EmployeeResponseDTO>>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Empleados obtenidos existosamente.")
+                        .data(employees)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 
 }

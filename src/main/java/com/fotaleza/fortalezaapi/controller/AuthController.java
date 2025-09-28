@@ -1,9 +1,8 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.UserDataDTO;
+import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.AuthResponseDTO;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDTO;
-import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
@@ -17,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -35,19 +35,8 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDataDTO> registerUser(@Valid @RequestBody UserDataDTO userDataDTO) {
-        User user = userService.createUser(
-                userDataDTO.getUsername(),
-                userDataDTO.getPassword(),
-                userDataDTO.getRoles()
-        );
-
-        return ResponseEntity.ok(userDataDTO);
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDTO authRequestDto) {
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> authenticateUser(@Valid @RequestBody AuthRequestDTO authRequestDto) {
 
         try {
             Authentication authentication = authenticationManager
@@ -66,20 +55,29 @@ public class AuthController {
             authResponseDto.setToken(jwt);
             authResponseDto.setRefreshToken(refreshToken);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(authResponseDto);
+            return ResponseEntity.ok(
+                    ApiResponse.<AuthResponseDTO>builder()
+                            .status(HttpStatus.OK.value())
+                            .message("Autenticación exitosa.")
+                            .data(authResponseDto)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
 
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(String.format("Error de autenticación: %s", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    ApiResponse.<AuthResponseDTO>builder()
+                            .status(HttpStatus.UNAUTHORIZED.value())
+                            .message("Nombre se usuario o contraseña incorrecta.")
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
         }
 
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshUserToken(@RequestBody Map<String, String> request) {
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> refreshUserToken(@RequestBody Map<String, String> request) {
 
         String refreshToken = request.get("refreshToken");
 
@@ -100,18 +98,31 @@ public class AuthController {
                 authResponseDto.setToken(newJwt);
                 authResponseDto.setRefreshToken(newRefreshToken);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(authResponseDto);
+                return ResponseEntity.ok(
+                        ApiResponse.<AuthResponseDTO>builder()
+                                .status(HttpStatus.OK.value())
+                                .message("Autenticación exitosa.")
+                                .data(authResponseDto)
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
             } else {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body("Token para refrescar inválido.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                        ApiResponse.<AuthResponseDTO>builder()
+                                .status(HttpStatus.UNAUTHORIZED.value())
+                                .message("Token para refrescar invalido.")
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
             }
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(String.format("Error en token para refrescar: %s", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    ApiResponse.<AuthResponseDTO>builder()
+                            .status(HttpStatus.UNAUTHORIZED.value())
+                            .message("Error en token para refrescar: " + e.getMessage())
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
         }
 
     }
