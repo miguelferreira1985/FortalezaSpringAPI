@@ -14,6 +14,9 @@ public interface PresentationRepository extends JpaRepository<Presentation, Inte
     Optional<Presentation> findByNameOrAbbreviation(String name, String abbreviation);
 
     @Query("SELECT p FROM Presentation p WHERE (p.name = :name OR p.abbreviation = :abbreviation) AND p.id != :id")
-    Optional<Presentation> findByNameOrAbbreviationAndIdNot(@Param("name") String presentationName, @Param("abbreviation") String abbreviation, @Param("id") Integer presentationId);
+    Optional<Presentation> findByNameOrAbbreviationAndIdNot(
+            @Param("name") String presentationName,
+            @Param("abbreviation") String abbreviation,
+            @Param("id") Integer presentationId);
 
 }
