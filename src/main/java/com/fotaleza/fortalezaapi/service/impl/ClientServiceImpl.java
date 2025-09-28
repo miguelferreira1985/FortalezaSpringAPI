@@ -25,7 +25,8 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public ClientResponseDTO createClient(ClientRequestDTO clientRequestDTO) {
-        validateRfcUnique(clientRequestDTO.getRfc(), null);
+
+        validateNameAndRfcUnique(clientRequestDTO.getName(), clientRequestDTO.getRfc(), null);
 
         Client client = clientMapper.toEntity(clientRequestDTO);
         Client savedClient = clientRepository.save(client);
@@ -35,10 +36,11 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public ClientResponseDTO updateClient(Integer clientId, ClientRequestDTO clientRequestDTO) {
-        Client clientToUpdate = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("El cliente no existe."));
 
-        validateRfcUnique(clientRequestDTO.getRfc(), clientId);
+        Client clientToUpdate = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("El cliente que desea actualizar no existe."));
+
+        validateNameAndRfcUnique(clientRequestDTO.getName(), clientRequestDTO.getRfc(), clientId);
 
         clientMapper.updateEntityFromRequestDTO(clientRequestDTO, clientToUpdate);
 
@@ -47,15 +49,7 @@ public class ClientServiceImpl implements IClientService {
 
     }
 
-    @Override
-    @Transactional
-    public void deleteClient(Integer clientId) {
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("El cliente no existe."));
 
-        client.setIsActivate(false);
-        clientRepository.save(client);
-    }
 
     @Override
     public ClientResponseDTO getClientById(Integer clientId) {
@@ -72,13 +66,45 @@ public class ClientServiceImpl implements IClientService {
         return clientMapper.toResponseDTOList(clients);
     }
 
-    private void validateRfcUnique(String rfc, Integer clientId) {
-        clientRepository.findByRfc(rfc)
-                .ifPresent(c -> {
-                    if (clientId == null || !c.getId().equals(clientId)) {
-                        throw new ResourceAlreadyExistsException("El cliente con RFC ya existe.");
-                    }
-                });
+    @Override
+    public ClientResponseDTO deactivateClient(Integer clientId) {
+
+        Client clientToDeactivate = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("El cliente no existe."));
+        clientToDeactivate.setIsActivate(false);
+
+        Client clientDeactivated = clientRepository.save(clientToDeactivate);
+
+        return clientMapper.toResponseDTO(clientDeactivated);
+    }
+
+    @Override
+    public ClientResponseDTO activateClient(Integer clientId) {
+
+        Client clientToActivate = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("El cliente no existe."));
+        clientToActivate.setIsActivate(false);
+
+        Client clientActivated = clientRepository.save(clientToActivate);
+
+        return clientMapper.toResponseDTO(clientActivated);
+    }
+
+    private void validateNameAndRfcUnique(String name, String rfc, Integer clientId) {
+
+        final String errorMessage = String.format("Ya existe un cliente con el nombre %s o rfc %s", name.toUpperCase(), rfc.toUpperCase());
+
+        if (clientId == null) {
+            clientRepository.findByNameOrRfc(name, rfc)
+                    .ifPresent(c -> {
+                        throw new ResourceAlreadyExistsException(errorMessage);
+                    });
+        } else {
+            clientRepository.findByNameOrRfcAndIdNot(name, rfc, clientId)
+                    .ifPresent(c -> {
+                        throw new ResourceAlreadyExistsException(errorMessage);
+                    });
+        }
     }
 
 }

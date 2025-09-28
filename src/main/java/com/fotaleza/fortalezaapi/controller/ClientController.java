@@ -31,7 +31,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<ClientResponseDTO>builder()
                         .status(HttpStatus.CREATED.value())
-                        .message("Cliente creado existosamente.")
+                        .message(String.format("El cliente %s ha sido agregado.", clientRequestDTO.getName().toUpperCase()))
                         .data(createdClient)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -46,22 +46,8 @@ public class ClientController {
         return ResponseEntity.ok(
                 ApiResponse.<ClientResponseDTO>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Cliente actualizado existosamente.")
+                        .message(String.format("El cliente %s ha sido actualizado.", clientRequestDTO.getName().toUpperCase()))
                         .data(updatedClient)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteClient(@PathVariable Integer id) {
-
-        clientService.deleteClient(id);
-
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Cliente eliminado existosamente.")
                         .timestamp(LocalDateTime.now())
                         .build()
         );
@@ -92,6 +78,32 @@ public class ClientController {
                         .status(HttpStatus.OK.value())
                         .message("Clientes obtenidos existosamente.")
                         .data(clients)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<ApiResponse<ClientResponseDTO>> activateClient(@PathVariable Integer id) {
+        ClientResponseDTO client = clientService.activateClient(id);
+        return ResponseEntity.ok(
+                ApiResponse.<ClientResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message(String.format("El cliente %s ha sido activado.", client.getName().toUpperCase()))
+                        .data(client)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PatchMapping("/{id}/desactivate")
+    public ResponseEntity<ApiResponse<ClientResponseDTO>> deactivateClient(@PathVariable Integer id) {
+        ClientResponseDTO client = clientService.deactivateClient(id);
+        return ResponseEntity.ok(
+                ApiResponse.<ClientResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message(String.format("El cliente %s ha sido desactivado.", client.getName().toUpperCase()))
+                        .data(client)
                         .timestamp(LocalDateTime.now())
                         .build()
         );

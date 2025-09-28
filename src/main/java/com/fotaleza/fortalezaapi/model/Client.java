@@ -21,20 +21,8 @@ public class Client extends AuditableEntity {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @Column(name = ColumnNames.COLUMN_COMPANY_NAME, length = 50)
-    private String companyName;
-
-    @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
-    private String firstName;
-
-    @Column(name = ColumnNames.COLUMN_LAST_NAME, length = 50, nullable = false)
-    private String lastName;
-
-    @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
-    private String address;
-
-    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
-    private String email;
+    @Column(name = ColumnNames.COLUMN_COMPANY_NAME, length = 50, unique = true, nullable = false)
+    private String name;
 
     @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
     private String phone;

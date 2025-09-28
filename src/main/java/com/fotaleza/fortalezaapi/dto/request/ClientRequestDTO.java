@@ -15,22 +15,9 @@ public class ClientRequestDTO {
 
     private Integer id;
 
-    @Size(max = 50, message = "El nombre de la Compañia no puede exceder los 50 caracteres.")
-    private String companyName;
-
-    @NotBlank(message = "El nombre no puede estar en blanco.")
-    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres.")
-    private String firstName;
-
-    @NotBlank(message = "El apellido no puede estar en blanco.")
-    @Size(max = 50, message = "El apellido no puede exceder los 50 caracteres.")
-    private String lastName;
-
-    @Size(max = 100, message = "La direccion no puede exceder los 100 caracteres.")
-    private String address;
-
-    @Email(message = "El formato del correo electronico no es valido.")
-    private String email;
+    @NotBlank(message = "El nombre del cliente no puede estar en blanco.")
+    @Size(max = 50, message = "El nombre del cliente no puede exceder los 50 caracteres.")
+    private String name;
 
     @Pattern(regexp = "\\+?[0-9]{10,15}", message = "El teléfono debe tener entre 7 y 15 dígitos y opcionalmente iniciar con +")
     private String phone;
