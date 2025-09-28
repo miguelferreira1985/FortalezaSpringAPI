@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public void deleteCategory (Integer categoryId) {
-        Category category = categoryRepository.findById(categoryId)
+        Category categoryToDelete = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("La categoría no existe"));
 
         categoryRepository.deleteById(categoryId);
