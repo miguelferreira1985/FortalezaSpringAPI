@@ -25,7 +25,7 @@ public class PresentationServiceImpl implements IPresentationService {
     @Transactional
     public PresentationResponseDTO createPresentation(PresentationRequestDTO presentationRequestDTO) {
 
-        validateNameUnique(presentationRequestDTO.getName(), null);
+        validateNameAndAbbreviationUnique(presentationRequestDTO.getName(), presentationRequestDTO.getAbbreviation(), null);
 
         Presentation presentation = presentationMapper.toEntity(presentationRequestDTO);
         Presentation savedPresentation = presentationRepository.save(presentation);
@@ -37,9 +37,9 @@ public class PresentationServiceImpl implements IPresentationService {
     @Transactional
     public PresentationResponseDTO updatePresentation(Integer presentationId, PresentationRequestDTO presentationRequestDTO) {
         Presentation presentationToUpdate = presentationRepository.findById(presentationId)
-                .orElseThrow(() -> new ResourceNotFoundException("La presentación que desea actulizar no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La presentación que desea actualizar no existe."));
 
-        validateNameUnique(presentationRequestDTO.getName(), presentationRequestDTO.getId());
+        validateNameAndAbbreviationUnique(presentationRequestDTO.getName(), presentationRequestDTO.getAbbreviation(), presentationId);
 
         presentationMapper.updateEntityFromRequestDTO(presentationRequestDTO, presentationToUpdate);
 
@@ -49,9 +49,18 @@ public class PresentationServiceImpl implements IPresentationService {
     }
 
     @Override
+    @Transactional
+    public void deletePresentation (Integer presentationId) {
+        Presentation presentationToDelete = presentationRepository.findById(presentationId)
+                .orElseThrow(() -> new ResourceNotFoundException("La presentación que desea eliminar no existe."));
+
+        presentationRepository.deleteById(presentationId);
+    }
+
+    @Override
     public PresentationResponseDTO getPresentationById(Integer presentationId) {
         Presentation presentation = presentationRepository.findById(presentationId)
-                .orElseThrow(() -> new ResourceNotFoundException("La presentación no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La presentación  no existe."));
         return presentationMapper.toResponseDTO(presentation);
     }
 
@@ -63,17 +72,17 @@ public class PresentationServiceImpl implements IPresentationService {
         return presentationMapper.toResponseDTOList(presentations);
     }
 
-    private void validateNameUnique(String name, Integer presentationId) {
+    private void validateNameAndAbbreviationUnique(String name, String abbreviation, Integer presentationId) {
 
         if (presentationId == null) {
-            presentationRepository.findByName(name)
+            presentationRepository.findByNameOrAbbreviation(name, abbreviation)
                     .ifPresent(p -> {
-                        throw new ResourceAlreadyExistsException("Ya existe una presentación con este nombre.");
+                        throw new ResourceAlreadyExistsException(String.format("Ya existe una presentación con el nombre %s o con la abreviación %s.", name, abbreviation));
                     });
         } else {
-            presentationRepository.findByNameAndIdNot(name, presentationId)
+            presentationRepository.findByNameOrAbbreviationAndIdNot(name, abbreviation, presentationId)
                     .ifPresent(p -> {
-                        throw new ResourceAlreadyExistsException("Ya existe una presentación con este nombre.");
+                        throw new ResourceAlreadyExistsException(String.format("Ya existe una presentación con el nombre %s o con la abreviación %s.", name, abbreviation));
                     });
         }
     }

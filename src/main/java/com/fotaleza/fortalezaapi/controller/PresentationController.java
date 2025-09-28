@@ -50,6 +50,20 @@ public class PresentationController {
         );
     }
 
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<ApiResponse<Void>> deletePresentation(@PathVariable Integer id) {
+
+        presentationService.deletePresentation(id);
+
+        return  ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("La presentación fue eliminada.")
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PresentationResponseDTO>> getPresentationById(@PathVariable Integer id) {
 

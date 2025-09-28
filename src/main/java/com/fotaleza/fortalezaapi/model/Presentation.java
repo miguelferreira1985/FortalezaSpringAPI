@@ -11,9 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_PRESENTATIONS)
-public class Presentation {
+public class Presentation extends AuditableEntity{
 
     @Id
     @Column(name = ColumnNames.COLUMN_PRESENTATION_ID)
@@ -24,7 +24,7 @@ public class Presentation {
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 
-    @Column(name = ColumnNames.COLUMN_ABBREVIATION, length =  10, nullable = false)
+    @Column(name = ColumnNames.COLUMN_ABBREVIATION, length =  10, unique = true, nullable = false)
     private String abbreviation;
 
 }
