@@ -30,7 +30,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<CategoryResponseDTO>builder()
                         .status(HttpStatus.CREATED.value())
-                        .message("Categoría creada existosamente.")
+                        .message(String.format("La categoría %s ha sido agregada.", createdCategory.getName().toUpperCase()))
                         .data(createdCategory)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -45,8 +45,22 @@ public class CategoryController {
         return ResponseEntity.ok(
                 ApiResponse.<CategoryResponseDTO>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Categoría actualizada existosamente.")
+                        .message(String.format("La categoría %s ha sido actualizada.", updatedCategory.getName().toUpperCase()))
                         .data(updatedCategory)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Integer id) {
+
+        categoryService.deleteCategory(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("La categoría fue eliminada.")
                         .timestamp(LocalDateTime.now())
                         .build()
         );

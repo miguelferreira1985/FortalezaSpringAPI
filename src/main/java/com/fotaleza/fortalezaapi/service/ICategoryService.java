@@ -11,5 +11,6 @@ public interface ICategoryService {
     CategoryResponseDTO getCategoryById(Integer categoryId);
     CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO);
     CategoryResponseDTO updateCategory(Integer categoryId, CategoryRequestDTO categoryRequestDTO);
+    void deleteCategory (Integer categoryId);
 
 }

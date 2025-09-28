@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements ICategoryService {
     @Transactional
     public CategoryResponseDTO updateCategory(Integer categoryId, CategoryRequestDTO categoryRequestDTO) {
         Category categoryToUpdate = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La categoria que desea actualiza no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría que desea actualiza no existe."));
 
         validateNameUnique(categoryRequestDTO.getName(), categoryId);
 
@@ -47,6 +47,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
         return categoryMapper.toResponseDTO(updatedCategory);
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategory (Integer categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría no existe"));
+
+        categoryRepository.deleteById(categoryId);
     }
 
     @Override
@@ -64,15 +73,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
     private void validateNameUnique(String name, Integer categoryId) {
 
+       final String errorMessage = String.format("Ya existe una categoría con el nombre %s.", name.toUpperCase());
+
         if (categoryId == null) {
             categoryRepository.findByName(name)
                     .ifPresent(c -> {
-                        throw new ResourceAlreadyExistsException("Ya existe una Categorìa con este nombre.");
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         } else {
             categoryRepository.findByNameAndIdNot(name, categoryId)
                     .ifPresent(c -> {
-                        throw new ResourceAlreadyExistsException("Ya existe una Categorìa con este nombre.");
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         }
     }
