@@ -14,7 +14,7 @@ public class SupplierResponseDTO {
     private Integer id;
     private String name;
     private String contact;
-    private String address;
+    private String location;
     private String email;
     private String contactPhone;
     private String officePhone;

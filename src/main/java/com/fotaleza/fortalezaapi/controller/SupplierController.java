@@ -29,7 +29,7 @@ public class SupplierController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<SupplierResponseDTO>builder()
                         .status(HttpStatus.CREATED.value())
-                        .message("Proveedor creado existosamente.")
+                        .message(String.format("El proveedor %s ha sido agregado.", supplierRequestDTO.getName().toUpperCase()))
                         .data(createdSupplier)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -44,22 +44,38 @@ public class SupplierController {
         return ResponseEntity.ok(
                 ApiResponse.<SupplierResponseDTO>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Proveedor actualizado existosamente.")
+                        .message(String.format("El proveedor %s ha sido actualizado.", supplierRequestDTO.getName().toUpperCase()))
                         .data(updatedSupplier)
                         .timestamp(LocalDateTime.now())
                         .build()
         );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteSupplier(@PathVariable Integer id) {
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<ApiResponse<SupplierResponseDTO>> deactivateSupplier(@PathVariable Integer id) {
 
-        supplierService.deleteSupplierAndReassignProducts(id);
+        SupplierResponseDTO supplierDeactivated = supplierService.deactivateSupplierAndReassignProducts(id);
 
         return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
+                ApiResponse.<SupplierResponseDTO>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Proveedor aliminado existosamente.")
+                        .message(String.format("El proveedor %s ha sido desactivado.", supplierDeactivated.getName().toUpperCase()))
+                        .data(supplierDeactivated)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PatchMapping("/{id}/activate|")
+    public ResponseEntity<ApiResponse<SupplierResponseDTO>> activateSupplier(@PathVariable Integer id) {
+
+        SupplierResponseDTO supplierDeactivated = supplierService.activateSupplier(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.<SupplierResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message(String.format("El proveedor %s ha sido activado.", supplierDeactivated.getName().toUpperCase()))
+                        .data(supplierDeactivated)
                         .timestamp(LocalDateTime.now())
                         .build()
         );
@@ -88,7 +104,7 @@ public class SupplierController {
         return ResponseEntity.ok(
                 ApiResponse.<List<SupplierResponseDTO>>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Proveedores actualizados existosamente.")
+                        .message("Proveedores obtenidos existosamente.")
                         .data(suppliers)
                         .timestamp(LocalDateTime.now())
                         .build()

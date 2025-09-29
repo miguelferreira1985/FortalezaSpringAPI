@@ -31,16 +31,16 @@ public class Supplier extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_CONTACT, length = 50)
     private String contact;
 
-    @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
-    private String address;
+    @Column(name = ColumnNames.COLUMN_LOCATION, length = 20)
+    private String location;
 
-    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50, unique = true)
+    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
-    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 20)
+    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 11)
     private String contactPhone;
 
-    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 20)
+    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 11)
     private String officePhone;
 
     @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)

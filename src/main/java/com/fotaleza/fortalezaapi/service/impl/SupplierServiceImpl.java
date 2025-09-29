@@ -32,6 +32,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Override
     @Transactional
     public SupplierResponseDTO createSupplier(SupplierRequestDTO supplierRequestDTO) {
+
         validateNameUnique(supplierRequestDTO.getName(), null);
 
         Supplier supplier = supplierMapper.toEntity(supplierRequestDTO);
@@ -44,7 +45,7 @@ public class SupplierServiceImpl implements ISupplierService {
     @Transactional
     public SupplierResponseDTO updateSupplier(Integer supplierId, SupplierRequestDTO supplierRequestDTO) {
         Supplier supplierToUpdate = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("El proveedor %s que desea actualizar no existe.", supplierRequestDTO.getName())));
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea actualizar no existe."));
 
         validateNameUnique(supplierRequestDTO.getName(), supplierId);
 
@@ -56,19 +57,35 @@ public class SupplierServiceImpl implements ISupplierService {
 
     @Override
     @Transactional
-    public void deleteSupplierAndReassignProducts(Integer supplierId) {
-        Supplier supplierToDelete = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea borrar no existe."));
+    public SupplierResponseDTO deactivateSupplierAndReassignProducts(Integer supplierId) {
+        Supplier supplierToDeactivate = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea desactivar no existe."));
 
-        Set<Product> associateProducts = supplierToDelete.getProducts();
+        Set<Product> associateProducts = supplierToDeactivate.getProducts();
 
         for (Product product : associateProducts) {
-            product.getSuppliers().remove(supplierToDelete);
+            product.getSuppliers().remove(supplierToDeactivate);
         }
 
         productRepository.saveAll(associateProducts);
 
-        supplierRepository.deleteById(supplierId);
+        supplierToDeactivate.setIsActivate(false);
+
+        Supplier supplierDeactivated = supplierRepository.save(supplierToDeactivate);
+
+        return supplierMapper.toResponseDTO(supplierDeactivated);
+    }
+
+    @Override
+    @Transactional
+    public SupplierResponseDTO activateSupplier(Integer supplierId) {
+        Supplier supplierToActivate = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea activar no existe."));
+        supplierToActivate.setIsActivate(false);
+
+        Supplier supplierActivated = supplierRepository.save(supplierToActivate);
+
+        return supplierMapper.toResponseDTO(supplierActivated);
     }
 
     @Override
@@ -100,15 +117,17 @@ public class SupplierServiceImpl implements ISupplierService {
 
     private void validateNameUnique(String name, Integer supplierId) {
 
+        final String errorMessage = String.format("Ya existe un proveedor con el nombre %s.", name.toUpperCase());
+
         if (supplierId == null) {
             supplierRepository.findByName(name)
                     .ifPresent(s -> {
-                        throw new ResourceAlreadyExistsException("Ya existe un proveedor con este nombre.");
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         } else {
             supplierRepository.findByNameAndIdNot(name, supplierId)
                     .ifPresent(s -> {
-                        throw new ResourceAlreadyExistsException("Ya existe un proveedor con este nombre.");
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         }
     }

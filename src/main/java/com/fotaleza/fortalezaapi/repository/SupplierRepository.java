@@ -13,6 +13,9 @@ import java.util.Optional;
 public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
     Optional<Supplier> findByName(String supplierName);
     List<Supplier> findByIsActivate(Boolean isActivate);
+
     @Query("SELECT s FROM Supplier s WHERE s.name = :name AND s.id != :id")
-    Optional<Supplier> findByNameAndIdNot(@Param("name") String supplierName, @Param("id") Integer supplierId);
+    Optional<Supplier> findByNameAndIdNot(
+            @Param("name") String supplierName,
+            @Param("id") Integer supplierId);
 }

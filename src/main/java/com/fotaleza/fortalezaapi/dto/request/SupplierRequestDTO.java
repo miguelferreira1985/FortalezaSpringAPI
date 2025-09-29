@@ -22,8 +22,8 @@ public class SupplierRequestDTO {
     @Size(max = 50, message = "El contacto no puede exceder los 50 caracteres.")
     private String contact;
 
-    @Size(max = 100, message = "La direccion no puede exceder los 100 caracteres.")
-    private String address;
+    @Size(max = 20, message = "La ubicación no puede exceder los 20 caracteres.")
+    private String location;
 
     @Email(message = "El formato del correo electronico no es valido.")
     private String email;
