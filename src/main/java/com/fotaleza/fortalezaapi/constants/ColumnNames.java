@@ -56,5 +56,6 @@ public class ColumnNames {
     public static final String COLUMN_ABBREVIATION = "abbreviation";
     public static final String COLUMN_LOCATION = "location";
     public static final String COLUMN_IS_BLOCKED = "isBlocked";
+    public static final String COLUMN_FAILED_ATTEMPTS = "failedAttempts";
 
 }

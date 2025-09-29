@@ -3,6 +3,7 @@ package com.fotaleza.fortalezaapi.controller;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.AuthResponseDTO;
 import com.fotaleza.fortalezaapi.dto.request.AuthRequestDTO;
+import com.fotaleza.fortalezaapi.model.User;
 import com.fotaleza.fortalezaapi.security.jwt.JwtUtils;
 import com.fotaleza.fortalezaapi.security.service.UserDetailsImpl;
 import com.fotaleza.fortalezaapi.service.impl.UserServiceImpl;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,36 +40,42 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDTO>> authenticateUser(@Valid @RequestBody AuthRequestDTO authRequestDto) {
 
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        authRequestDto.getUsername(),
-                        authRequestDto.getPassword()
-                ));
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(
+                            authRequestDto.getUsername(),
+                            authRequestDto.getPassword()
+                    ));
 
-        UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(authRequestDto.getUsername()));
+            UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(authRequestDto.getUsername()));
 
-        List<String> roles = userDetails.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority)
-                .toList();
+            List<String> roles = userDetails.getAuthorities()
+                    .stream().map(GrantedAuthority::getAuthority)
+                    .toList();
 
-        String jwt = jwtUtils.generateToken(userDetails, roles);
-        String refreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
+            String jwt = jwtUtils.generateToken(userDetails, roles);
+            String refreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
 
-        AuthResponseDTO authResponseDto = new AuthResponseDTO();
-        authResponseDto.setToken(jwt);
-        authResponseDto.setRefreshToken(refreshToken);
-        authResponseDto.setUsername(userDetails.getUsername());
-        authResponseDto.setRoles(roles);
+            userService.resetFailedAttempts(authRequestDto.getUsername());
 
-        return ResponseEntity.ok(
-                ApiResponse.<AuthResponseDTO>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Autenticación exitosa.")
-                        .data(authResponseDto)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
+            AuthResponseDTO authResponseDto = new AuthResponseDTO();
+            authResponseDto.setToken(jwt);
+            authResponseDto.setRefreshToken(refreshToken);
+            authResponseDto.setUsername(userDetails.getUsername());
+            authResponseDto.setRoles(roles);
 
+            return ResponseEntity.ok(
+                    ApiResponse.<AuthResponseDTO>builder()
+                            .status(HttpStatus.OK.value())
+                            .message("Autenticación exitosa.")
+                            .data(authResponseDto)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
+        } catch (BadCredentialsException ex) {
+            userService.processFailedLogin(authRequestDto.getUsername());
+            throw ex;
+        }
     }
 
     @PostMapping("/refresh")

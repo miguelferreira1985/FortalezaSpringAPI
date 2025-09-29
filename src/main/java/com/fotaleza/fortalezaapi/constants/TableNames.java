@@ -12,7 +12,7 @@ public class TableNames {
     public static final String TABLE_EMPLOYEES = "employees";
     public static final String TABLE_SUBCATEGORIES = "subcategories";
     public static final String TABLE_PRODUCTS = "products";
-    public static final String TABLE_PRODUCTS_SUPPLIERS = "product_suppiers";
+    public static final String TABLE_PRODUCTS_SUPPLIERS = "product_suppliers";
     public static final String TABLE_CASH_START = "cashStart";
     public static final String TABLE_CASH_CUT = "cashCut";
     public static final String TABLE_CASH_OUT_FLOW = "cashOutFlow";

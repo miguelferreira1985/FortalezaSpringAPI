@@ -44,7 +44,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmployee().getLastName(),
                 user.getPassword(),
                 user.getIsActivate(),
-                user.isBlocked(),
+                user.getIsBlocked(),
                 authorities);
     }
 

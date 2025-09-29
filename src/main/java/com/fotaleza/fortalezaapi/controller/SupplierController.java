@@ -66,7 +66,7 @@ public class SupplierController {
         );
     }
 
-    @PatchMapping("/{id}/activate|")
+    @PatchMapping("/{id}/activate")
     public ResponseEntity<ApiResponse<SupplierResponseDTO>> activateSupplier(@PathVariable Integer id) {
 
         SupplierResponseDTO supplierDeactivated = supplierService.activateSupplier(id);
