@@ -1,8 +1,10 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
 
+import com.fotaleza.fortalezaapi.constants.ErrorMessages;
 import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.enums.EMovementType;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ProductMapper;
@@ -10,10 +12,8 @@ import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 import com.fotaleza.fortalezaapi.model.Supplier;
-import com.fotaleza.fortalezaapi.repository.PresentationRepository;
-import com.fotaleza.fortalezaapi.repository.ProductRepository;
-import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
-import com.fotaleza.fortalezaapi.repository.SupplierRepository;
+import com.fotaleza.fortalezaapi.repository.*;
+import com.fotaleza.fortalezaapi.service.IInventoryMovementService;
 import com.fotaleza.fortalezaapi.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,7 @@ public class ProductServiceImpl implements IProductService {
     private final PresentationRepository presentationRepository;
     private final SupplierRepository supplierRepository;
     private final ProductMapper productMapper;
+    private final IInventoryMovementService inventoryMovementService;
 
     @Override
     @Transactional
@@ -44,15 +45,17 @@ public class ProductServiceImpl implements IProductService {
         Product product = productMapper.toEntity(productRequestDTO);
 
         Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subcategoria no encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
         product.setSubcategory(subcategory);
 
         Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Presentación no encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
         product.setPresentation(presentation);
 
         Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
         product.setSuppliers(suppliers);
+
+
 
         Product savedProduct = productRepository.save(product);
         return productMapper.toResponseDTO(savedProduct);
@@ -62,18 +65,18 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     public ProductResponseDTO updateProduct(Integer productId, ProductRequestDTO productRequestDTO) {
         Product productToUpdate =productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("El producto no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
 
         validateNameOrCodeUnique(productRequestDTO.getName(), productRequestDTO.getCode(), productId);
 
         productMapper.updateEntityFromRequestDTO(productRequestDTO, productToUpdate);
 
         Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subcategoria no encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
         productToUpdate.setSubcategory(subcategory);
 
         Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Presentación no encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
         productToUpdate.setPresentation(presentation);
 
         Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
@@ -84,34 +87,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    @Transactional
-    public void deleteProduct(Integer productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("El producto no existe"));
-
-        boolean isStockZero = product.getStock().compareTo(BigDecimal.ZERO) == 0;
-        boolean isNotActive = !product.getIsActivate();
-
-        if (isStockZero && isNotActive) {
-            productRepository.deleteById(productId);
-        } else {
-            String message = "";
-            if (!isStockZero) {
-                message = "El stock tiene que estar en 0 para poder eliminar el producto.";
-            }
-
-            if (!isNotActive) {
-                message = "El producto debe esta desactivado para poder eliminarlo.";
-            }
-
-            throw new IllegalStateException(message);
-        }
-    }
-
-    @Override
     public ProductResponseDTO getProductById(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("El producto no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
         return productMapper.toResponseDTO(product);
     }
 
@@ -127,7 +105,7 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     public ProductResponseDTO activateProduct(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("El producto no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
         product.setIsActivate(true);
 
         Product savedProduct = productRepository.save(product);
@@ -139,7 +117,7 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     public ProductResponseDTO deactivateProduct(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("El producto no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
         product.setIsActivate(false);
 
         Product savedProduct = productRepository.save(product);
@@ -152,19 +130,42 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.calculateTotalInventoryValue();
     }
 
+    @Override
+    @Transactional
+    public ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
+
+        BigDecimal previousStock = product.getStock();
+        BigDecimal newStock = previousStock.add(quantity);
+
+        if (newStock.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalStateException("El stock no puede ser negativo");
+        }
+
+        product.setStock(newStock);
+
+        Product productToUpdate = productRepository.save(product);
+
+        inventoryMovementService.recordMovement(product, quantity, EMovementType.AJUSTE);
+
+        return productMapper.toResponseDTO(productToUpdate);
+    }
 
 
     private void validateNameOrCodeUnique(String name, String code, Integer productId) {
 
+        final String errorMessage = String.format(ErrorMessages.PRODUCT_ALREADY_EXISTS, name.toUpperCase(), code.toUpperCase());
+
         if (productId == null) {
             productRepository.findByNameOrCode(name, code)
                     .ifPresent(p -> {
-                            throw new ResourceAlreadyExistsException("El producto con el nombre o codigo ya existe.;");
+                            throw new ResourceAlreadyExistsException(errorMessage);
                     });
         } else {
             productRepository.findByNameOrCodeAndIdNot(name, code, productId)
                     .ifPresent(p -> {
-                        throw new ResourceAlreadyExistsException("El producto con el nombre o codigo ya existe.;");
+                        throw new ResourceAlreadyExistsException(errorMessage);
                     });
         }
 

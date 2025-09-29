@@ -24,12 +24,6 @@ import java.util.Set;
         })
 public class Product extends AuditableEntity {
 
-    @Id
-    @Column(name = ColumnNames.COLUMN_PRODUCT_ID)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Integer id;
-
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 

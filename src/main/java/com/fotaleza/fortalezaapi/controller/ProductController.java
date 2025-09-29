@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.dto.StockUpdateRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
@@ -110,6 +111,12 @@ public class ProductController {
         return ResponseEntity.ok(lowStock);
     }
 
+    @GetMapping("/inventory-value")
+    public ResponseEntity<BigDecimal> getInventoryValue() {
+        BigDecimal totalValue = productService.getInventoryValue();
+        return ResponseEntity.ok(totalValue);
+    }
+
     @PatchMapping("/{id}/activate")
     public ResponseEntity<ProductResponseDTO> activateProduct(@PathVariable Integer id) {
         ProductResponseDTO product = productService.activateProduct(id);
@@ -122,10 +129,21 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/inventory-value")
-    public ResponseEntity<BigDecimal> getInventoryValue() {
-        BigDecimal totalValue = productService.getInventoryValue();
-        return ResponseEntity.ok(totalValue);
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> deactivateProduct(
+            @PathVariable Integer id,
+            @Valid @RequestBody StockUpdateRequestDTO stockUpdateRequestDTO) {
+
+        ProductResponseDTO updatedProduct = productService.updateProductStock(id, stockUpdateRequestDTO.getQuantity());
+
+        return ResponseEntity.ok(
+                ApiResponse.<ProductResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Stock actualizado exitosamente.")
+                        .data(updatedProduct)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 
 }
