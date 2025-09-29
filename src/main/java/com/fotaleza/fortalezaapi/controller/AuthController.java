@@ -38,41 +38,35 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDTO>> authenticateUser(@Valid @RequestBody AuthRequestDTO authRequestDto) {
 
-        try {
-            Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), authRequestDto.getPassword()));
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        authRequestDto.getUsername(),
+                        authRequestDto.getPassword()
+                ));
 
-            UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(authRequestDto.getUsername()));
+        UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(authRequestDto.getUsername()));
 
-            List<String> roles = userDetails.getAuthorities()
-                    .stream().map(GrantedAuthority::getAuthority)
-                    .toList();
+        List<String> roles = userDetails.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority)
+                .toList();
 
-            String jwt = jwtUtils.generateToken(userDetails, roles);
-            String refreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
+        String jwt = jwtUtils.generateToken(userDetails, roles);
+        String refreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
 
-            AuthResponseDTO authResponseDto = new AuthResponseDTO();
-            authResponseDto.setToken(jwt);
-            authResponseDto.setRefreshToken(refreshToken);
+        AuthResponseDTO authResponseDto = new AuthResponseDTO();
+        authResponseDto.setToken(jwt);
+        authResponseDto.setRefreshToken(refreshToken);
+        authResponseDto.setUsername(userDetails.getUsername());
+        authResponseDto.setRoles(roles);
 
-            return ResponseEntity.ok(
-                    ApiResponse.<AuthResponseDTO>builder()
-                            .status(HttpStatus.OK.value())
-                            .message("Autenticación exitosa.")
-                            .data(authResponseDto)
-                            .timestamp(LocalDateTime.now())
-                            .build()
-            );
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    ApiResponse.<AuthResponseDTO>builder()
-                            .status(HttpStatus.UNAUTHORIZED.value())
-                            .message("Nombre se usuario o contraseña incorrecta.")
-                            .timestamp(LocalDateTime.now())
-                            .build()
-            );
-        }
+        return ResponseEntity.ok(
+                ApiResponse.<AuthResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Autenticación exitosa.")
+                        .data(authResponseDto)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
 
     }
 
@@ -80,50 +74,39 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponseDTO>> refreshUserToken(@RequestBody Map<String, String> request) {
 
         String refreshToken = request.get("refreshToken");
+        String username = jwtUtils.getUserNamefromJwtToken(refreshToken);
+        UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(username));
+        List<String> roles = userDetails.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority)
+                .toList();
 
-        try {
-
-            String username = jwtUtils.getUserNamefromJwtToken(refreshToken);
-            UserDetailsImpl userDetails = UserDetailsImpl.build(userService.getByUserName(username));
-            List<String> roles = userDetails.getAuthorities()
-                    .stream().map(GrantedAuthority::getAuthority)
-                    .toList();
-
-            if (jwtUtils.validateJwtToken(refreshToken, userDetails)) {
-
-                String newJwt = jwtUtils.generateToken(userDetails, roles);
-                String newRefreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
-
-                AuthResponseDTO authResponseDto = new AuthResponseDTO();
-                authResponseDto.setToken(newJwt);
-                authResponseDto.setRefreshToken(newRefreshToken);
-
-                return ResponseEntity.ok(
-                        ApiResponse.<AuthResponseDTO>builder()
-                                .status(HttpStatus.OK.value())
-                                .message("Autenticación exitosa.")
-                                .data(authResponseDto)
-                                .timestamp(LocalDateTime.now())
-                                .build()
-                );
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                        ApiResponse.<AuthResponseDTO>builder()
-                                .status(HttpStatus.UNAUTHORIZED.value())
-                                .message("Token para refrescar invalido.")
-                                .timestamp(LocalDateTime.now())
-                                .build()
-                );
-            }
-        } catch (Exception e) {
+        if (!jwtUtils.validateJwtToken(refreshToken, userDetails)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                     ApiResponse.<AuthResponseDTO>builder()
                             .status(HttpStatus.UNAUTHORIZED.value())
-                            .message("Error en token para refrescar: " + e.getMessage())
+                            .message("Token para refrescar inválido.")
                             .timestamp(LocalDateTime.now())
                             .build()
             );
         }
+
+        String newJwt = jwtUtils.generateToken(userDetails, roles);
+        String newRefreshToken = jwtUtils.generateRefreshToken(userDetails, roles);
+
+        AuthResponseDTO authResponseDto = new AuthResponseDTO();
+        authResponseDto.setToken(newJwt);
+        authResponseDto.setRefreshToken(newRefreshToken);
+        authResponseDto.setUsername(userDetails.getUsername());
+        authResponseDto.setRoles(roles);
+
+        return ResponseEntity.ok(
+                ApiResponse.<AuthResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Token refrescado exitosamente.")
+                        .data(authResponseDto)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
 
     }
 }

@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
@@ -31,7 +32,11 @@ public class User extends AuditableEntity {
     private String username;
 
     @Column(name = ColumnNames.COLUMN_PASSWORD, nullable = false)
+    @JsonIgnore
     private String password;
+
+    @Column(name = ColumnNames.COLUMN_IS_BLOCKED, nullable = false)
+    private boolean isBlocked;
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY,

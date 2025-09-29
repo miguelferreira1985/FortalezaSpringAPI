@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -66,6 +68,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         return build(HttpStatus.UNAUTHORIZED, "Credenciales inválidas", "Usuario y/o contraseña incorrectos");
+    }
+
+    // 401 - Usuario deasctivado
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ApiErrorResponse> handleDisable(DisabledException ex) {
+        return build(HttpStatus.UNAUTHORIZED, "Usuario inactivo", "Tu cuenta no está activada");
+    }
+
+    // 401 - Usuario bloqueado
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity<ApiErrorResponse> handleLocked(LockedException ex) {
+        return build(HttpStatus.FORBIDDEN, "Usuario bloqueado", "Tu cuenta ha sido bloqueada, contacta al administrador.");
     }
 
     // 403 – Sin permisos
