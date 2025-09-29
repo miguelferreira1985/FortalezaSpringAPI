@@ -28,7 +28,7 @@ public class SubcategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<SubcategoryResponseDTO>builder()
                         .status(HttpStatus.CREATED.value())
-                        .message("Subcategoría creada existosamente.")
+                        .message(String.format("La subcategoría %s ha sido agregada.", subcategoryRequestDTO.getName().toUpperCase()))
                         .data(createdSubcategory)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -44,7 +44,7 @@ public class SubcategoryController {
         return ResponseEntity.ok(
                 ApiResponse.<SubcategoryResponseDTO>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Subcategoría actualizada existosamente.")
+                        .message(String.format("La subcategoría %s ha sido actualizada.", subcategoryRequestDTO.getName().toUpperCase()))
                         .data(updatedSubcategory)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -59,7 +59,7 @@ public class SubcategoryController {
         return ResponseEntity.ok(
                 ApiResponse.<Void>builder()
                         .status(HttpStatus.OK.value())
-                        .message("Subcategoría eliminada existosamente.")
+                        .message("La subcategoría fue eliminada.")
                         .timestamp(LocalDateTime.now())
                         .build()
         );
@@ -81,9 +81,9 @@ public class SubcategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<SubcategoryResponseDTO>>> getAllSubcategories(@RequestParam(name = "isACtivate", required = false) Boolean isActivate) {
+    public ResponseEntity<ApiResponse<List<SubcategoryResponseDTO>>> getAllSubcategories() {
 
-        List<SubcategoryResponseDTO> subcategories = subcategoryService.getAllSubcategories(isActivate);
+        List<SubcategoryResponseDTO> subcategories = subcategoryService.getAllSubcategories();
 
         return ResponseEntity.ok(
                 ApiResponse.<List<SubcategoryResponseDTO>>builder()

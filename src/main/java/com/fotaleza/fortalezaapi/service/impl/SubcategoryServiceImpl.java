@@ -28,12 +28,14 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     @Override
     @Transactional
     public SubcategoryResponseDTO createSubcategory(SubcategoryRequestDTO subcategoryRequestDTO) {
+
         validateNameUnique(subcategoryRequestDTO.getName(), null);
 
         Subcategory subcategory = subcategoryMapper.toEntity(subcategoryRequestDTO);
 
         Category category = categoryRepository.findById(subcategoryRequestDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("La categoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría que intenta asignar no existe."));
+
         subcategory.setCategory(category);
 
         Subcategory savedSubcategory = subcategoryRepository.save(subcategory);
@@ -46,14 +48,14 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     @Transactional
     public SubcategoryResponseDTO updateSubcategory(Integer subcategoryId, SubcategoryRequestDTO subcategoryRequestDTO) {
         Subcategory subcategoryToUpdate = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoría que desea actualizar no existe."));
 
         validateNameUnique(subcategoryRequestDTO.getName(), subcategoryId);
 
         subcategoryMapper.updateEntityFromRequestDTO(subcategoryRequestDTO, subcategoryToUpdate);
 
         Category category = categoryRepository.findById(subcategoryRequestDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("La categoría seleccionada no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La categoría que desea asignar no existe."));
         subcategoryToUpdate.setCategory(category);
 
         Subcategory updatedSubcategory = subcategoryRepository.save(subcategoryToUpdate);
@@ -63,35 +65,42 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     @Override
     public void deleteSubcategory(Integer subcategoryId) {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoría no existe."));
 
-        subcategory.setIsActivate(false);
-        subcategoryRepository.save(subcategory);
+        subcategoryRepository.deleteById(subcategoryId);
     }
 
     @Override
     public SubcategoryResponseDTO getSubcategoryById(Integer subcategoryId) {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("La subcategoria no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("La subcategoría no existe."));
 
         return subcategoryMapper.toResponseDTO(subcategory);
     }
 
     @Override
-    public List<SubcategoryResponseDTO> getAllSubcategories(Boolean isActivate) {
-        List<Subcategory> subcategories = Optional.ofNullable(isActivate)
-                .map(subcategoryRepository::findByIsActivate)
-                .orElseGet(subcategoryRepository::findAll);
+    public List<SubcategoryResponseDTO> getAllSubcategories() {
+        List<Subcategory> subcategories = subcategoryRepository.findAll()
+                .stream().toList();
 
         return subcategoryMapper.toResponseDTOList(subcategories);
     }
 
     private void validateNameUnique(String name, Integer subcategoryId) {
-        subcategoryRepository.findByName(name)
-                .ifPresent(sc -> {
-                    if (subcategoryId == null || !sc.getId().equals(subcategoryId)) {
-                        throw new ResourceAlreadyExistsException("La subcategoria con el nombre ya existe.");
-                    }
-                });
+
+        final String errorMessage = String.format("Ya existe una subcategoría con el nombre %s.", name.toUpperCase());
+
+        if (subcategoryId == null) {
+            subcategoryRepository.findByName(name)
+                    .ifPresent(sc -> {
+                        throw new ResourceAlreadyExistsException(errorMessage);
+                    });
+        } else {
+            subcategoryRepository.findByNameAndNotId(name, subcategoryId)
+                    .ifPresent(sc -> {
+                        throw new ResourceAlreadyExistsException(errorMessage);
+                    });
+        }
+
     }
 }

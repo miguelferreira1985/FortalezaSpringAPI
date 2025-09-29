@@ -16,7 +16,6 @@ public class SubcategoryResponseDTO {
     private String name;
     private String description;
     private Category category;
-    private Boolean isActivate;
 
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

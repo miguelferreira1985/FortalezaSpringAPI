@@ -11,6 +11,6 @@ public interface ISubcategoryService {
     SubcategoryResponseDTO updateSubcategory(Integer subcategoryId, SubcategoryRequestDTO subcategoryRequestDTO);
     void deleteSubcategory(Integer subcategoryId);
     SubcategoryResponseDTO getSubcategoryById(Integer subcategoryId);
-    List<SubcategoryResponseDTO> getAllSubcategories(Boolean isActivate);
+    List<SubcategoryResponseDTO> getAllSubcategories();
 
 }
