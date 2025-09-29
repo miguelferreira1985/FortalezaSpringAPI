@@ -47,4 +47,15 @@ public class Supplier extends AuditableEntity {
     @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+    }
+
 }

@@ -14,7 +14,6 @@ public class CashOutFlowResponseDTO {
     private BigDecimal amount;
     private String reason;
     private Integer cashStartId;
-    private Boolean isActivate;
 
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

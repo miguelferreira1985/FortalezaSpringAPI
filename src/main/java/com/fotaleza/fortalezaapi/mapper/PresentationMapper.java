@@ -16,7 +16,6 @@ public interface PresentationMapper {
     PresentationResponseDTO toResponseDTO(Presentation presentation);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -24,7 +23,6 @@ public interface PresentationMapper {
     Presentation toEntity(PresentationRequestDTO presentationRequestDTO);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

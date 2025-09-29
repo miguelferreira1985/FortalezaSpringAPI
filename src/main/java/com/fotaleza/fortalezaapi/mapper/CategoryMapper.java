@@ -16,7 +16,6 @@ public interface CategoryMapper {
     CategoryResponseDTO toResponseDTO(Category category);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -24,7 +23,6 @@ public interface CategoryMapper {
     Category toEntity(CategoryRequestDTO categoryRequestDTO);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

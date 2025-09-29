@@ -30,11 +30,17 @@ public class Client extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_RFC, length = 20, unique = true, nullable = false)
     private String rfc;
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
     @PrePersist
     protected void onCreate() {
         super.onCreate();
         if (this.rfc != null) {
             this.rfc = this.rfc.toUpperCase();
+        }
+        if (isActivate == null) {
+            this.isActivate = true;
         }
     }
 

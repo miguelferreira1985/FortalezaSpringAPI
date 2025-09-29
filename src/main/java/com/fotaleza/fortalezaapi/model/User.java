@@ -49,4 +49,15 @@ public class User extends AuditableEntity {
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+    }
+
 }
