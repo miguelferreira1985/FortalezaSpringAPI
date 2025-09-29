@@ -59,19 +59,6 @@ public class ProductController {
         );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Integer id) {
-        productService.deleteProduct(id);
-
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Producto eliminado existosamente.")
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductResponseDTO>> getProductById(@PathVariable Integer id) {
         ProductResponseDTO product = productService.getProductById(id);
