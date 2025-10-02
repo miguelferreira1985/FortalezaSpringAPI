@@ -1,7 +1,8 @@
 package com.fotaleza.fortalezaapi.security.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,37 +13,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @Getter
     private Long id;
     private String username;
-    @Getter
     private String firstName;
-    @Getter
     private String lastName;
-
-    @JsonIgnore
     private String password;
-
+    private boolean isActivated;
+    private boolean isBlocked;
     private Collection<? extends GrantedAuthority> authorities;
-
-    public UserDetailsImpl(long id, String username, String firstName, String lastName,
-                           String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.authorities = authorities;
-    }
 
     public static UserDetailsImpl build(User user) {
 
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .map(Enum::name)
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
@@ -51,6 +43,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmployee().getFirstName(),
                 user.getEmployee().getLastName(),
                 user.getPassword(),
+                user.getIsActivate(),
+                user.getIsBlocked(),
                 authorities);
     }
 
@@ -69,27 +63,24 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() { return !isBlocked; }
 
     @Override
     public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() { return isActivated; }
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserDetailsImpl that)) return false;
+        return Objects.equals(id, that.id);
+    }
 
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
 }

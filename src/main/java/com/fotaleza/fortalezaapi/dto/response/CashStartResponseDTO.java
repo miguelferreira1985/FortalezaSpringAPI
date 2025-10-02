@@ -15,7 +15,6 @@ public class CashStartResponseDTO {
     private LocalDateTime endDateTime;
     private BigDecimal finalAmount;
     private BigDecimal difference;
-    private Boolean isActivate;
 
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

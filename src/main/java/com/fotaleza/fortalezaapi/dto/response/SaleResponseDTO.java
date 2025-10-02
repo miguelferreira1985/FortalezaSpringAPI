@@ -16,7 +16,6 @@ public class SaleResponseDTO {
     private PaymentType paymentType;
     private BigDecimal totalAmount;
     private Set<SaleItemResponseDTO> saleItems;
-    private Boolean isActivate;
 
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

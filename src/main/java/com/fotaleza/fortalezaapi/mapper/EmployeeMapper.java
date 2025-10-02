@@ -19,14 +19,20 @@ public interface EmployeeMapper {
     EmployeeResponseDTO toResponseDTO(Employee employee);
 
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Employee toEntity(EmployeeRequestDTO employeeRequestDTODTO);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     void updateEntityFromRequestDTO(EmployeeRequestDTO employeeDTO, @MappingTarget Employee employee);
 
     List<EmployeeResponseDTO> toResponseDTOList(List<Employee> employees);

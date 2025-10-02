@@ -10,11 +10,11 @@ public interface IProductService {
 
     ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO);
     ProductResponseDTO updateProduct(Integer productId, ProductRequestDTO productRequestDTO);
-    void deleteProduct(Integer productId);
     ProductResponseDTO getProductById(Integer productId);
     List<ProductResponseDTO> getAllProducts(Boolean isActivate);
     ProductResponseDTO activateProduct(Integer productId);
     ProductResponseDTO deactivateProduct(Integer productId);
     BigDecimal getInventoryValue();
+    ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity, String description);
 
 }

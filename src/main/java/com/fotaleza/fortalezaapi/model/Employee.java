@@ -43,4 +43,15 @@ public class Employee extends  AuditableEntity {
     @JoinColumn(name = ColumnNames.COLUMN_USER_ID)
     private User user;
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+    }
+
 }

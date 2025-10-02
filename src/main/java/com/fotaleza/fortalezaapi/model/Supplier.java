@@ -28,23 +28,34 @@ public class Supplier extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_NAME, length = 50, unique = true, nullable = false)
     private String name;
 
-    @Column(name = ColumnNames.COLUMN_CONTACT, length = 50)
+    @Column(name = ColumnNames.COLUMN_CONTACT, length = 50, nullable = false)
     private String contact;
 
-    @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
-    private String address;
+    @Column(name = ColumnNames.COLUMN_LOCATION, length = 20, nullable = false)
+    private String location;
 
-    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50, unique = true)
+    @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
-    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 20)
+    @Column(name = ColumnNames.COLUMN_CONTACT_PHONE, length = 11, nullable = false)
     private String contactPhone;
 
-    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 20)
+    @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 11)
     private String officePhone;
 
     @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Product> products = new HashSet<>();
+
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+    }
 
 }

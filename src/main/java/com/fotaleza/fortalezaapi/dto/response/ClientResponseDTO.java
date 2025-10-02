@@ -12,11 +12,7 @@ import java.time.LocalDateTime;
 public class ClientResponseDTO {
 
     private Integer id;
-    private String companyName;
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String email;
+    private String name;
     private String phone;
     private String rfc;
     private Boolean isActivate;

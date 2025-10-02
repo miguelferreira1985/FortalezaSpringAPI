@@ -73,6 +73,17 @@ public class Product extends AuditableEntity {
         supplier.getProducts().remove(supplier);
     }
 
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+    }
+
     @Transient
     public boolean isBelowOrEqualMinimumStock() {
         return stock != null && minimumStock != null && stock.compareTo(minimumStock) <= 0;

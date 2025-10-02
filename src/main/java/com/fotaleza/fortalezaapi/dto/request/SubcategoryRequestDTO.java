@@ -13,8 +13,8 @@ public class SubcategoryRequestDTO {
 
     private Integer id;
 
-    @NotBlank(message = "El nombre no puede estar en blanco.")
-    @Size(max = 50, message = "El nombre no puede exceder los 50 caracteres.")
+    @NotBlank(message = "El nombre de la subcategoría no puede estar en blanco.")
+    @Size(max = 50, message = "El nombre de la subcstegoría no puede exceder los 50 caracteres.")
     private String name;
 
     private String description;

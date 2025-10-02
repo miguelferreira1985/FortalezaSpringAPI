@@ -12,7 +12,10 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     Optional<Category> findByName(String name);
+
     @Query("SELECT c FROM Category c WHERE c.name = :name AND c.id != :id")
-    Optional<Category> findByNameAndIdNot(@Param("name") String categoryName, @Param("id") Integer categoryId);
+    Optional<Category> findByNameAndIdNot(
+            @Param("name") String categoryName,
+            @Param("id") Integer categoryId);
 
 }

@@ -16,6 +16,7 @@ public class ColumnNames {
     public static final String COLUMN_CASH_OUT_FLOW_ID = "cashOutFlowId";
     public static final String COLUMN_SALE_ID = "saleId";
     public static final String COLUMN_SALE_ITEM_ID = "saleItemId";
+    public static final String COLUMN_INVENTORY_MOVEMENT_ID = "inventoryMovementId";
     public static final String COLUMN_CREATED_DATE_TIME = "createdDateTime";
     public static final String COLUMN_UPDATED_DATE_TIME = "updatedDateTime";
     public static final String COLUMN_IS_ACTIVATE = "isActivate";
@@ -54,5 +55,12 @@ public class ColumnNames {
     public static final String COLUMN_SUBTOTAL = "subtotal";
     public static final String COlUMN_RECOMMENDED_STOCK = "recommendedStock";
     public static final String COLUMN_ABBREVIATION = "abbreviation";
+    public static final String COLUMN_LOCATION = "location";
+    public static final String COLUMN_IS_BLOCKED = "isBlocked";
+    public static final String COLUMN_FAILED_ATTEMPTS = "failedAttempts";
+    public static final String COLUMN_PREVIOUS_STOCK = "previousStock";
+    public static final String COLUMN_NEW_STOCK = "newStock";
+    public static final String COLUMN_MOVEMENT_TYPE = "movementType";
+    public static final String COLUMN_MOVEMENT_DATE = "movementDate";
 
 }

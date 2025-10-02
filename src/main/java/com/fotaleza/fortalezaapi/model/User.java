@@ -1,10 +1,10 @@
 package com.fotaleza.fortalezaapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +19,6 @@ import java.util.Set;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = ColumnNames.COLUMN_USERNAME)
     })
-@SQLDelete(sql = "UPDATE users SET isActivate = false WHERE userId = ?")
 public class User extends AuditableEntity {
 
     @Id
@@ -31,7 +30,11 @@ public class User extends AuditableEntity {
     private String username;
 
     @Column(name = ColumnNames.COLUMN_PASSWORD, nullable = false)
+    @JsonIgnore
     private String password;
+
+    @Column(name = ColumnNames.COLUMN_IS_BLOCKED, nullable = false)
+    private Boolean isBlocked;
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY,
@@ -43,5 +46,23 @@ public class User extends AuditableEntity {
                 joinColumns = @JoinColumn(name = ColumnNames.COLUMN_USER_ID),
                 inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_ROLE_ID))
     private Set<Role> roles = new HashSet<>();
+
+    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
+    private Boolean isActivate;
+
+    @Column(name = ColumnNames.COLUMN_FAILED_ATTEMPTS)
+    private int failedAttempts;
+
+    @PrePersist
+    protected void onCreate() {
+        super.onCreate();
+        if (isActivate == null) {
+            this.isActivate = true;
+        }
+        if (isBlocked == null) {
+            this.isBlocked = false;
+        }
+        this.failedAttempts = 0;
+    }
 
 }

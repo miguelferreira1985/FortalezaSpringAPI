@@ -18,6 +18,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
 
+    private static final int MAX_FAILED_ATTEMPTS = 5;
+
     private final UserRepository userRepository;
     private final RoleServiceImpl roleService;
     private final PasswordEncoder encoder;
@@ -65,6 +67,35 @@ public class UserServiceImpl implements IUserService {
     public User getByUserName(String userName) {
         return userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Usuario no encontrado con el nombre: %s", userName)));
+    }
+
+    public void processFailedLogin(String username) {
+        userRepository.findByUsername(username)
+                .ifPresent(user -> {
+                    int newFails = user.getFailedAttempts() + 1;
+                    user.setFailedAttempts(newFails);
+
+                    if ( newFails >= MAX_FAILED_ATTEMPTS) {
+                        user.setIsBlocked(true);
+                    }
+
+                    userRepository.save(user);
+                });
+    }
+
+    public void resetFailedAttempts(String username) {
+        userRepository.findByUsername(username)
+                .ifPresent(user -> {
+                    user.setFailedAttempts(0);
+                    userRepository.save(user);
+                    userRepository.save(user);
+                });
+    }
+
+    public void unblockUser(User user) {
+        user.setIsBlocked(false);
+        user.setFailedAttempts(0);
+        userRepository.save(user);
     }
 
 }

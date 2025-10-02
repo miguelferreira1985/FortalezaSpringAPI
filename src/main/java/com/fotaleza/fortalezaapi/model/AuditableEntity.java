@@ -27,16 +27,10 @@ public abstract class AuditableEntity {
     @Column(name = ColumnNames.COLUMN_UPDATED_BY)
     private String updatedBy;
 
-    @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
-    private Boolean isActivate;
-
     @PrePersist
     protected void onCreate() {
         this.createdDateTime = LocalDateTime.now();
         this.createdBy = SecurityUtils.getCurrentUserLogin().orElse("anonymousUser");
-        if (isActivate == null) {
-            this.isActivate = true;
-        }
     }
 
     @PreUpdate

@@ -18,7 +18,6 @@ public interface CashCutMapper {
     @Mapping(target = "cashStart", ignore = true)
     @Mapping(target = "startAmount", ignore = true)
     @Mapping(target = "difference", ignore = true)
-    @Mapping(target = "isActivate", ignore = true)
     @Mapping(target = "createdDateTime", ignore = true)
     @Mapping(target = "updatedDateTime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

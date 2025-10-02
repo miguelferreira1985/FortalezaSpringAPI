@@ -9,8 +9,8 @@ public interface IClientService {
 
     ClientResponseDTO createClient(ClientRequestDTO clientRequestDTO);
     ClientResponseDTO updateClient(Integer clientId, ClientRequestDTO clientRequestDTO);
-    void deleteClient(Integer clientId);
     ClientResponseDTO getClientById(Integer clientId);
     List<ClientResponseDTO> getAllClients(Boolean isActivate);
-
+    ClientResponseDTO deactivateClient(Integer clientId);
+    ClientResponseDTO activateClient(Integer clientId);
 }

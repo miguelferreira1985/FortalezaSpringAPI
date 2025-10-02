@@ -11,9 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @Table(name = TableNames.TABLE_CATEGORIES)
-public class Category {
+public class Category extends AuditableEntity {
 
     @Id
     @Column(name =  ColumnNames.COLUMN_CATEGORY_ID)

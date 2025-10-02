@@ -3,16 +3,14 @@ package com.fotaleza.fortalezaapi.model;
 import com.fotaleza.fortalezaapi.constants.ColumnNames;
 import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString(callSuper = true, exclude = {"product", "sale"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = TableNames.TABLE_SALE_ITEMS)

@@ -11,5 +11,6 @@ public interface IPresentationService {
     PresentationResponseDTO getPresentationById(Integer presentationId);
     PresentationResponseDTO createPresentation(PresentationRequestDTO presentationRequestDTO);
     PresentationResponseDTO updatePresentation(Integer presentation, PresentationRequestDTO presentationRequestDTO);
+    void deletePresentation (Integer presentationId);
 
 }
