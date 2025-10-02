@@ -22,4 +22,4 @@ RUN ./mvnw clean package -DskipTests
 EXPOSE 10000
 
 # Comando para arrancar la app
-CMD ["java", "-jar", "target/fortalezaapi-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/fortalezaapi-1.0.0.jar"]
