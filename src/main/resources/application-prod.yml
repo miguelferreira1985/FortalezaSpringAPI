@@ -21,7 +21,9 @@ spring:
 logging:
   level:
     org.springframework: info
-    org.hibernate.SQL: warn
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
 
 # App Properties
 fortaleza:
