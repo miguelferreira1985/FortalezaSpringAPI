@@ -9,7 +9,7 @@ public class AuthResponseDTO {
 
     private String token;
     private String refreshToken;
-    private String username;
-    private List<String> roles;
+    //private String username;
+    //private List<String> roles;
 
 }

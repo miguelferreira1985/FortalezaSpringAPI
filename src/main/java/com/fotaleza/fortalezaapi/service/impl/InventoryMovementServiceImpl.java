@@ -11,6 +11,7 @@ import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.service.IInventoryMovementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,13 +25,13 @@ public class InventoryMovementServiceImpl implements IInventoryMovementService {
     private final InventoryMovementMapper inventoryMovementMapper;
 
     @Override
-    public InventoryMovement recordMovement(Product product, BigDecimal quantity, EMovementType movementType) {
-
-        BigDecimal previousStock = product.getStock();
-        BigDecimal newStock = previousStock.add(quantity);
+    @Transactional
+    public InventoryMovement recordMovement(Product product, BigDecimal quantity, EMovementType movementType, BigDecimal previousStock,
+                                            BigDecimal newStock, String description) {
 
         InventoryMovement movement = new InventoryMovement();
         movement.setProduct(product);
+        movement.setDescription(description);
         movement.setQuantity(quantity);
         movement.setPreviousStock(previousStock);
         movement.setNewStock(newStock);

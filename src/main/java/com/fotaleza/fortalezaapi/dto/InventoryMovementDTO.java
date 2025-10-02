@@ -20,6 +20,7 @@ public class InventoryMovementDTO {
     private String productName;
     private String productCode;
     private EMovementType movementType;
+    private String description;
     private BigDecimal quantity;
     private BigDecimal previousStock;
     private BigDecimal newStock;

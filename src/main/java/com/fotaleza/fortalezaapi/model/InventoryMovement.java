@@ -31,6 +31,10 @@ public class InventoryMovement {
     @JoinColumn(name = ColumnNames.COLUMN_PRODUCT_ID, nullable = false)
     private Product product;
 
+    // Justificación del moviemienti solo se usara par AJUSTE y DEVOLUCIÓN
+    @Column(name = ColumnNames.COLUMN_DESCRIPTION)
+    private String description;
+
     // Cantidad del movimiento (positiva = entrada, negativa = salida)
     @Column(name = ColumnNames.COLUMN_QUANTITY, nullable = false)
     private BigDecimal quantity;

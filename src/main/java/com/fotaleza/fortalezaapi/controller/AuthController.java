@@ -60,8 +60,8 @@ public class AuthController {
             AuthResponseDTO authResponseDto = new AuthResponseDTO();
             authResponseDto.setToken(jwt);
             authResponseDto.setRefreshToken(refreshToken);
-            authResponseDto.setUsername(userDetails.getUsername());
-            authResponseDto.setRoles(roles);
+            //authResponseDto.setUsername(userDetails.getUsername());
+            //authResponseDto.setRoles(roles);
 
             return ResponseEntity.ok(
                     ApiResponse.<AuthResponseDTO>builder()
@@ -103,8 +103,8 @@ public class AuthController {
         AuthResponseDTO authResponseDto = new AuthResponseDTO();
         authResponseDto.setToken(newJwt);
         authResponseDto.setRefreshToken(newRefreshToken);
-        authResponseDto.setUsername(userDetails.getUsername());
-        authResponseDto.setRoles(roles);
+        //authResponseDto.setUsername(userDetails.getUsername());
+        //authResponseDto.setRoles(roles);
 
         return ResponseEntity.ok(
                 ApiResponse.<AuthResponseDTO>builder()

@@ -1,9 +1,11 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.dto.InventoryMovementDTO;
 import com.fotaleza.fortalezaapi.dto.StockUpdateRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.ProductRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.ProductResponseDTO;
+import com.fotaleza.fortalezaapi.service.IInventoryMovementService;
 import com.fotaleza.fortalezaapi.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +27,7 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService productService;
+    private final IInventoryMovementService inventoryMovementService;
 
     @Operation(summary = "Crear producto", description = "Crea un nuevo producto en el sistema")
     @PostMapping
@@ -98,6 +101,20 @@ public class ProductController {
         return ResponseEntity.ok(lowStock);
     }
 
+    @GetMapping("/{id}/inventory-movement")
+    public ResponseEntity<ApiResponse<List<InventoryMovementDTO>>> getInventoryMovementByProductId(@PathVariable Integer id) {
+        List<InventoryMovementDTO> inventoryMovements = inventoryMovementService.getMovementsByProduct(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<InventoryMovementDTO>>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Movimientos del inventario obtenidos existosamente.")
+                        .data(inventoryMovements)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
     @GetMapping("/inventory-value")
     public ResponseEntity<BigDecimal> getInventoryValue() {
         BigDecimal totalValue = productService.getInventoryValue();
@@ -117,11 +134,11 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}/stock")
-    public ResponseEntity<ApiResponse<ProductResponseDTO>> deactivateProduct(
+    public ResponseEntity<ApiResponse<ProductResponseDTO>> updateStock(
             @PathVariable Integer id,
             @Valid @RequestBody StockUpdateRequestDTO stockUpdateRequestDTO) {
 
-        ProductResponseDTO updatedProduct = productService.updateProductStock(id, stockUpdateRequestDTO.getQuantity());
+        ProductResponseDTO updatedProduct = productService.updateProductStock(id, stockUpdateRequestDTO.getQuantity(), stockUpdateRequestDTO.getDescription());
 
         return ResponseEntity.ok(
                 ApiResponse.<ProductResponseDTO>builder()

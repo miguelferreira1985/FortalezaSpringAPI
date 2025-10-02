@@ -15,6 +15,6 @@ public interface IProductService {
     ProductResponseDTO activateProduct(Integer productId);
     ProductResponseDTO deactivateProduct(Integer productId);
     BigDecimal getInventoryValue();
-    ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity);
+    ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity, String description);
 
 }

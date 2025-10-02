@@ -13,4 +13,6 @@ public class StockUpdateRequestDTO {
     @NotNull(message = "La cantidad es obligarotia")
     private BigDecimal quantity; // puede ser positiva o negativa
 
+    private String description;
+
 }

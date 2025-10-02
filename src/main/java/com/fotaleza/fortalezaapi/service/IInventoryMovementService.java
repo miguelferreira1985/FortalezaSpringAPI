@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IInventoryMovementService {
 
-    InventoryMovement recordMovement(Product product, BigDecimal quantity, EMovementType movementType);
+    InventoryMovement recordMovement(Product product, BigDecimal quantity, EMovementType movementType, BigDecimal previousStock, BigDecimal newStock, String description);
     List<InventoryMovementDTO> getMovementsByProduct(Integer productId);
 
 }

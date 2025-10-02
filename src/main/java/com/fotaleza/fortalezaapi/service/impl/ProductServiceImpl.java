@@ -132,7 +132,8 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional
-    public ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity) {
+    public ProductResponseDTO updateProductStock(Integer productId, BigDecimal quantity, String description) {
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
 
@@ -147,7 +148,7 @@ public class ProductServiceImpl implements IProductService {
 
         Product productToUpdate = productRepository.save(product);
 
-        inventoryMovementService.recordMovement(product, quantity, EMovementType.AJUSTE);
+        inventoryMovementService.recordMovement(product, quantity, EMovementType.AJUSTE, previousStock, newStock, description);
 
         return productMapper.toResponseDTO(productToUpdate);
     }
