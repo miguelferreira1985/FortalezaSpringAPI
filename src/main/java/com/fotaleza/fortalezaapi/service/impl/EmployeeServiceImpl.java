@@ -3,7 +3,6 @@ package com.fotaleza.fortalezaapi.service.impl;
 import com.fotaleza.fortalezaapi.dto.request.UserRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
-import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.EmployeeMapper;
 import com.fotaleza.fortalezaapi.model.Employee;

@@ -2,9 +2,7 @@ package com.fotaleza.fortalezaapi.mapper;
 
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
-import com.fotaleza.fortalezaapi.dto.request.UserRequestDTO;
 import com.fotaleza.fortalezaapi.model.Employee;
-import com.fotaleza.fortalezaapi.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
