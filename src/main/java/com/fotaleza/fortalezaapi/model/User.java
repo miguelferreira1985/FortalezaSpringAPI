@@ -31,11 +31,13 @@ public class User extends AuditableEntity {
 
     @Column(name = ColumnNames.COLUMN_PASSWORD, nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private String password;
 
     @Column(name = ColumnNames.COLUMN_IS_BLOCKED, nullable = false)
     private Boolean isBlocked;
 
+    @JsonIgnore
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "user", cascade = CascadeType.PERSIST)

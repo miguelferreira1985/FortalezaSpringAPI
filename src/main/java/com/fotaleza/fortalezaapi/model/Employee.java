@@ -19,7 +19,7 @@ public class Employee extends  AuditableEntity {
     @Column(name = ColumnNames.COLUMN_EMPLOYEE_ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Integer Id;
+    private Integer id;
 
     @Column(name = ColumnNames.COLUMN_FIRST_NAME, length = 50, nullable = false)
     private String firstName;
@@ -30,16 +30,16 @@ public class Employee extends  AuditableEntity {
     @Column(name = ColumnNames.COLUMN_EMAIL, length = 50)
     private String email;
 
-    @Column(name = ColumnNames.COLUMN_PHONE, length = 20)
+    @Column(name = ColumnNames.COLUMN_PHONE, length = 20, nullable = false)
     private String phone;
 
     @Column(name = ColumnNames.COLUMN_ADDRESS, length = 100)
     private String address;
 
-    @Column(name = ColumnNames.COLUMN_SSN, length = 20, unique = true, nullable = false)
+    @Column(name = ColumnNames.COLUMN_SSN, length = 20)
     private String ssn;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = ColumnNames.COLUMN_USER_ID)
     private User user;
 

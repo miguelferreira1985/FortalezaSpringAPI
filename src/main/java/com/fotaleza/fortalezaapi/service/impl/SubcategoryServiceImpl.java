@@ -8,9 +8,11 @@ import com.fotaleza.fortalezaapi.mapper.SubcategoryMapper;
 import com.fotaleza.fortalezaapi.model.Category;
 import com.fotaleza.fortalezaapi.model.Subcategory;
 import com.fotaleza.fortalezaapi.repository.CategoryRepository;
+import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
 import com.fotaleza.fortalezaapi.service.ISubcategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
 
     private final SubcategoryRepository subcategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
     private final SubcategoryMapper subcategoryMapper;
 
     @Override
@@ -65,6 +68,10 @@ public class SubcategoryServiceImpl implements ISubcategoryService {
     public void deleteSubcategory(Integer subcategoryId) {
         Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("La subcategoría no existe."));
+
+        if (productRepository.existsBySubcategoryId(subcategoryId)) {
+            throw  new DataIntegrityViolationException("No se puede borrar la subcategoría porque tiene prodcutos asociados.");
+        }
 
         subcategoryRepository.deleteById(subcategoryId);
     }

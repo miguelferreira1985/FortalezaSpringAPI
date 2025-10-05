@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    Optional<Employee> findBySsn(String ssn);
     List<Employee> findByIsActivate(Boolean isActivate);
 }

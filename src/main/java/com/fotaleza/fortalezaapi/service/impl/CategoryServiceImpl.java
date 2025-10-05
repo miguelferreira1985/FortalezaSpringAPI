@@ -7,8 +7,10 @@ import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.CategoryMapper;
 import com.fotaleza.fortalezaapi.model.Category;
 import com.fotaleza.fortalezaapi.repository.CategoryRepository;
+import com.fotaleza.fortalezaapi.repository.SubcategoryRepository;
 import com.fotaleza.fortalezaapi.service.ICategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class CategoryServiceImpl implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final SubcategoryRepository subcategoryRepository;
     private final CategoryMapper categoryMapper;
 
     @Override
@@ -54,6 +57,10 @@ public class CategoryServiceImpl implements ICategoryService {
     public void deleteCategory (Integer categoryId) {
         Category categoryToDelete = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("La categoría no existe"));
+
+        if (subcategoryRepository.existsByCategoryId(categoryId)) {
+            throw new DataIntegrityViolationException("No se puede eliminar la categoría porque tiene subcategorías asociadas.");
+        }
 
         categoryRepository.deleteById(categoryId);
     }

@@ -1,4 +1,4 @@
-package com.fotaleza.fortalezaapi.dto;
+package com.fotaleza.fortalezaapi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,7 +13,9 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDataDTO {
+public class UserRequestDTO {
+
+    private Integer id;
 
     @NotBlank(message = "Username es requerido.")
     @Size(max = 20, message = "Username must not exceed 20 characters.")

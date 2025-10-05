@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.service.impl;
 
+import com.fotaleza.fortalezaapi.dto.request.UserRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
@@ -29,19 +30,42 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDTO) {
-        validateSsnUnique(employeeRequestDTO.getSsn(), null);
-
-        User user = userService.createUser(
-                employeeRequestDTO.getUserData().getUsername(),
-                employeeRequestDTO.getUserData().getPassword(),
-                employeeRequestDTO.getUserData().getRoles()
-        );
 
         Employee employee = employeeMapper.toEntity(employeeRequestDTO);
-        employee.setUser(user);
+
+        if (employeeRequestDTO.getUserRequestDTO() != null) {
+            User user = userService.createUser(
+                    employeeRequestDTO.getUserRequestDTO().getUsername(),
+                    employeeRequestDTO.getUserRequestDTO().getPassword(),
+                    employeeRequestDTO.getUserRequestDTO().getRoles()
+            );
+            employee.setUser(user);
+        }
 
         Employee savedEmployed = employeeRepository.save(employee);
         return employeeMapper.toResponseDTO(savedEmployed);
+    }
+
+    @Override
+    @Transactional
+    public EmployeeResponseDTO addUserToEmployee(Integer employeeId, UserRequestDTO userRequestDTO) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
+
+        if (employee.getIsActivate() != null) {
+            throw new IllegalStateException("El empleado ya tiene un usuario asignado.");
+        }
+
+        User user = userService.createUser(
+                userRequestDTO.getUsername(),
+                userRequestDTO.getPassword(),
+                userRequestDTO.getRoles()
+        );
+
+        employee.setUser(user);
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return employeeMapper.toResponseDTO(updatedEmployee);
     }
 
     @Override
@@ -50,21 +74,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Employee employeeToUpdate = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
 
-        validateSsnUnique(employeeRequestDTO.getSsn(), employeeId);
-
         employeeMapper.updateEntityFromRequestDTO(employeeRequestDTO, employeeToUpdate);
 
         Employee updatedEmployee = employeeRepository.save(employeeToUpdate);
         return employeeMapper.toResponseDTO(updatedEmployee);
-    }
-
-    @Override
-    @Transactional
-    public void deleteEmployee(Integer employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
-        employee.setIsActivate(false);
-        employeeRepository.save(employee);
     }
 
     @Override
@@ -82,12 +95,4 @@ public class EmployeeServiceImpl implements IEmployeeService {
         return employeeMapper.toResponseDTOList(employees);
     }
 
-    private void validateSsnUnique(String ssn, Integer employeeId) {
-        employeeRepository.findBySsn(ssn)
-                .ifPresent(e -> {
-                    if (employeeId == null || e.getId().equals(employeeId)) {
-                        throw new ResourceAlreadyExistsException("El empleado con el NSS ya existe.");
-                    }
-                });
-    }
 }

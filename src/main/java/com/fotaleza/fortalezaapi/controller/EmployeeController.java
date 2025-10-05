@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.controller;
 
+import com.fotaleza.fortalezaapi.dto.request.UserRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.EmployeeRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.EmployeeResponseDTO;
@@ -30,6 +31,23 @@ public class EmployeeController {
                         .status(HttpStatus.CREATED.value())
                         .message("Empleado creado existosamente.")
                         .data(createdEmployee)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PostMapping("/{id}/user")
+    public ResponseEntity<ApiResponse<EmployeeResponseDTO>> addUserToEmployee(
+            @PathVariable Integer id,
+            @Valid @RequestBody UserRequestDTO userRequestDTO) {
+
+        EmployeeResponseDTO updatedEmployee =  employeeService.addUserToEmployee(id, userRequestDTO);
+
+        return ResponseEntity.ok(
+                ApiResponse.<EmployeeResponseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Usuario asignado al empleado exitosamente.")
+                        .data(updatedEmployee)
                         .timestamp(LocalDateTime.now())
                         .build()
         );

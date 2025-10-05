@@ -1,6 +1,5 @@
 package com.fotaleza.fortalezaapi.dto.request;
 
-import com.fotaleza.fortalezaapi.dto.UserDataDTO;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -27,14 +26,13 @@ public class EmployeeRequestDTO {
     @Email(message = "El formato del correo electronico no es valido.")
     private String email;
 
+    @NotBlank(message = "El telefono no puede estar en blanco.")
     @Pattern(regexp = "\\+?[0-9]{10,15}", message = "El teléfono debe tener entre 7 y 15 dígitos y opcionalmente iniciar con +")
     private String phone;
 
-    @NotBlank(message = "El NSS no puede estar en blanco.")
     @Size(max = 20, message = "El NSS no puede exceder 20 caracteres.")
     private String ssn;
 
-    @NotNull(message = "User data is required.")
-    private UserDataDTO userData;
+    private UserRequestDTO userRequestDTO;
 
 }
