@@ -17,6 +17,8 @@ public class ColumnNames {
     public static final String COLUMN_SALE_ID = "saleId";
     public static final String COLUMN_SALE_ITEM_ID = "saleItemId";
     public static final String COLUMN_INVENTORY_MOVEMENT_ID = "inventoryMovementId";
+    public static final String COLUMN_PURCHASE_ORDER_ID = "purchaseOrderId";
+    public static final String COLUMN_PURCHASE_ORDER_ITEM_ID = "purchaseOrderItemId";
     public static final String COLUMN_CREATED_DATE_TIME = "createdDateTime";
     public static final String COLUMN_UPDATED_DATE_TIME = "updatedDateTime";
     public static final String COLUMN_IS_ACTIVATE = "isActivate";
@@ -62,5 +64,12 @@ public class ColumnNames {
     public static final String COLUMN_NEW_STOCK = "newStock";
     public static final String COLUMN_MOVEMENT_TYPE = "movementType";
     public static final String COLUMN_MOVEMENT_DATE = "movementDate";
+    public static final String COLUMN_ORDER_STATUS = "orderStatus";
+    public static final String COLUMN_ORDER_DATE = "orderDate";
+    public static final String COLUMN_EXPECTED_DELIVERY_DATE = "expectedDeliveryDate";
+    public static final String COLUMN_QUANTITY_ORDERED = "quantityOrdered";
+    public static final String COLUMN_QUANTITY_RECEIVED = "quantityReceived";
+    public static final String COLUMN_UNIT_COST = "unitCost";
+
 
 }
