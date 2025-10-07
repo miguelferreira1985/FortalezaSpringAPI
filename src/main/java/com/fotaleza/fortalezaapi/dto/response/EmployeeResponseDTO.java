@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.dto.response;
 
+import com.fotaleza.fortalezaapi.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class EmployeeResponseDTO {
     private String phone;
     private String address;
     private String ssn;
-    private Long userId;
+    private User user;
     private Boolean isActivate;
 
     private LocalDateTime createdDateTime;

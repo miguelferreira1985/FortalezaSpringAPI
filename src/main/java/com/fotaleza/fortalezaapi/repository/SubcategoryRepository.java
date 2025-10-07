@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface SubcategoryRepository extends JpaRepository<Subcategory, Integer> {
 
     Optional<Subcategory> findByName(String subcategoryName);
+    boolean existsByCategoryId(Integer caegoryId);
 
     @Query("SELECT s FROM Subcategory s WHERE s.name = :name AND s.id != :id")
     Optional<Subcategory> findByNameAndNotId(

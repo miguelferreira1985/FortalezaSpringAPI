@@ -7,8 +7,10 @@ import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.PresentationMapper;
 import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.repository.PresentationRepository;
+import com.fotaleza.fortalezaapi.repository.ProductRepository;
 import com.fotaleza.fortalezaapi.service.IPresentationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class PresentationServiceImpl implements IPresentationService {
 
     private final PresentationRepository presentationRepository;
+    private final ProductRepository productRepository;
     private final PresentationMapper presentationMapper;
 
     @Override
@@ -53,6 +56,10 @@ public class PresentationServiceImpl implements IPresentationService {
     public void deletePresentation (Integer presentationId) {
         Presentation presentationToDelete = presentationRepository.findById(presentationId)
                 .orElseThrow(() -> new ResourceNotFoundException("La presentación que desea eliminar no existe."));
+
+        if (productRepository.existsByPresentationId(presentationId)) {
+            throw new DataIntegrityViolationException("No se puede eliminar la presentación porque tiene productos asociados.");
+        }
 
         presentationRepository.deleteById(presentationId);
     }
