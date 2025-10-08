@@ -44,16 +44,22 @@ public class ProductServiceImpl implements IProductService {
 
         Product product = productMapper.toEntity(productRequestDTO);
 
-        Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
-        product.setSubcategory(subcategory);
+        if (productRequestDTO.getPresentationId() != null) {
+            Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
+            product.setSubcategory(subcategory);
+        }
 
-        Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
-        product.setPresentation(presentation);
+        if (productRequestDTO.getPresentationId() != null) {
+            Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
+            product.setPresentation(presentation);
+        }
 
-        Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
-        product.setSuppliers(suppliers);
+        if (!productRequestDTO.getSupplierIds().isEmpty()) {
+            Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
+            product.setSuppliers(suppliers);
+        }
 
 
 
@@ -71,16 +77,22 @@ public class ProductServiceImpl implements IProductService {
 
         productMapper.updateEntityFromRequestDTO(productRequestDTO, productToUpdate);
 
-        Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
-        productToUpdate.setSubcategory(subcategory);
+        if (productRequestDTO.getPresentationId() != null) {
+            Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
+            productToUpdate.setSubcategory(subcategory);
+        }
 
-        Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
-        productToUpdate.setPresentation(presentation);
+        if (productRequestDTO.getPresentationId() != null) {
+            Presentation presentation = presentationRepository.findById(productRequestDTO.getPresentationId())
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_PRESENTATION_NOT_FOUND));
+            productToUpdate.setPresentation(presentation);
+        }
 
-        Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
-        productToUpdate.setSuppliers(suppliers);
+        if (!productRequestDTO.getSupplierIds().isEmpty()) {
+            Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
+            productToUpdate.setSuppliers(suppliers);
+        }
 
         Product updatedProduct = productRepository.save(productToUpdate);
         return productMapper.toResponseDTO(updatedProduct);
