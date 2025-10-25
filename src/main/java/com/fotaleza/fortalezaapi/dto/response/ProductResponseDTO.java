@@ -2,12 +2,11 @@ package com.fotaleza.fortalezaapi.dto.response;
 
 import com.fotaleza.fortalezaapi.model.Presentation;
 import com.fotaleza.fortalezaapi.model.Subcategory;
-import com.fotaleza.fortalezaapi.model.Supplier;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,7 +26,7 @@ public class ProductResponseDTO {
     private BigDecimal recommendedStock;
     private Subcategory subcategory;
     private Presentation presentation;
-    private Set<Supplier> suppliers;
+    private List<SupplierCostResponseDTO> supplierCosts;
     private Boolean isActivate;
     private LocalDateTime createdDateTime;
     private LocalDateTime updatedDateTime;

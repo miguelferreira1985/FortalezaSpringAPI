@@ -34,7 +34,6 @@ public class SupplierRequestDTO {
     @Pattern(regexp = "\\+?[0-9]{10,15}", message = "El teléfono del contacto debe tener entre 7 y 15 dígitos y opcionalmente iniciar con +")
     private String contactPhone;
 
-    @Pattern(regexp = "\\+?[0-9]{10,15}", message = "El teléfono de oficina debe tener entre 7 y 15 dígitos y opcionalmente iniciar con +")
     private String officePhone;
 
 }

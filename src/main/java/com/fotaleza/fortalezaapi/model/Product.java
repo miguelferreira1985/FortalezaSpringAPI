@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"suppliers", "subcategory"})
+@ToString(exclude = "subcategory")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(
         name = TableNames.TABLE_PRODUCTS,
@@ -62,16 +64,8 @@ public class Product extends AuditableEntity {
     @JoinColumn(name = ColumnNames.COLUMN_PRESENTATION_ID)
     private Presentation presentation;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableNames.TABLE_PRODUCTS_SUPPLIERS,
-                joinColumns = @JoinColumn(name = ColumnNames.COLUMN_PRODUCT_ID),
-                inverseJoinColumns = @JoinColumn(name = ColumnNames.COLUMN_SUPPLIER_ID))
-    private Set<Supplier> suppliers = new HashSet<>();
-
-    public void removeSuppliers(Supplier supplier) {
-        this.suppliers.remove(supplier);
-        supplier.getProducts().remove(supplier);
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SupplierProduct> supplierProducts = new ArrayList<>();
 
     @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
     private Boolean isActivate;
@@ -82,6 +76,21 @@ public class Product extends AuditableEntity {
         if (isActivate == null) {
             this.isActivate = true;
         }
+    }
+
+    public void addSupplierProduct(SupplierProduct supplierProduct) {
+        supplierProducts.add(supplierProduct);
+        supplierProduct.setProduct(this);
+    }
+
+    public void clearSupplierProducts() {
+        supplierProducts.forEach(sp -> sp.setProduct(null));
+        supplierProducts.clear();
+    }
+
+    public void removeSupplierProduct(SupplierProduct supplierProduct) {
+        supplierProduct.setProduct(null);
+        this.supplierProducts.remove(supplierProduct);
     }
 
     @Transient

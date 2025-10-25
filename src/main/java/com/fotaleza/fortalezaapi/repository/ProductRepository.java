@@ -24,4 +24,22 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT SUM(CAST(p.stock as java.math.BigDecimal) * CAST(p.cost as java.math.BigDecimal)) FROM Product p")
     BigDecimal calculateTotalInventoryValue();
+
+    @Query("""
+    SELECT p 
+    FROM Product p
+    LEFT JOIN FETCH p.supplierProducts sp
+    LEFT JOIN FETCH sp.supplier s
+    WHERE p.id = :id
+    """)
+    Optional<Product> findByIdWithSuppliers(@Param("id") Integer id);
+
+    @Query("""
+    SELECT DISTINCT p 
+    FROM Product p
+    LEFT JOIN FETCH p.supplierProducts sp
+    LEFT JOIN FETCH sp.supplier s
+    WHERE (:isActivate IS NULL OR p.isActivate = :isActivate)
+""")
+    List<Product> findAllWithSuppliersAndStatus(@Param("isActivate") Boolean isActivate);
 }

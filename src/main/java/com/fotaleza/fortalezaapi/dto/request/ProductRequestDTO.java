@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.dto.request;
 
+import com.fotaleza.fortalezaapi.dto.response.SupplierCostResponseDTO;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +51,6 @@ public class ProductRequestDTO {
 
     private Integer subcategoryId;
     private Integer presentationId;
-    private Set<Integer> supplierIds;
+    private Set<SupplierCostRequestDTO> supplierCosts;
 
 }
