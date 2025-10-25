@@ -7,9 +7,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -86,11 +84,6 @@ public class Product extends AuditableEntity {
     public void clearSupplierProducts() {
         supplierProducts.forEach(sp -> sp.setProduct(null));
         supplierProducts.clear();
-    }
-
-    public void removeSupplierProduct(SupplierProduct supplierProduct) {
-        supplierProduct.setProduct(null);
-        this.supplierProducts.remove(supplierProduct);
     }
 
     @Transient

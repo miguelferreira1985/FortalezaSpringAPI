@@ -8,7 +8,6 @@ import com.fotaleza.fortalezaapi.model.SupplierProduct;
 import org.mapstruct.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

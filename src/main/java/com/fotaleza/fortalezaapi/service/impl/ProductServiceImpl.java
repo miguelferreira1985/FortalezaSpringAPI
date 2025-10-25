@@ -30,7 +30,6 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final SubcategoryRepository subcategoryRepository;
     private final PresentationRepository presentationRepository;
-    private final SupplierProductRepository supplierProductRepository;
     private final SupplierRepository supplierRepository;
     private final ProductMapper productMapper;
     private final IInventoryMovementService inventoryMovementService;
