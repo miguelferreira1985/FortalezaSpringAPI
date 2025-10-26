@@ -12,9 +12,9 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    generate-ddl: false
+    # generate-ddl: false
     hibernate:
-      ddl-auto: validate   # en producción real mejor usar "validate"
+      ddl-auto: update   # en producción real mejor usar "validate"
     show-sql: false
     properties:
       hibernate:
