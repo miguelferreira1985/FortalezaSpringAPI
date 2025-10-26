@@ -9,7 +9,9 @@ import com.fotaleza.fortalezaapi.mapper.ProductMapper;
 import com.fotaleza.fortalezaapi.mapper.SupplierMapper;
 import com.fotaleza.fortalezaapi.model.Product;
 import com.fotaleza.fortalezaapi.model.Supplier;
+import com.fotaleza.fortalezaapi.model.SupplierProduct;
 import com.fotaleza.fortalezaapi.repository.ProductRepository;
+import com.fotaleza.fortalezaapi.repository.SupplierProductRepository;
 import com.fotaleza.fortalezaapi.repository.SupplierRepository;
 import com.fotaleza.fortalezaapi.service.ISupplierService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SupplierServiceImpl implements ISupplierService {
 
     private final SupplierRepository supplierRepository;
+    private final SupplierProductRepository supplierProductRepository;
     private final ProductRepository productRepository;
     private final SupplierMapper supplierMapper;
     private final ProductMapper productMapper;
@@ -61,17 +63,11 @@ public class SupplierServiceImpl implements ISupplierService {
         Supplier supplierToDeactivate = supplierRepository.findById(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("El proveedor que desea desactivar no existe."));
 
-        Set<Product> associateProducts = supplierToDeactivate.getProducts();
-
-        for (Product product : associateProducts) {
-            product.getSuppliers().remove(supplierToDeactivate);
-        }
-
-        productRepository.saveAll(associateProducts);
-
         supplierToDeactivate.setIsActivate(false);
 
         Supplier supplierDeactivated = supplierRepository.save(supplierToDeactivate);
+
+        supplierProductRepository.deleteAll(supplierProductRepository.findBySupplierId(supplierId));
 
         return supplierMapper.toResponseDTO(supplierDeactivated);
     }
@@ -109,7 +105,10 @@ public class SupplierServiceImpl implements ISupplierService {
         Supplier supplier = supplierRepository.findById(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("El proveedor no existe."));
 
-        return supplier.getProducts().stream()
+        List<SupplierProduct> supplierProducts = supplierProductRepository.findBySupplierId(supplierId);
+
+        return supplierProducts.stream()
+                .map(SupplierProduct::getProduct)
                 .filter(Product::getIsActivate)
                 .map(productMapper::toResponseDTO)
                 .toList();

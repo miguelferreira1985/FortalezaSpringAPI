@@ -8,10 +8,7 @@ import com.fotaleza.fortalezaapi.enums.EMovementType;
 import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.ProductMapper;
-import com.fotaleza.fortalezaapi.model.Presentation;
-import com.fotaleza.fortalezaapi.model.Product;
-import com.fotaleza.fortalezaapi.model.Subcategory;
-import com.fotaleza.fortalezaapi.model.Supplier;
+import com.fotaleza.fortalezaapi.model.*;
 import com.fotaleza.fortalezaapi.repository.*;
 import com.fotaleza.fortalezaapi.service.IInventoryMovementService;
 import com.fotaleza.fortalezaapi.service.IProductService;
@@ -22,8 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +42,7 @@ public class ProductServiceImpl implements IProductService {
 
         Product product = productMapper.toEntity(productRequestDTO);
 
-        if (productRequestDTO.getPresentationId() != null) {
+        if (productRequestDTO.getSubcategoryId() != null) {
             Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
             product.setSubcategory(subcategory);
@@ -56,20 +54,31 @@ public class ProductServiceImpl implements IProductService {
             product.setPresentation(presentation);
         }
 
-        if (!productRequestDTO.getSupplierIds().isEmpty()) {
-            Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
-            product.setSuppliers(suppliers);
+        product.clearSupplierProducts();
+
+        if (productRequestDTO.getSupplierCosts() != null && !productRequestDTO.getSupplierCosts().isEmpty()) {
+            for (var sc : productRequestDTO.getSupplierCosts()) {
+                Supplier supplier = supplierRepository.findById(sc.getSupplierId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
+
+                SupplierProduct supplierProduct = new SupplierProduct();
+                supplierProduct.setSupplier(supplier);
+                supplierProduct.setCost(sc.getCost());
+                supplierProduct.setDiscount(sc.getDiscount());
+
+                product.addSupplierProduct(supplierProduct);
+            }
         }
 
-
-
         Product savedProduct = productRepository.save(product);
+
         return productMapper.toResponseDTO(savedProduct);
     }
 
     @Override
     @Transactional
     public ProductResponseDTO updateProduct(Integer productId, ProductRequestDTO productRequestDTO) {
+
         Product productToUpdate =productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
 
@@ -77,7 +86,7 @@ public class ProductServiceImpl implements IProductService {
 
         productMapper.updateEntityFromRequestDTO(productRequestDTO, productToUpdate);
 
-        if (productRequestDTO.getPresentationId() != null) {
+        if (productRequestDTO.getSubcategoryId() != null) {
             Subcategory subcategory = subcategoryRepository.findById(productRequestDTO.getSubcategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_SUBCATEGORY_NOT_FOUND));
             productToUpdate.setSubcategory(subcategory);
@@ -89,27 +98,47 @@ public class ProductServiceImpl implements IProductService {
             productToUpdate.setPresentation(presentation);
         }
 
-        if (!productRequestDTO.getSupplierIds().isEmpty()) {
-            Set<Supplier> suppliers = new HashSet<>(supplierRepository.findAllById(productRequestDTO.getSupplierIds()));
-            productToUpdate.setSuppliers(suppliers);
+        Map<Integer, SupplierProduct> currentBySupplier = productToUpdate.getSupplierProducts().stream()
+                .collect(Collectors.toMap(sp -> sp.getSupplier().getId(), sp -> sp));
+
+        Set<Integer> incoming = new HashSet<>();
+
+        if (productRequestDTO.getSupplierCosts() != null && !productRequestDTO.getSupplierCosts().isEmpty()) {
+            for (var sc : productRequestDTO.getSupplierCosts()) {
+                int supplierId = sc.getSupplierId();
+                incoming.add(supplierId);
+
+                SupplierProduct supplierProduct = currentBySupplier.get(supplierId);
+
+                if (supplierProduct == null) {
+                    Supplier supplier = supplierRepository.findById(supplierId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado."));
+                    supplierProduct = new SupplierProduct();
+                    supplierProduct.setSupplier(supplier);
+                    productToUpdate.addSupplierProduct(supplierProduct);
+                }
+                supplierProduct.setCost(sc.getCost());
+                supplierProduct.setDiscount(sc.getDiscount());
+            }
         }
 
+        productToUpdate.getSupplierProducts().removeIf(sp -> !incoming.contains(sp.getSupplier().getId()));
+
         Product updatedProduct = productRepository.save(productToUpdate);
+
         return productMapper.toResponseDTO(updatedProduct);
     }
 
     @Override
     public ProductResponseDTO getProductById(Integer productId) {
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithSuppliers(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, productId)));
         return productMapper.toResponseDTO(product);
     }
 
     @Override
     public List<ProductResponseDTO> getAllProducts(Boolean isActivate) {
-        List<Product> products = Optional.ofNullable(isActivate)
-                .map(productRepository::findByIsActivate)
-                .orElseGet(productRepository::findAll);
+        List<Product> products = productRepository.findAllWithSuppliersAndStatus(isActivate);
         return productMapper.toResponseDTOList(products);
     }
 
@@ -182,6 +211,24 @@ public class ProductServiceImpl implements IProductService {
                     });
         }
 
+    }
+
+    private Set<SupplierProduct> mapSupplierCost(ProductRequestDTO productRequestDTO, Product product) {
+        return productRequestDTO.getSupplierCosts()
+                .stream()
+                .map(costDto -> {
+                    Supplier supplier = supplierRepository.findById(costDto.getSupplierId())
+                            .orElseThrow(() -> new ResourceNotFoundException(
+                                    "Proveedor no encontrado con ID: " + costDto.getSupplierId()));
+                    SupplierProduct sp = new SupplierProduct();
+                    sp.setSupplier(supplier);
+                    sp.setProduct(product);
+                    sp.setCost(costDto.getCost());
+                    sp.setDiscount(costDto.getDiscount());
+                    sp.setId(new SupplierProductId(supplier.getId(), product.getId()));
+                    return sp;
+                })
+                .collect(Collectors.toSet());
     }
 
 }

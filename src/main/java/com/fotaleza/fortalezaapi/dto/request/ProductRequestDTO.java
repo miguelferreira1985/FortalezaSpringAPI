@@ -50,6 +50,6 @@ public class ProductRequestDTO {
 
     private Integer subcategoryId;
     private Integer presentationId;
-    private Set<Integer> supplierIds;
+    private Set<SupplierCostRequestDTO> supplierCosts;
 
 }

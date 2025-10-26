@@ -12,24 +12,26 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    # generate-ddl: false
     hibernate:
       ddl-auto: update   # en producción real mejor usar "validate"
     show-sql: false
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
     org.springframework: info
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: trace
-    org.springframework.security: DEBUG
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.springframework.security: INFO
 
 
 # App Properties
 fortaleza:
   app:
     jwtSecret: =======================BezKoder=Spring=======================
-    jwtExpirationMs: 86400000
+    jwtExpirationMs: 43200000
     cors:
       allowed-origins: "https://fortaleza-admin-798e8.web.app"

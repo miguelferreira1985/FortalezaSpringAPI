@@ -62,5 +62,5 @@ public class ColumnNames {
     public static final String COLUMN_NEW_STOCK = "newStock";
     public static final String COLUMN_MOVEMENT_TYPE = "movementType";
     public static final String COLUMN_MOVEMENT_DATE = "movementDate";
-
+    public static final String COLUMN_DISCOUNT = "discount";
 }
