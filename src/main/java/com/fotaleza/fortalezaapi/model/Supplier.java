@@ -6,15 +6,15 @@ import com.fotaleza.fortalezaapi.constants.TableNames;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "products")
+@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true,callSuper = false)
 @Table(name = TableNames.TABLE_SUPPLIERS)
 public class Supplier extends AuditableEntity {
@@ -43,9 +43,9 @@ public class Supplier extends AuditableEntity {
     @Column(name = ColumnNames.COLUMN_OFFICE_PHONE, length = 11)
     private String officePhone;
 
-    @ManyToMany(mappedBy = TableNames.TABLE_SUPPLIERS, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<Product> products = new HashSet<>();
+    private List<SupplierProduct> supplierProducts = new ArrayList<>();
 
     @Column(name = ColumnNames.COLUMN_IS_ACTIVATE)
     private Boolean isActivate;
