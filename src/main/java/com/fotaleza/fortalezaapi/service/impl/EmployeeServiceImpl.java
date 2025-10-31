@@ -51,7 +51,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("El empleado no existe."));
 
-        if (employee.getIsActivate() != null) {
+        if (!employee.getIsActivate()) {
+            throw new IllegalStateException("El empleado no esta activo.");
+        }
+
+        if(employee.getUser() != null) {
             throw new IllegalStateException("El empleado ya tiene un usuario asignado.");
         }
 

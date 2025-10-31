@@ -1,5 +1,6 @@
 package com.fotaleza.fortalezaapi.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +11,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePaswordRequestDTO {
+public class ChangePasswordRequestDTO {
 
+    //@JsonProperty("newPassword")
     @NotBlank(message = "La nueva contraseña no puede estar vacia.")
     private String newPassword;
 }

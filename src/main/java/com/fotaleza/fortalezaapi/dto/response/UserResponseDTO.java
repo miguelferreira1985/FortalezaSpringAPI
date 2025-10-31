@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserResponseDTO {
 
+    private Long id;
     private String username;
     private Boolean isBlocked;
     private Boolean isActivate;
