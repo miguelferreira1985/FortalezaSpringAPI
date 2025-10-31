@@ -98,6 +98,20 @@ public class UserController {
                         .build());
     }
 
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<ApiResponse<Void>> deletePresentation(@PathVariable Long id) {
+
+        userService.deleteUserIfDeactivate(id);
+
+        return  ResponseEntity.ok(
+                ApiResponse.<Void>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("El usuario fue eliminad.")
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
     @GetMapping()
     public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllUsers(
             @RequestParam(name = "isActivate", required = false) Boolean isActivate) {

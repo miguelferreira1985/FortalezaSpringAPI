@@ -18,4 +18,5 @@ public interface IUserService {
     void processFailedLogin(String username);
     void resetFailedAttempts(String username);
     List<UserResponseDTO> getAllUsers(Boolean isActivate);
+    void deleteUserIfDeactivate(Long userId);
 }
