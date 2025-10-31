@@ -5,8 +5,10 @@ import com.fotaleza.fortalezaapi.exception.ResourceAlreadyExistsException;
 import com.fotaleza.fortalezaapi.enums.ERole;
 import com.fotaleza.fortalezaapi.exception.ResourceNotFoundException;
 import com.fotaleza.fortalezaapi.mapper.UserMapper;
+import com.fotaleza.fortalezaapi.model.Employee;
 import com.fotaleza.fortalezaapi.model.Role;
 import com.fotaleza.fortalezaapi.model.User;
+import com.fotaleza.fortalezaapi.repository.EmployeeRepository;
 import com.fotaleza.fortalezaapi.repository.UserRepository;
 import com.fotaleza.fortalezaapi.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements IUserService {
     private static final int MAX_FAILED_ATTEMPTS = 5;
 
     private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
     private final UserMapper userMapper;
     private final RoleServiceImpl roleService;
     private final PasswordEncoder encoder;
@@ -141,6 +144,28 @@ public class UserServiceImpl implements IUserService {
                     user.setFailedAttempts(0);
                     userRepository.save(user);
                 });
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserIfDeactivate(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
+
+        if (Boolean.TRUE.equals(user.getIsActivate())) {
+            throw new IllegalStateException("El usuario de estar desactivado para poder borrarse.");
+        }
+
+        Employee employee = user.getEmployee();
+        if (employee != null) {
+            employee.setUser(null);
+            employeeRepository.save(employee);
+        }
+
+        user.getRoles().clear();
+        userRepository.save(user);
+
+        userRepository.delete(user);
     }
 
     @Override

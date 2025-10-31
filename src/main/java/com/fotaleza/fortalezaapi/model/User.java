@@ -66,5 +66,4 @@ public class User extends AuditableEntity {
         }
         this.failedAttempts = 0;
     }
-
 }

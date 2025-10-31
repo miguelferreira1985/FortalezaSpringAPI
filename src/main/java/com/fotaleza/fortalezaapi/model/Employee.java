@@ -53,5 +53,4 @@ public class Employee extends  AuditableEntity {
             this.isActivate = true;
         }
     }
-
 }

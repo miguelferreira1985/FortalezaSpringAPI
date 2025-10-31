@@ -1,6 +1,7 @@
 package com.fotaleza.fortalezaapi.repository;
 
 import com.fotaleza.fortalezaapi.model.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     List<User> findByIsActivate(Boolean isActivate);
     Boolean existsByUsername(String username);
+
+    @EntityGraph(attributePaths = {"employee", "roles"})
+    Optional<User> findById(Long id);
 
 }
