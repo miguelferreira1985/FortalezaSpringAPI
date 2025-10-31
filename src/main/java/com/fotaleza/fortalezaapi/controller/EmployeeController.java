@@ -36,7 +36,7 @@ public class EmployeeController {
         );
     }
 
-    @PostMapping("/{id}/user")
+    @PutMapping("/{id}/user")
     public ResponseEntity<ApiResponse<EmployeeResponseDTO>> addUserToEmployee(
             @PathVariable Integer id,
             @Valid @RequestBody UserRequestDTO userRequestDTO) {
@@ -47,6 +47,23 @@ public class EmployeeController {
                 ApiResponse.<EmployeeResponseDTO>builder()
                         .status(HttpStatus.OK.value())
                         .message("Usuario asignado al empleado exitosamente.")
+                        .data(updatedEmployee)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<EmployeeResponseDTO>> updateEmployee(
+            @PathVariable Integer id,
+            @Valid @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+
+        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(id, employeeRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.<EmployeeResponseDTO>builder()
+                        .status(HttpStatus.CREATED.value())
+                        .message("Empleado actualizado existosamente.")
                         .data(updatedEmployee)
                         .timestamp(LocalDateTime.now())
                         .build()

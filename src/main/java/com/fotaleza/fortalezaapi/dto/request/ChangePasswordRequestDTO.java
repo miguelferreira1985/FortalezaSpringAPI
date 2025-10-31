@@ -10,8 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePaswordRequestDTO {
+public class ChangePasswordRequestDTO {
 
+    //@JsonProperty("newPassword")
     @NotBlank(message = "La nueva contraseña no puede estar vacia.")
     private String newPassword;
 }

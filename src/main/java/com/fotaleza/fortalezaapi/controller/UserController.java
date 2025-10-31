@@ -1,11 +1,10 @@
 package com.fotaleza.fortalezaapi.controller;
 
-import com.fotaleza.fortalezaapi.dto.request.ChangePaswordRequestDTO;
+import com.fotaleza.fortalezaapi.dto.request.ChangePasswordRequestDTO;
 import com.fotaleza.fortalezaapi.dto.request.UpdateRolesRequestDTO;
 import com.fotaleza.fortalezaapi.dto.response.ApiResponse;
 import com.fotaleza.fortalezaapi.dto.response.UserResponseDTO;
 import com.fotaleza.fortalezaapi.service.IUserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class UserController {
 
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<ApiResponse<UserResponseDTO>> deactivateUser(@PathVariable Long id) {
-        UserResponseDTO deactivateUser = userService.activateUser(id);
+        UserResponseDTO deactivateUser = userService.deactivateUser(id);
 
         return ResponseEntity.ok(
                 ApiResponse.<UserResponseDTO>builder()
@@ -69,9 +68,9 @@ public class UserController {
     @PatchMapping("/{id}/password")
     public ResponseEntity<ApiResponse<UserResponseDTO>> changePassword(
             @PathVariable Long id,
-            ChangePaswordRequestDTO changePaswordRequestDTO) {
+            @Valid @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO) {
 
-        UserResponseDTO updatedUser = userService.changePassowrd(id, changePaswordRequestDTO.getNewPassword());
+        UserResponseDTO updatedUser = userService.changePassowrd(id, changePasswordRequestDTO.getNewPassword());
 
         return ResponseEntity.ok(
                 ApiResponse.<UserResponseDTO>builder()
